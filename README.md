@@ -1,13 +1,24 @@
-( * : 為團隊需自行修改部分 )
-# *Gaas-repo-template ( 換成自己遊戲名稱 )
+# 骰子街 (Machi Koro)
+![image](https://www.ultraboardgames.com/img/slideshow/machi-koro.jpg)
 
-# Intro your game
+## Intro your game
 
+- 2-4 人遊玩
+- 輕鬆有趣又充滿運氣(?)的遊戲
+- 可以默默賺錢或是陷害別人
+- 蓋完所有地標你就贏啦！就這麼簡單
 
-# My Practice Stack
-- 描述一下你們使用的軟體方法論 :
-   1. *...
+## Practice Stack
+
+- Event Storming
+- Example Mapping
+- ATDD
+- OOAD
+- Clean Architecture
 
 ### Tech Stack
-- 描述一下你們使用的技術、框架、語言 :
-   1. *...
+
+- Java
+- Spring Framework
+- MongoDB
+- 前端待定
