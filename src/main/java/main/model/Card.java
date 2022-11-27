@@ -2,31 +2,31 @@ package main.model;
 
 public abstract class Card {
 
-    private String cardName;
+    private String name;
 
-    private int buildCoin;
+    private int constructionCost;
 
     private CardType cardType;
 
-    private int cardNumbers;
+    private int quantity;
 
     public abstract void takeEffect();
 
 
-    public String getCardName() {
-        return cardName;
+    public String getName() {
+        return name;
     }
 
-    public void setCardName(String cardName) {
-        this.cardName = cardName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getBuildCoin() {
-        return buildCoin;
+    public int getConstructionCost() {
+        return constructionCost;
     }
 
-    public void setBuildCoin(int buildCoin) {
-        this.buildCoin = buildCoin;
+    public void setConstructionCost(int constructionCost) {
+        this.constructionCost = constructionCost;
     }
 
     public CardType getCardType() {
@@ -37,12 +37,12 @@ public abstract class Card {
         this.cardType = cardType;
     }
 
-    public int getCardNumbers() {
-        return cardNumbers;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setCardNumbers(int cardNumbers) {
-        this.cardNumbers = cardNumbers;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
 }

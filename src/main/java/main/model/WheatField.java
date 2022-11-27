@@ -1,4 +1,4 @@
 package main.model;
 
-public class WheatField extends Building {
+public class WheatField extends Establishment {
 }

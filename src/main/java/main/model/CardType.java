@@ -1,11 +1,11 @@
 package main.model;
 
 public enum CardType {
+    CROP,
+    Nature_Resources,
+    ANIMAL_HUSBANDRY,
     SHOP,
-    FACTORY,
-    MARKET,
     RESTAURANT,
+    FACTORY_OR_MARKET,
     MAJOR_ESTABLISHMENT,
-    INDUSTRY,
-    Nature_Resources;
 }

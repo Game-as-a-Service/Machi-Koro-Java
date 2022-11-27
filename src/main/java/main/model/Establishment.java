@@ -1,7 +1,7 @@
 package main.model;
 
-public class Building extends Card {
-    private int requireDicePoint;
+public class Establishment extends Card {
+    private int diceRollNeededToActivateEffect;
     private Industry industry;
 
     @Override
