@@ -8,5 +8,4 @@ public enum CardType {
     MAJOR_ESTABLISHMENT,
     INDUSTRY,
     Nature_Resources;
-    //todo 自然資源
 }
