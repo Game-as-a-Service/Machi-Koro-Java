@@ -1,15 +1,29 @@
 package main.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player {
     private final String name;
-    private int coin = 3;
+    private int totalCoin = 0;
+    private List<Establishment> handEstablishment = new ArrayList<>();
+    private List<Landmark> handLandmark = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
     }
 
-    public void rollTheDice() {
+    public void addCardToHandCard(Establishment establishment) {
+        this.handEstablishment.add(establishment);
+        establishment.setPlayer(this);
+    }
 
+    public int getTotalCoin() {
+        return totalCoin;
+    }
+
+    public List<Establishment> getHandEstablishment() {
+        return handEstablishment;
     }
 
     public void buyCard() {
@@ -20,7 +34,8 @@ public class Player {
 
     }
 
-    public void gainCoin() {
+    public void gainCoin(int coin) {
+        this.totalCoin += coin;
 
     }
 
