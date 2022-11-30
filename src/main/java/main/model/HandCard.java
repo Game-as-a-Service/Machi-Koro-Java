@@ -1,8 +1,3 @@
 package main.model;
 
-public class HandCard extends Card {
-    @Override
-    public void takeEffect() {
-
-    }
-}
+// FIXME: 2022/11/30 Do we need this class ? 

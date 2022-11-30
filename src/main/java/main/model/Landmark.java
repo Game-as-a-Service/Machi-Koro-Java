@@ -3,12 +3,15 @@ package main.model;
 public class Landmark extends Card {
     private CardSide cardSide;
 
-    @Override
-    public void takeEffect() {
-
+    public Landmark(String name, int constructionCost, CardType cardType, int quantity) {
+        super(name, constructionCost, cardType, quantity);
     }
 
+    @Override
+    public void takeEffect(Game game) {
+
+    }
     public enum CardSide {
-        FRONT, BACK;
+        FRONT, BACK
     }
 }

@@ -1,5 +1,7 @@
 package main.model;
 
+import java.util.Random;
+
 public class Dice {
 
     private int point;
@@ -8,7 +10,8 @@ public class Dice {
         return point;
     }
 
-    public void setPoint(int point) {
-        this.point = point;
+    public void throwDice() {
+        var random = new Random();
+        this.point = random.nextInt(6) + 1;
     }
 }
