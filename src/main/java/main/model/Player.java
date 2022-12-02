@@ -5,13 +5,12 @@ import java.util.List;
 
 public class Player {
     private final String name;
-    private int totalCoin;
-    private final List<Establishment> ownedEstablishment;
+    private int totalCoin = 3;
+    private List<Establishment> ownedEstablishment;
     private final List<Landmark> ownedLandMark;
 
-    public Player(String name, int coin) {
+    public Player(String name) {
         this.name = name;
-        this.totalCoin = coin;
         ownedEstablishment = new ArrayList<>();
         ownedLandMark = new ArrayList<>();
     }
@@ -38,6 +37,9 @@ public class Player {
 
     public List<Establishment> getOwnedEstablishment() {
         return ownedEstablishment;
+    }
+    public void setOwnedEstablishment(List<Establishment> ownedEstablishment) {
+        this.ownedEstablishment = ownedEstablishment;
     }
 
     public List<Landmark> getOwnedLandMark() {

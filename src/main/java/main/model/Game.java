@@ -37,7 +37,6 @@ public class Game {
 
     }
 
-
     public Queue<Player> getPlayers() {
         return players;
     }
@@ -52,6 +51,9 @@ public class Game {
 
     public int getCurrentDicePoint() {
         return this.dice.getPoint();
+    }
+    public int setCurrentDicePoint(int point) {
+        return this.dice.setPoint(point);
     }
 
     public void throwDice() {

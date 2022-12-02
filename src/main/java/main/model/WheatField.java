@@ -15,15 +15,11 @@ public class WheatField extends Establishment {
             game.getBank().payCoin(1);
             var player = Optional.ofNullable(game.getPlayers().peek());
             if (player.isPresent()) {
-                var wheatFields = player.get().getOwnedEstablishment().stream().filter(e -> e.equals(this)).toList();
-                player.get().gainCoin(wheatFields.size());
+                player.get().gainCoin(1);
             }
         }
-
     }
-
     public boolean isDicePointToTakeEffect(int dicePoint) {
         return dicePoint == this.getDiceRollNeededToActivateEffect();
     }
-
 }

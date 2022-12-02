@@ -20,27 +20,31 @@ class WheatFieldTest {
 
     @BeforeEach
     void setUp() {
-        wheatField = spy(new WheatField());
-        player = spy(new Player("a", 3));
-        game = spy(
-                new Game(new ArrayDeque<>(4) {{
-                    add(player);
-                }},
-                new Dice())
-        );
-
+        wheatField = new WheatField();
+        player = new Player("a");
+        game = new Game(new ArrayDeque<>(4) {{
+            add(player);
+        }}, new Dice());
     }
 
     @Test
     void takeEffect() {
-        var establishments = List.of(wheatField,wheatField,wheatField);
+        //given three wheatFields to player
+        List<Establishment> establishments = List.of(wheatField, wheatField, wheatField);
+        player.setOwnedEstablishment(establishments);
         var originalCoin = player.getTotalCoin();
 
-        doReturn(establishments).when(player).getOwnedEstablishment();
-        doReturn(true).when(wheatField).isDicePointToTakeEffect(1);
-        doReturn(1).when(game).getCurrentDicePoint();
 
-        wheatField.takeEffect(game);
-        assertEquals(player.getTotalCoin(), originalCoin + establishments.size());
+        //when dicepoint is 1
+        game.setCurrentDicePoint(1);
+
+        player.getOwnedEstablishment().forEach((handcard) -> {
+            if (game.getCurrentDicePoint() == handcard.getDiceRollNeededToActivateEffect()) {
+                handcard.takeEffect(game);
+            }
+        });
+
+        //then player's totalpoints is 6
+        assertEquals(player.getTotalCoin(), originalCoin + 3);
     }
 }
