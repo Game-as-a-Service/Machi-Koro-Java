@@ -10,16 +10,18 @@ class BankTest {
 
     @BeforeEach
     void setUp() {
-        bank = new Bank(78);
+        bank = new Bank(100);
     }
 
     @Test
     void payCoin() {
-        fail();
+        bank.payCoin(1);
+        assertEquals(99, bank.getTotalCoin());
     }
 
     @Test
     void gainCoin() {
-        fail();
+        bank.gainCoin(1);
+        assertEquals(101, bank.getTotalCoin());
     }
 }

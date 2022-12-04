@@ -1,17 +1,24 @@
 package main.model;
 
 public class Bank {
-    private int coin;
+    private int totalCoin = 282;
+
+    public Bank() {
+    }
 
     public Bank(int coin) {
-        this.coin = coin;
+        this.totalCoin = coin;
     }
 
-    public void payCoin() {
-
+    public int getTotalCoin() {
+        return totalCoin;
     }
 
-    public void gainCoin() {
+    public void payCoin(int coin) {
+        this.totalCoin -= coin;
+    }
 
+    public void gainCoin(int coin) {
+        this.totalCoin += coin;
     }
 }
