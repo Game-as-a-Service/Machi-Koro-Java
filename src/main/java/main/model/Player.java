@@ -6,24 +6,23 @@ import java.util.List;
 public class Player {
     private final String name;
     private int totalCoin = 0;
-    private List<Establishment> handEstablishment = new ArrayList<>();
-    private List<Landmark> handLandmark = new ArrayList<>();
+    private List<Establishment> ownedEstablishment = new ArrayList<>();
+    private List<Landmark> ownedLandmark = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
     }
 
     public void addCardToHandCard(Establishment establishment) {
-        this.handEstablishment.add(establishment);
-        establishment.setPlayer(this);
+        this.ownedEstablishment.add(establishment);
     }
 
     public int getTotalCoin() {
         return totalCoin;
     }
 
-    public List<Establishment> getHandEstablishment() {
-        return handEstablishment;
+    public List<Establishment> getOwnedEstablishment() {
+        return ownedEstablishment;
     }
 
     public void buyCard() {

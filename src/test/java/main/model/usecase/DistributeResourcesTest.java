@@ -26,6 +26,7 @@ public class DistributeResourcesTest {
 
         // when
         int playerBDicePoint = 1;
+        game.setTurnPlayer(playerA);
         game.distributeResources(playerBDicePoint);
 
         // then

@@ -27,7 +27,7 @@ class WheatFieldTest {
     void testTakeEffect() {
         game = new Game(new Bank(100), List.of(playerA), null, null);
         game.setCurrentDicePoint(1);
-        wheatField.setPlayer(playerA);
+        game.setTurnPlayer(playerA);
 
         wheatField.takeEffect(game);
 

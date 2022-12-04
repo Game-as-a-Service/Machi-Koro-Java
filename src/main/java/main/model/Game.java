@@ -8,6 +8,7 @@ public class Game {
     private final List<Player> players;
     private final List<Dice> dices;
     private int currentDicePoint;
+    private Player turnPlayer;
     private final Marketplace marketplace;
 
     public Game(Bank bank, List<Player> players, List<Dice> dices, Marketplace marketplace) {
@@ -19,11 +20,19 @@ public class Game {
 
     public void distributeResources(int dicePoint) {
         this.setCurrentDicePoint(dicePoint);
-        this.getPlayers().forEach(player -> player.getHandEstablishment().forEach(establishment -> establishment.takeEffect(this)));
+        this.getPlayers().forEach(player -> player.getOwnedEstablishment().forEach(establishment -> establishment.takeEffect(this)));
     }
 
     public int getCurrentDicePoint() {
         return currentDicePoint;
+    }
+
+    public Player getTurnPlayer() {
+        return turnPlayer;
+    }
+
+    public void setTurnPlayer(Player turnPlayer) {
+        this.turnPlayer = turnPlayer;
     }
 
     public void setCurrentDicePoint(int currentDicePoint) {

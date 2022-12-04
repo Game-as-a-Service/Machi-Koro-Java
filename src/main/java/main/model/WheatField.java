@@ -11,7 +11,7 @@ public class WheatField extends Establishment {
         // 任何人骰出這個數字時，你都可以從銀行獲得1元
         if (isDicePointToTakeEffect(game.getCurrentDicePoint())) {
             game.getBank().payCoin(1);
-            this.getPlayer().gainCoin(1);
+            game.getTurnPlayer().gainCoin(1);
         }
 
     }

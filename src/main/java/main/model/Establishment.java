@@ -5,7 +5,7 @@ public abstract class Establishment extends Card {
     private final Industry industry;
 
     public Establishment(String name, Player player, int constructionCost, CardType cardType, int quantity, int diceRollNeededToActivateEffect, Industry industry) {
-        super(name, player, constructionCost, cardType, quantity);
+        super(name, constructionCost, cardType, quantity);
         this.diceRollNeededToActivateEffect = diceRollNeededToActivateEffect;
         this.industry = industry;
     }

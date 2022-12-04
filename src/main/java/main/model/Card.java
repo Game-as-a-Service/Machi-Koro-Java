@@ -1,16 +1,16 @@
 package main.model;
 
+import java.util.Objects;
+
 public abstract class Card {
 
     private final String name;
-    private Player player;
     private final int constructionCost;
     private final CardType cardType;
     private final int quantity;
 
-    public Card(String name, Player player, int constructionCost, CardType cardType, int quantity) {
+    public Card(String name, int constructionCost, CardType cardType, int quantity) {
         this.name = name;
-        this.player = player;
         this.constructionCost = constructionCost;
         this.cardType = cardType;
         this.quantity = quantity;
@@ -23,13 +23,7 @@ public abstract class Card {
         return name;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
 
-    public Player getPlayer() {
-        return player;
-    }
 
     public int getConstructionCost() {
         return constructionCost;
@@ -43,5 +37,16 @@ public abstract class Card {
         return quantity;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return Objects.equals(name, card.name);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }
