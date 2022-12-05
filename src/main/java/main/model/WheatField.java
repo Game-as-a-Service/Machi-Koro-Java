@@ -1,6 +1,8 @@
 package main.model;
 
 public class WheatField extends Establishment {
+    private final int COIN_TO_TAKE = 1;
+    private final int COIN_TO_GAIN = 1;
 
     public WheatField() {
         super("小麥田", null, 1, CardType.CROP, 6, 1, Industry.BLUE);
@@ -10,8 +12,16 @@ public class WheatField extends Establishment {
     public void takeEffect(Game game) {
         // 任何人骰出這個數字時，你都可以從銀行獲得1元
         if (isDicePointToTakeEffect(game.getCurrentDicePoint())) {
-            game.getBank().payCoin(1);
-            game.getTurnPlayer().gainCoin(1);
+            payCoin(game.getBank());
+            gainCoin(game.getTurnPlayer());
         }
     }
+
+    void payCoin(Bank bank) {
+        bank.payCoin(COIN_TO_GAIN);
+    }
+    void gainCoin(Player player) {
+        player.gainCoin(COIN_TO_TAKE);
+    }
+
 }
