@@ -12,8 +12,8 @@ public class DistributeResourcesTest {
     @Test
     @DisplayName(
             "given 有銀行(100 coin)、A 玩家(0 coin)及 B 玩家，A 玩家手牌裡有小麥田 " +
-            "when B 玩家擲骰子是1時，系統分配資源後 " +
-            "then A 玩家從銀行獲得1元(銀行 coin = 99, A 玩家 coin = 1)")
+                    "when B 玩家擲骰子是1時，系統分配資源後 " +
+                    "then A 玩家從銀行獲得1元(銀行 coin = 99, A 玩家 coin = 1)")
     void testWheatField() {
         // given
         Player playerA = new Player("A");
@@ -32,5 +32,13 @@ public class DistributeResourcesTest {
         // then
         assertEquals(99, game.getBank().getTotalCoin());
         assertEquals(1, playerA.getTotalCoin());
+    }
+
+    @Test
+    @DisplayName(
+            "given 有銀行(100 coin)、A 玩家(0 coin)及 B 玩家(1 coin)，A 玩家手牌裡有咖啡館 " +
+                    "when B 玩家擲骰子是3時，系統分配資源後 " +
+                    "then A 玩家從玩家B獲得1元(B玩家 coin = 0, A 玩家 coin = 1)")
+    void testCafe() {
     }
 }

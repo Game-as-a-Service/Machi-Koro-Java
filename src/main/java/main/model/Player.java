@@ -29,14 +29,11 @@ public class Player {
 
     }
 
-    public void payCoin() {
-
+    public void payCoin(int coin) {
+       this.totalCoin -= coin;
     }
 
     public void gainCoin(int coin) {
         this.totalCoin += coin;
-
     }
-
-
 }

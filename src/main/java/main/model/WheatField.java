@@ -19,6 +19,4 @@ public class WheatField extends Establishment {
     public boolean isDicePointToTakeEffect(int dicePoint) {
         return dicePoint == this.getDiceRollNeededToActivateEffect();
     }
-
-
 }
