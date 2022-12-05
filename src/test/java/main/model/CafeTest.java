@@ -29,15 +29,14 @@ class CafeTest {
     @Test
     void testTakeEffect() {
         game = new Game(new Bank(100), List.of(playerA,playerB), null, null);
-        playerA.gainCoin(1);
         playerB.addCardToHandCard(cafe);
 
         game.setTurnPlayer(playerA);
 
-        game.setCurrentDicePoint(2);
+        game.setCurrentDicePoint(3);
         cafe.takeEffect(game);
 
-        assertEquals(0,playerA.getTotalCoin());
-        assertEquals(1,playerB.getTotalCoin());
+        assertEquals(2,playerA.getTotalCoin());
+        assertEquals(4,playerB.getTotalCoin());
     }
 }

@@ -15,15 +15,11 @@ public abstract class Card {
         this.cardType = cardType;
         this.quantity = quantity;
     }
-
     public abstract void takeEffect(Game game);
-
 
     public String getName() {
         return name;
     }
-
-
 
     public int getConstructionCost() {
         return constructionCost;
