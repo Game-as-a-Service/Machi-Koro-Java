@@ -9,8 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WheatFieldTest {
     private WheatField wheatField;
+
     Player playerA;
     Game game;
+
 
     @BeforeEach
     void setUp() {
