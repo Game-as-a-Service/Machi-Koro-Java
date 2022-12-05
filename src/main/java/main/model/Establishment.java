@@ -16,4 +16,8 @@ public abstract class Establishment extends Card {
 
     @Override
     public abstract void takeEffect(Game game);
+
+    protected boolean isDicePointToTakeEffect(int dicePoint) {
+        return dicePoint == this.getDiceRollNeededToActivateEffect();
+    }
 }

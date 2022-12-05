@@ -13,10 +13,5 @@ public class WheatField extends Establishment {
             game.getBank().payCoin(1);
             game.getTurnPlayer().gainCoin(1);
         }
-
-    }
-
-    public boolean isDicePointToTakeEffect(int dicePoint) {
-        return dicePoint == this.getDiceRollNeededToActivateEffect();
     }
 }

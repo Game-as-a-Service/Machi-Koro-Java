@@ -22,9 +22,4 @@ public class Cafe extends Establishment {
             }
         }
     }
-
-    public boolean isDicePointToTakeEffect(int dicePoint) {
-        return dicePoint == this.getDiceRollNeededToActivateEffect();
-    }
-
 }
