@@ -4,7 +4,7 @@ public abstract class Establishment extends Card {
     private final int diceRollNeededToActivateEffect;
     private final Industry industry;
 
-    public Establishment(String name, Player player, int constructionCost, CardType cardType, int quantity, int diceRollNeededToActivateEffect, Industry industry) {
+    public Establishment(String name, int constructionCost, CardType cardType, int quantity, int diceRollNeededToActivateEffect, Industry industry) {
         super(name, constructionCost, cardType, quantity);
         this.diceRollNeededToActivateEffect = diceRollNeededToActivateEffect;
         this.industry = industry;
@@ -15,5 +15,5 @@ public abstract class Establishment extends Card {
     }
 
     @Override
-    public abstract void takeEffect(Game game);
+    public abstract void takeEffect(Game game, Player player);
 }

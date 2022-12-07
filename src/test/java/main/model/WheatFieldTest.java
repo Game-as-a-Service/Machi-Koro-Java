@@ -19,17 +19,11 @@ class WheatFieldTest {
     }
 
     @Test
-    void getName() {
-        assertEquals("小麥田", wheatField.getName());
-    }
-
-    @Test
     void testTakeEffect() {
         game = new Game(new Bank(100), List.of(playerA), null, null);
         game.setCurrentDicePoint(1);
-        game.setTurnPlayer(playerA);
 
-        wheatField.takeEffect(game);
+        wheatField.takeEffect(game, playerA);
 
         assertEquals(1, game.getPlayers().get(0).getTotalCoin());
         assertEquals(99, game.getBank().getTotalCoin());
