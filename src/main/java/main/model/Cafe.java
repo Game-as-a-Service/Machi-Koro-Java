@@ -1,7 +1,7 @@
 package main.model;
 
 public class Cafe extends Establishment {
-    private final int COIN_TO_TAKE = 1;
+    private final int COIN_TO_PAY = 1;
     private final int COIN_TO_GAIN = 1;
 
     public Cafe() {
@@ -19,15 +19,15 @@ public class Cafe extends Establishment {
         }
     }
 
-    private static boolean playerHasEnoughCoin(Game game) {
+    private boolean playerHasEnoughCoin(Game game) {
         return game.getTurnPlayer().getTotalCoin() > 0;
     }
 
     void payCoin(Player player) {
-        player.payCoin(COIN_TO_GAIN);
+        player.payCoin(COIN_TO_PAY);
     }
 
     void gainCoin(Player player) {
-        player.gainCoin(COIN_TO_TAKE);
+        player.gainCoin(COIN_TO_GAIN);
     }
 }

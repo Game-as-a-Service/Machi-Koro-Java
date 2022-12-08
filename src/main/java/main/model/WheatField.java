@@ -1,7 +1,7 @@
 package main.model;
 
 public class WheatField extends Establishment {
-    private final int COIN_TO_TAKE = 1;
+    private final int COIN_TO_PAY = 1;
     private final int COIN_TO_GAIN = 1;
 
     public WheatField() {
@@ -18,10 +18,10 @@ public class WheatField extends Establishment {
     }
 
     void payCoin(Bank bank) {
-        bank.payCoin(COIN_TO_GAIN);
+        bank.payCoin(COIN_TO_PAY);
     }
     void gainCoin(Player player) {
-        player.gainCoin(COIN_TO_TAKE);
+        player.gainCoin(COIN_TO_GAIN);
     }
 
 }

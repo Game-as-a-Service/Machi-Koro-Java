@@ -27,8 +27,8 @@ public class DistributeResourcesTest {
 
     @Test
     @DisplayName(
-            "given 有銀行(100 coin)、A 玩家(0 coin)及 B 玩家，A 玩家手牌裡有小麥田 " +
-                    "when B 玩家擲骰子是1時，系統分配資源後 " +
+            "given 有銀行(100 coin)、A 玩家(3 coin)，A 玩家手牌裡有小麥田 " +
+                    "when A 玩家擲骰子是1時，系統分配資源後 " +
                     "then A 玩家從銀行獲得1元(銀行 coin = 99, A 玩家 coin = 1)")
     void testWheatField() {
         // given
@@ -45,9 +45,9 @@ public class DistributeResourcesTest {
 
     @Test
     @DisplayName(
-            "given 有銀行(100 coin)、A 玩家(3 coin)及 B 玩家(3 coin)，A 玩家手牌裡有咖啡館 " +
-                    "when B 玩家擲骰子是3時，系統分配資源後 " +
-                    "then A 玩家從玩家B獲得1元(B玩家 coin = 4, A 玩家 coin = 2)")
+            "given 有銀行(100 coin)、A 玩家(3 coin)及 B 玩家(3 coin)，B 玩家手牌裡有咖啡館 " +
+                    "when A 玩家擲骰子是3時，系統分配資源後 " +
+                    "then B 玩家從玩家A獲得1元(B 玩家 coin = 4, A 玩家 coin = 2)")
     void playerB_has_OneCafe() {
         //given
         playerB.addCardToHandCard(cafe);
