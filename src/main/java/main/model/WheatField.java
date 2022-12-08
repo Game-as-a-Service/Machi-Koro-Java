@@ -5,23 +5,15 @@ public class WheatField extends Establishment {
     private final int COIN_TO_GAIN = 1;
 
     public WheatField() {
-        super("小麥田", null, 1, CardType.CROP, 6, 1, Industry.BLUE);
+        super("小麥田",  1, CardType.CROP, 6, 1, Industry.BLUE);
     }
 
     @Override
-    public void takeEffect(Game game) {
+    public void takeEffect(Game game,Player player) {
         // 任何人骰出這個數字時，你都可以從銀行獲得1元
         if (isDicePointToTakeEffect(game.getCurrentDicePoint())) {
-            payCoin(game.getBank());
-            gainCoin(game.getTurnPlayer());
+            game.getBank().payCoin(COIN_TO_PAY);
+            player.gainCoin(COIN_TO_GAIN);
         }
     }
-
-    void payCoin(Bank bank) {
-        bank.payCoin(COIN_TO_PAY);
-    }
-    void gainCoin(Player player) {
-        player.gainCoin(COIN_TO_GAIN);
-    }
-
 }
