@@ -22,12 +22,4 @@ public class Cafe extends Establishment {
     private boolean playerHasEnoughCoin(Game game) {
         return game.getTurnPlayer().getTotalCoin() > 0;
     }
-
-    void payCoin(Player player) {
-        player.payCoin(COIN_TO_PAY);
-    }
-
-    void gainCoin(Player player) {
-        player.gainCoin(COIN_TO_GAIN);
-    }
 }
