@@ -34,7 +34,7 @@ class CafeTest {
         game.setTurnPlayer(playerA);
 
         game.setCurrentDicePoint(3);
-        cafe.takeEffect(game);
+        cafe.takeEffect(game,playerB);
 
         assertEquals(2,playerA.getTotalCoin());
         assertEquals(4,playerB.getTotalCoin());

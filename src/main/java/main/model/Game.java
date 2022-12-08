@@ -3,7 +3,6 @@ package main.model;
 import java.util.List;
 
 public class Game {
-
     private final Bank bank;
     private final List<Player> players;
     private final List<Dice> dices;
@@ -20,7 +19,7 @@ public class Game {
 
     public void distributeResources(int dicePoint) {
         this.setCurrentDicePoint(dicePoint);
-        this.getPlayers().forEach(player -> player.getOwnedEstablishment().forEach(establishment -> establishment.takeEffect(this)));
+        this.getPlayers().forEach(player -> player.getOwnedEstablishment().forEach(establishment -> establishment.takeEffect(this,player)));
     }
 
     public int getCurrentDicePoint() {
