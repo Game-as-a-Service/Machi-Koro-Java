@@ -15,7 +15,9 @@ public abstract class Card {
         this.cardType = cardType;
         this.quantity = quantity;
     }
-    public abstract void takeEffect(Game game,Player player);
+
+    public abstract void takeEffect(Game game, Player player);
+
 
     public String getName() {
         return name;
