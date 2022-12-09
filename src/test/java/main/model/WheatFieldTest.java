@@ -11,7 +11,6 @@ class WheatFieldTest {
     private WheatField wheatField;
     Player playerA;
     Game game;
-
     @BeforeEach
     void setUp() {
         wheatField = new WheatField();
@@ -23,9 +22,11 @@ class WheatFieldTest {
         game = new Game(new Bank(100), List.of(playerA), null, null);
         game.setCurrentDicePoint(1);
 
+
         wheatField.takeEffect(game, playerA);
 
-        assertEquals(1, game.getPlayers().get(0).getTotalCoin());
+
+        assertEquals(4, game.getPlayers().get(0).getTotalCoin());
         assertEquals(99, game.getBank().getTotalCoin());
     }
 }

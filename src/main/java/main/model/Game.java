@@ -3,7 +3,6 @@ package main.model;
 import java.util.List;
 
 public class Game {
-
     private final Bank bank;
     private final List<Player> players;
     private final List<Dice> dices;

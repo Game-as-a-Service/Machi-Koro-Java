@@ -16,14 +16,14 @@ public abstract class Card {
         this.quantity = quantity;
     }
 
+
     public abstract void takeEffect(Game game, Player player);
+
 
 
     public String getName() {
         return name;
     }
-
-
 
     public int getConstructionCost() {
         return constructionCost;
