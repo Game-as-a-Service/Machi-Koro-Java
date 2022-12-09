@@ -13,7 +13,7 @@ public class Cafe extends Establishment {
 
     @Override
     public void takeEffect(Game game,Player player) {
-        // 任何人骰出這個數字時，擁有此手牌的玩家能從骰骰子的人獲得1元，並且骰骰的人扣1元
+        // 如果別人骰出這個數字，他必須給你1元
         if (isDicePointToTakeEffect(game.getCurrentDicePoint()) && playerHasEnoughCoin(game)) {
             game.getTurnPlayer().payCoin(COIN_TO_PAY);
             player.gainCoin(COIN_TO_GAIN);
