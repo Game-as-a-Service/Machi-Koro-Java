@@ -40,7 +40,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        settingDicePointAndTakeEffect(1, game);
+       setDicePointAndTakeEffect(1, game);
 
         // then
         assertEquals(99, game.getBank().getTotalCoin());
@@ -58,7 +58,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        settingDicePointAndTakeEffect(3, game);
+        setDicePointAndTakeEffect(3, game);
 
         // then
         assertEquals(100, game.getBank().getTotalCoin());
@@ -77,7 +77,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        settingDicePointAndTakeEffect(3, game);
+        setDicePointAndTakeEffect(3, game);
 
         // then
         assertEquals(100, game.getBank().getTotalCoin());
@@ -97,7 +97,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        settingDicePointAndTakeEffect(3, game);
+        setDicePointAndTakeEffect(3, game);
 
         // then
         assertEquals(100, game.getBank().getTotalCoin());
@@ -117,7 +117,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerD);
-        settingDicePointAndTakeEffect(3, game);
+        setDicePointAndTakeEffect(3, game);
 
         // then
         assertEquals(100, game.getBank().getTotalCoin());
@@ -139,7 +139,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerD);
-        settingDicePointAndTakeEffect(3, game);
+        setDicePointAndTakeEffect(3, game);
 
         // then
         assertEquals(100, game.getBank().getTotalCoin());
@@ -148,7 +148,7 @@ public class DistributeResourcesTest {
         assertEquals(2, playerD.getTotalCoin());
     }
 
-    private void settingDicePointAndTakeEffect(int point, Game game) {
+    private void setDicePointAndTakeEffect(int point, Game game) {
         game.setCurrentDicePoint(point);
         game.distributeResources(game.getCurrentDicePoint());
     }
