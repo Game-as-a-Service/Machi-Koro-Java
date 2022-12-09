@@ -55,6 +55,10 @@ public class Player {
         this.totalCoin += coin;
     }
 
+    public void ownedEstablishmentTakeEffect(Game game) {
+        ownedEstablishment.forEach(establishment -> establishment.takeEffect(game, this));
+    }
+
     private boolean isBalanceEnough(int cost) {
         return getTotalCoin() >= cost;
     }
