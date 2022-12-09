@@ -40,7 +40,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-       setDicePointAndTakeEffect(1, game);
+        setDicePointAndTakeEffect(1, game);
 
         // then
         assertEquals(99, game.getBank().getTotalCoin());
