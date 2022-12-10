@@ -1,6 +1,8 @@
 package main.model;
 
 public class WheatField extends Establishment {
+    private final int COIN_TO_PAY = 1;
+    private final int COIN_TO_GAIN = 1;
 
     public WheatField() {
         super("小麥田", 1, CardType.CROP, 6, 1, Industry.BLUE);
@@ -13,11 +15,5 @@ public class WheatField extends Establishment {
             game.getBank().payCoin(1);
             player.gainCoin(1);
         }
-
-    }
-
-    @Override
-    public boolean isDicePointToTakeEffect(int dicePoint) {
-        return dicePoint == this.getDiceRollNeededToActivateEffect();
     }
 }

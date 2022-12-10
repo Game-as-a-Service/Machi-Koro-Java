@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Player {
     private final String name;
-    private int totalCoin = 0;
+    private int totalCoin = 3;
     private List<Establishment> ownedEstablishment = new ArrayList<>();
     private List<Landmark> ownedLandmark = new ArrayList<>();
 
@@ -25,18 +25,37 @@ public class Player {
         return ownedEstablishment;
     }
 
-    public void buyCard() {
-
+    public List<Landmark> getOwnedLandmark() {
+        return ownedLandmark;
     }
 
-    public void payCoin() {
+    public void buyCard(Establishment card) {
+        int cost = card.getConstructionCost();
+        if (!isBalanceEnough(cost))
+            return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
+        totalCoin -= cost; // FIXME: 2022/12/8 need to refactor after payCoin implemented.
+        getOwnedEstablishment().add(card);
+    }
+
+    public void buyCard(Landmark card) {
+        int cost = card.getConstructionCost();
+        if (!isBalanceEnough(cost))
+            return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
+
+        totalCoin -= cost; // FIXME: 2022/12/8 need to refactor after payCoin implemented.
+        getOwnedLandmark().add(card);
+    }
+
+    public void payCoin(int coin) {
+       this.totalCoin -= coin;
     }
 
     public void gainCoin(int coin) {
         this.totalCoin += coin;
-
     }
 
-
+    private boolean isBalanceEnough(int cost) {
+        return getTotalCoin() >= cost;
+    }
 }
