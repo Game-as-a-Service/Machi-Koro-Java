@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DistributeResourcesTest {
@@ -146,6 +147,24 @@ public class DistributeResourcesTest {
         assertEquals(4, playerB.getTotalCoin());
         assertEquals(4, playerC.getTotalCoin());
         assertEquals(2, playerD.getTotalCoin());
+    }
+
+    @Test
+    @DisplayName(
+            "given 有銀行(100 coin)、A 玩家(3 coin)，A 玩家手牌裡有牧場 " +
+            "when 任何玩家擲骰子是2時，系統分配資源後 " +
+            "then A 玩家從銀行獲得1元(銀行 coin = 99, A 玩家 coin = 4)")
+    void testRanch() {
+        // given
+        playerA.addCardToHandCard(new Ranch());
+
+        // when
+        game.setTurnPlayer(playerB);
+        game.distributeResources(2);
+
+        // then
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
+        assertThat(playerA.getTotalCoin()).isEqualTo(4);
     }
 
     private void setDicePointAndTakeEffect(int point, Game game) {
