@@ -3,8 +3,8 @@ package main.model;
 public class Landmark extends Card {
     private CardSide cardSide = CardSide.BACK;
 
-    public Landmark(String name, int constructionCost, CardType cardType, int quantity) {
-        super(name, constructionCost, cardType, quantity);
+    public Landmark(String name, int constructionCost, CardType cardType) {
+        super(name, constructionCost, cardType);
     }
 
     @Override
