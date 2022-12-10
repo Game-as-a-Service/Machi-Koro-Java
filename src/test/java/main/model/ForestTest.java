@@ -27,12 +27,15 @@ class ForestTest {
                 return 5;
             }
         };
+        var originalBalanceOfPlayer = game.getPlayers().get(0).getTotalCoin();
+        var originalBalanceOfBank = game.getBank().getTotalCoin();
 
         forest.takeEffect(game, player);
+
         var balanceOfPlayer = game.getPlayers().get(0).getTotalCoin();
         var balanceOfBank = game.getBank().getTotalCoin();
 
-        assertThat(balanceOfPlayer).isEqualTo(1);
-        assertThat(balanceOfBank).isEqualTo(99);
+        assertThat(balanceOfPlayer).isEqualTo(originalBalanceOfPlayer + 1);
+        assertThat(balanceOfBank).isEqualTo(originalBalanceOfBank - 1);
     }
 }
