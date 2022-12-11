@@ -3,7 +3,7 @@ package main.model;
 public class ConvenienceStore extends Establishment {
 
     public ConvenienceStore() {
-        super("便利商店", 1, CardType.SHOP, 6, 4, Industry.BLUE);
+        super("便利商店", 1, CardType.SHOP, 4, Industry.BLUE);
     }
 
     public void takeEffect(Game game, Player owner) {
