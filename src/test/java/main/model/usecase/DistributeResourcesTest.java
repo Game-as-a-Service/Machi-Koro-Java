@@ -167,6 +167,24 @@ public class DistributeResourcesTest {
         assertThat(playerA.getTotalCoin()).isEqualTo(4);
     }
 
+    @Test
+    @DisplayName(
+            "given 有銀行(100 coin)、A 玩家(3 coin)，A 玩家手牌裡有便利商店 " +
+                    "when A 玩家擲骰子是4時，系統分配資源後 " +
+                    "then A 玩家從銀行獲得3元(銀行 coin = 97, A 玩家 coin = 6)")
+    void testConvenienceStore() {
+        // given
+        playerA.addCardToHandCard(new ConvenienceStore());
+
+        // when
+        game.setTurnPlayer(playerA);
+        game.distributeResources(4);
+
+        // then
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(97);
+        assertThat(playerA.getTotalCoin()).isEqualTo(6);
+    }
+
     private void setDicePointAndTakeEffect(int point, Game game) {
         game.setCurrentDicePoint(point);
         game.distributeResources(game.getCurrentDicePoint());
