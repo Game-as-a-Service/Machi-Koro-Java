@@ -6,7 +6,7 @@ import domain.card.CardType;
 
 public class Mine extends Establishment {
     public Mine() {
-        super("礦場", 6, CardType.Nature_Resources, 6, 9, Industry.BLUE);
+        super("礦場", 6, CardType.NATURE_RESOURCES, 9, Industry.BLUE);
     }
 
     @Override

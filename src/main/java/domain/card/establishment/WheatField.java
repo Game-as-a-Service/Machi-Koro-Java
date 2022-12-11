@@ -9,7 +9,7 @@ public class WheatField extends Establishment {
     private final int COIN_TO_GAIN = 1;
 
     public WheatField() {
-        super("小麥田", 1, CardType.CROP, 6, 1, Industry.BLUE);
+        super("小麥田", 1, CardType.CROP, 1, Industry.BLUE);
     }
 
     @Override

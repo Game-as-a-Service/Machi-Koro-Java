@@ -2,7 +2,7 @@ package domain.card;
 
 public enum CardType {
     CROP,
-    Nature_Resources,
+    NATURE_RESOURCES,
     ANIMAL_HUSBANDRY,
     SHOP,
     RESTAURANT,

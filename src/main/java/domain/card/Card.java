@@ -10,13 +10,11 @@ public abstract class Card {
     private final String name;
     private final int constructionCost;
     private final CardType cardType;
-    private final int quantity;
 
-    public Card(String name, int constructionCost, CardType cardType, int quantity) {
+    public Card(String name, int constructionCost, CardType cardType) {
         this.name = name;
         this.constructionCost = constructionCost;
         this.cardType = cardType;
-        this.quantity = quantity;
     }
 
 
@@ -34,10 +32,6 @@ public abstract class Card {
 
     public CardType getCardType() {
         return cardType;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 
     @Override
