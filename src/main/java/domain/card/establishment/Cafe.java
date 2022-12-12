@@ -15,7 +15,7 @@ public class Cafe extends Establishment {
     @Override
     public void takeEffect(Game game, Player player) {
         // 如果別人骰出這個數字，他必須給你1元
-        if (isDicePointToTakeEffect(game.getCurrentDicePoint()) && playerHasEnoughCoin(game)) {
+        if (!game.isTurnPlayer(player) && isDicePointToTakeEffect(game.getCurrentDicePoint()) && playerHasEnoughCoin(game)) {
             game.getTurnPlayer().payCoin(COIN_TO_PAY);
             player.gainCoin(COIN_TO_GAIN);
         }

@@ -1,16 +1,17 @@
 package domain;
 
 import domain.card.establishment.Establishment;
-import domain.card.landmark.Landmark;
+import domain.card.landmark.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Player {
     private final String name;
     private int totalCoin = 3;
     private List<Establishment> ownedEstablishment = new ArrayList<>();
-    private List<Landmark> ownedLandmark = new ArrayList<>();
+    private List<Landmark> ownedLandmark = new ArrayList<>(Arrays.asList(new TrainStation(),new ShoppingMall(),new AmusementPark(),new RadioTower())); //FIXME: Do we need to initialize?
 
     public Player(String name) {
         this.name = name;
@@ -37,21 +38,24 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        totalCoin -= cost; // FIXME: 2022/12/8 need to refactor after payCoin implemented.
-        getOwnedEstablishment().add(card);
+        this.payCoin(cost);
+        addCardToHandCard(card);
     }
 
-    public void buyCard(Landmark card) {
+    public void flipLandMark(Landmark card) {
         int cost = card.getConstructionCost();
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        totalCoin -= cost; // FIXME: 2022/12/8 need to refactor after payCoin implemented.
-        getOwnedLandmark().add(card);
+        this.payCoin(cost);
+        getOwnedLandmark().stream()
+                .filter(landmark -> landmark.equals(card))
+                .forEach(landmark -> landmark.setCardSide(Landmark.CardSide.FRONT));
+
     }
 
     public void payCoin(int coin) {
-       this.totalCoin -= coin;
+        this.totalCoin -= coin;
     }
 
     public void gainCoin(int coin) {

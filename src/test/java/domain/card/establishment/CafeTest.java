@@ -32,15 +32,22 @@ class CafeTest {
 
     @Test
     void testTakeEffect() {
-        game = new Game(new Bank(100), List.of(playerA,playerB), null, null);
-        playerB.addCardToHandCard(cafe);
+        //given
+        game = new Game(new Bank(100), List.of(playerA, playerB), null, null) {
+            @Override
+            public int getCurrentDicePoint() {
+                return 3;
+            }
+        };
+        int original_playerA_totalCoin = playerA.getTotalCoin();
+        int original_playerB_totalCoin = playerB.getTotalCoin();
 
+        //when
         game.setTurnPlayer(playerA);
+        cafe.takeEffect(game, playerB);
 
-        game.setCurrentDicePoint(3);
-        cafe.takeEffect(game,playerB);
-
-        assertEquals(2,playerA.getTotalCoin());
-        assertEquals(4,playerB.getTotalCoin());
+        //then
+        assertEquals(original_playerA_totalCoin - 1, playerA.getTotalCoin());
+        assertEquals(original_playerB_totalCoin + 1, playerB.getTotalCoin());
     }
 }
