@@ -4,10 +4,12 @@ import domain.Game;
 import domain.Player;
 import domain.card.CardType;
 
+import java.util.Set;
+
 public class AppleOrchard extends Establishment {
 
     public AppleOrchard() {
-        super("蘋果園", 3, CardType.CROP, 10, Industry.BLUE);
+        super("蘋果園", 3, CardType.CROP, Set.of(10), Industry.BLUE);
     }
 
     @Override
