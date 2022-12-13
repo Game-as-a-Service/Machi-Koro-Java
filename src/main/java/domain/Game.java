@@ -62,4 +62,9 @@ public class Game {
         return players;
     }
 
+    public boolean isTurnPlayer(Player player) {
+        return this.getTurnPlayer().equals(player);
+    }
+
+
 }
