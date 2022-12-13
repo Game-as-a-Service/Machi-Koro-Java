@@ -3,7 +3,7 @@ package domain.card.establishment;
 import domain.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.TestUtils;
+import utils.TestGameBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +19,7 @@ class AppleOrchardTest {
 
     @Test
     void takeEffect() {
-        game = TestUtils.createTestGameWithFixedDiceValue(10, 1);
+        game = new TestGameBuilder().setFixedDicePoint(10).setPlayers(1).build();
         var player = game.getPlayers().get(0);
 
         var originalBalanceOfBank = game.getBank().getTotalCoin();

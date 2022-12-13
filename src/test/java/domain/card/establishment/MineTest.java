@@ -1,10 +1,9 @@
 package domain.card.establishment;
 
 import domain.Game;
-import domain.card.establishment.Mine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.TestUtils;
+import utils.TestGameBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +19,7 @@ class MineTest {
 
     @Test
     void takeEffect() {
-        game = TestUtils.createTestGameWithFixedDiceValue(9, 1);
+        game = new TestGameBuilder().setFixedDicePoint(9).setPlayers(1).build();
         var originalBalanceOfBank = game.getBank().getTotalCoin();
         var player = game.getPlayers().get(0);
         var originalBalanceOfPlayer = player.getTotalCoin();
