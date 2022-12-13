@@ -4,7 +4,7 @@ import domain.Game;
 import domain.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.TestUtils;
+import utils.TestGameBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +16,7 @@ class ConvenienceStoreTest {
 
     @BeforeEach
     void setUp() {
-        game = TestUtils.createTestGameWithFixedDiceValue(4, 1);
+        game = new TestGameBuilder().setFixedDicePoint(4).setPlayers(1).build();
         player = game.getPlayers().get(0);
     }
 
