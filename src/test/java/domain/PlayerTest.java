@@ -2,11 +2,13 @@ package domain;
 
 import domain.card.landmark.AmusementPark;
 import domain.card.establishment.WheatField;
+import domain.card.landmark.LandMarkIsFlippedException;
 import domain.card.landmark.Landmark;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 class PlayerTest {
 
@@ -33,7 +35,7 @@ class PlayerTest {
     }
 
     @Test
-    void flipBackLandMark() {
+    void flipBackLandMark() throws LandMarkIsFlippedException {
         //given 玩家有背面的主題樂園
         var originalBalanceOfPlayer = player.getTotalCoin();
         var amusementPark = new AmusementPark();
@@ -47,17 +49,18 @@ class PlayerTest {
     }
 
     @Test
-    void flipFrontLandMark() {
+    void flipFrontLandMark() throws LandMarkIsFlippedException {
         //given 玩家有正面的主題樂園
         var originalBalanceOfPlayer = player.getTotalCoin();
         var amusementPark = new AmusementPark();
         player.getOwnedLandmark().get(2).setCardSide(Landmark.CardSide.FRONT);
 
         //when
-        player.flipLandMark(amusementPark);
+        LandMarkIsFlippedException actualException = Assertions.assertThrows(LandMarkIsFlippedException.class,
+                () -> player.flipLandMark(amusementPark));
 
         //then
         assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer);
-        assertThat(player.getOwnedLandmark().get(2).getCardSide()).isEqualTo(Landmark.CardSide.FRONT);
+        assertThat(actualException.getMessage()).isEqualTo("This landmark has been flipped");
     }
 }
