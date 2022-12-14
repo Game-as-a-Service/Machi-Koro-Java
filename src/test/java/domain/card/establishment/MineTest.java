@@ -24,7 +24,7 @@ class MineTest {
         var player = game.getPlayers().get(0);
         var originalBalanceOfPlayer = player.getTotalCoin();
 
-        mine.takeEffect(game, player);
+        mine.takeEffect(game);
 
         var balanceOfBank = game.getBank().getTotalCoin();
         var balanceOfPlayer = player.getTotalCoin();

@@ -1,7 +1,6 @@
 package domain.card.establishment;
 
 import domain.Game;
-import domain.Player;
 import domain.card.CardType;
 
 import java.util.Set;
@@ -12,9 +11,9 @@ public class Mine extends Establishment {
     }
 
     @Override
-    public void takeEffect(Game game, Player player) {
+    public void takeEffect(Game game) {
         // 任何人骰出這個數字時，你都可以從銀行獲得5元。
         game.getBank().payCoin(5);
-        player.gainCoin(5);
+        getOwner().gainCoin(5);
     }
 }

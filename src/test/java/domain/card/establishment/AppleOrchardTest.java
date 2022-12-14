@@ -25,7 +25,7 @@ class AppleOrchardTest {
         var originalBalanceOfBank = game.getBank().getTotalCoin();
         var originalBalanceOfPlayer = player.getTotalCoin();
 
-        appleOrchard.takeEffect(game, player);
+        appleOrchard.takeEffect(game);
         
         var balanceOfBank = game.getBank().getTotalCoin();
         var balanceOfPlayer = player.getTotalCoin();

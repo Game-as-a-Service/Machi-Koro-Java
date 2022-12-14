@@ -26,7 +26,7 @@ class ConvenienceStoreTest {
         int originalBankTotalCoin = game.getBank().getTotalCoin();
 
         game.setTurnPlayer(player);
-        convenienceStore.takeEffect(game, player);
+        convenienceStore.takeEffect(game);
 
         assertThat(player.getTotalCoin()).isEqualTo(originalPlayerTotalCoin + 3);
         assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankTotalCoin - 3);

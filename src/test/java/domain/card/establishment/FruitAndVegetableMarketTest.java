@@ -30,7 +30,7 @@ class FruitAndVegetableMarketTest {
         int originalBankTotalCoin = game.getBank().getTotalCoin();
 
         game.setTurnPlayer(player);
-        fruitAndVegetableMarket.takeEffect(game, player);
+        fruitAndVegetableMarket.takeEffect(game);
 
         assertThat(player.getTotalCoin()).isEqualTo(originalPlayerTotalCoin + 4);
         assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankTotalCoin - 4);

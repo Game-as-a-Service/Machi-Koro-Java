@@ -2,7 +2,6 @@ package domain.card;
 
 import domain.Game;
 import domain.Player;
-
 import java.util.Objects;
 
 public abstract class Card {
@@ -11,6 +10,8 @@ public abstract class Card {
     private final int constructionCost;
     private final CardType cardType;
 
+    private Player owner;
+
     public Card(String name, int constructionCost, CardType cardType) {
         this.name = name;
         this.constructionCost = constructionCost;
@@ -18,9 +19,7 @@ public abstract class Card {
     }
 
 
-    public abstract void takeEffect(Game game, Player player);
-
-
+    public abstract void takeEffect(Game game);
 
     public String getName() {
         return name;
@@ -32,6 +31,14 @@ public abstract class Card {
 
     public CardType getCardType() {
         return cardType;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
     @Override

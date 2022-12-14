@@ -14,7 +14,7 @@ public class Landmark extends Card {
 
     @Override
 
-    public void takeEffect(Game game, Player player) {
+    public void takeEffect(Game game) {
 
     }
     public enum CardSide {

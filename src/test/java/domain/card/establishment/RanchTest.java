@@ -3,7 +3,6 @@ package domain.card.establishment;
 import domain.Bank;
 import domain.Game;
 import domain.Player;
-import domain.card.establishment.Ranch;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,9 +18,10 @@ public class RanchTest {
         };
         Player playerA = new Player("A");
         Ranch ranch = new Ranch();
+        playerA.addCardToHandCard(ranch);
 
         // when
-        ranch.takeEffect(game, playerA);
+        ranch.takeEffect(game);
 
         // then
         assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
