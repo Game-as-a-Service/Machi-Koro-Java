@@ -24,6 +24,7 @@ class ConvenienceStoreTest {
     void testTakeEffect() {
         int originalPlayerTotalCoin = player.getTotalCoin();
         int originalBankTotalCoin = game.getBank().getTotalCoin();
+        player.addCardToHandCard(convenienceStore);
 
         game.setTurnPlayer(player);
         convenienceStore.takeEffect(game);

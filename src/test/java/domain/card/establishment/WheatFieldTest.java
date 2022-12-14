@@ -3,34 +3,32 @@ package domain.card.establishment;
 import domain.Bank;
 import domain.Game;
 import domain.Player;
-import domain.card.establishment.WheatField;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WheatFieldTest {
-    private WheatField wheatField;
-    Player playerA;
-    Game game;
-    @BeforeEach
-    void setUp() {
-        wheatField = new WheatField();
-        playerA = new Player("A");
-    }
-
     @Test
     void testTakeEffect() {
-        game = new Game(new Bank(100), List.of(playerA), null, null);
-        game.setCurrentDicePoint(1);
+        // given
+        Game game = new Game(new Bank(100), null, null, null) {
+            @Override
+            public int getCurrentDicePoint() {
+                return 1;
+            }
+        };
+        Player playerA = new Player("A");
+        WheatField wheatField = new WheatField();
+        playerA.addCardToHandCard(wheatField);
 
-
+        // when
         wheatField.takeEffect(game);
 
-
-        assertEquals(4, game.getPlayers().get(0).getTotalCoin());
-        assertEquals(99, game.getBank().getTotalCoin());
+        // then
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
+        assertThat(playerA.getTotalCoin()).isEqualTo(4);
     }
 }

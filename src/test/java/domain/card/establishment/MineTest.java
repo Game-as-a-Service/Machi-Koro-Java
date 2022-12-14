@@ -23,6 +23,7 @@ class MineTest {
         var originalBalanceOfBank = game.getBank().getTotalCoin();
         var player = game.getPlayers().get(0);
         var originalBalanceOfPlayer = player.getTotalCoin();
+        player.addCardToHandCard(mine);
 
         mine.takeEffect(game);
 

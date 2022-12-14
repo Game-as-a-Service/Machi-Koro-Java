@@ -24,6 +24,7 @@ class ForestTest {
         var player = game.getPlayers().get(0);
         var originalBalanceOfPlayer = player.getTotalCoin();
         var originalBalanceOfBank = game.getBank().getTotalCoin();
+        player.addCardToHandCard(forest);
 
         forest.takeEffect(game);
 

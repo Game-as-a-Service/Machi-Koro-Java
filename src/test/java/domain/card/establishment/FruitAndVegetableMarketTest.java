@@ -28,6 +28,7 @@ class FruitAndVegetableMarketTest {
         player.addCardToHandCard(appleOrchard);
         int originalPlayerTotalCoin = player.getTotalCoin();
         int originalBankTotalCoin = game.getBank().getTotalCoin();
+        player.addCardToHandCard(fruitAndVegetableMarket);
 
         game.setTurnPlayer(player);
         fruitAndVegetableMarket.takeEffect(game);
