@@ -6,6 +6,7 @@ import domain.card.landmark.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Player {
     private final String name;
@@ -42,7 +43,7 @@ public class Player {
         addCardToHandCard(card);
     }
 
-    public void flipLandMark(Landmark card) throws LandMarkIsFlippedException {
+    public void flipLandMark(Landmark card) {
         int cost = card.getConstructionCost();
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
@@ -55,7 +56,7 @@ public class Player {
                     this.payCoin(cost);
                     return targetlandmark;
                 })
-                .orElseThrow(()->new LandMarkIsFlippedException("This landmark has been flipped"));
+                .orElseThrow(()-> new NoSuchElementException("This LandMark has been flipped"));
     }
 
     public void payCoin(int coin) {
