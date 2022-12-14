@@ -33,16 +33,31 @@ class PlayerTest {
     }
 
     @Test
-    void flipLandMark() {
-        //given
+    void flipBackLandMark() {
+        //given 玩家有背面的主題樂園
         var originalBalanceOfPlayer = player.getTotalCoin();
-        var landMark = new AmusementPark();
+        var amusementPark = new AmusementPark();
 
         //when
-        player.flipLandMark(landMark);
+        player.flipLandMark(amusementPark);
 
         //then
         assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - 16);
+        assertThat(player.getOwnedLandmark().get(2).getCardSide()).isEqualTo(Landmark.CardSide.FRONT);
+    }
+
+    @Test
+    void flipFrontLandMark() {
+        //given 玩家有正面的主題樂園
+        var originalBalanceOfPlayer = player.getTotalCoin();
+        var amusementPark = new AmusementPark();
+        player.getOwnedLandmark().get(2).setCardSide(Landmark.CardSide.FRONT);
+
+        //when
+        player.flipLandMark(amusementPark);
+
+        //then
+        assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer);
         assertThat(player.getOwnedLandmark().get(2).getCardSide()).isEqualTo(Landmark.CardSide.FRONT);
     }
 }
