@@ -19,6 +19,7 @@ public class Player {
     }
 
     public void addCardToHandCard(Establishment establishment) {
+        establishment.setOwner(this);
         this.ownedEstablishment.add(establishment);
     }
 
