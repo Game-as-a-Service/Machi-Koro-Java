@@ -15,9 +15,7 @@ public class AppleOrchard extends Establishment {
     @Override
     public void takeEffect(Game game, Player player) {
         // 任何人骰出這個數字時，你都可以從銀行獲得3元。
-        if (isDicePointToTakeEffect(game.getCurrentDicePoint())) {
-            game.getBank().payCoin(3);
-            player.gainCoin(3);
-        }
+        game.getBank().payCoin(3);
+        player.gainCoin(3);
     }
 }
