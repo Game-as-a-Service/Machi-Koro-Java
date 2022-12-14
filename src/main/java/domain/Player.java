@@ -42,19 +42,20 @@ public class Player {
         addCardToHandCard(card);
     }
 
-    public void flipLandMark(Landmark card) {
+    public void flipLandMark(Landmark card) throws LandMarkIsFlippedException {
         int cost = card.getConstructionCost();
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
         getOwnedLandmark().stream()
-                .filter(landmark -> landmark.equals(card))
-                .filter(landmark -> landmark.getCardSide().equals(Landmark.CardSide.BACK))
-                .forEach(landmark -> {
-                    landmark.setCardSide(Landmark.CardSide.FRONT);
+                .filter(landmark -> landmark.equals(card) && landmark.getCardSide().equals(Landmark.CardSide.BACK))
+                .findFirst()
+                .map(targetlandmark -> {
+                    targetlandmark.setCardSide(Landmark.CardSide.FRONT);
                     this.payCoin(cost);
-                });
-
+                    return targetlandmark;
+                })
+                .orElseThrow(()->new LandMarkIsFlippedException("This landmark has been flipped"));
     }
 
     public void payCoin(int coin) {
