@@ -4,10 +4,12 @@ import domain.Game;
 import domain.Player;
 import domain.card.CardType;
 
+import java.util.Set;
+
 public class ConvenienceStore extends Establishment {
 
     public ConvenienceStore() {
-        super("便利商店", 1, CardType.SHOP, 4, Industry.BLUE);
+        super("便利商店", 1, CardType.SHOP, Set.of(4), Industry.GREEN);
     }
 
     public void takeEffect(Game game, Player owner) {

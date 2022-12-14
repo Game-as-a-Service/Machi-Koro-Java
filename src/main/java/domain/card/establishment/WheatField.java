@@ -4,12 +4,14 @@ import domain.Game;
 import domain.Player;
 import domain.card.CardType;
 
+import java.util.Set;
+
 public class WheatField extends Establishment {
     private final int COIN_TO_PAY = 1;
     private final int COIN_TO_GAIN = 1;
 
     public WheatField() {
-        super("小麥田", 1, CardType.CROP, 1, Industry.BLUE);
+        super("小麥田", 1, CardType.CROP, Set.of(1), Industry.BLUE);
     }
 
     @Override
