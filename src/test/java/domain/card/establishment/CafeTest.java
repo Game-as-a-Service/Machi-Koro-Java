@@ -39,15 +39,15 @@ class CafeTest {
                 return 3;
             }
         };
-        int original_playerA_totalCoin = playerA.getTotalCoin();
-        int original_playerB_totalCoin = playerB.getTotalCoin();
+        int originalBalanceOfPlayerA = playerA.getTotalCoin();
+        int originalBalanceOfPlayerB = playerB.getTotalCoin();
 
         //when
         game.setTurnPlayer(playerA);
         cafe.takeEffect(game, playerB);
 
         //then
-        assertEquals(original_playerA_totalCoin - 1, playerA.getTotalCoin());
-        assertEquals(original_playerB_totalCoin + 1, playerB.getTotalCoin());
+        assertEquals(originalBalanceOfPlayerA - 1, playerA.getTotalCoin());
+        assertEquals(originalBalanceOfPlayerB + 1, playerB.getTotalCoin());
     }
 }

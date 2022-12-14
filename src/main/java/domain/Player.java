@@ -11,7 +11,7 @@ public class Player {
     private final String name;
     private int totalCoin = 3;
     private List<Establishment> ownedEstablishment = new ArrayList<>();
-    private List<Landmark> ownedLandmark = new ArrayList<>(Arrays.asList(new TrainStation(),new ShoppingMall(),new AmusementPark(),new RadioTower())); //FIXME: Do we need to initialize?
+    private List<Landmark> ownedLandmark = new ArrayList<>(Arrays.asList(new TrainStation(), new ShoppingMall(), new AmusementPark(), new RadioTower())); //FIXME: Do we need to initialize?
 
     public Player(String name) {
         this.name = name;
@@ -47,10 +47,13 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        this.payCoin(cost);
         getOwnedLandmark().stream()
                 .filter(landmark -> landmark.equals(card))
-                .forEach(landmark -> landmark.setCardSide(Landmark.CardSide.FRONT));
+                .filter(landmark -> landmark.getCardSide().equals(Landmark.CardSide.BACK))
+                .forEach(landmark -> {
+                    landmark.setCardSide(Landmark.CardSide.FRONT);
+                    this.payCoin(cost);
+                });
 
     }
 
