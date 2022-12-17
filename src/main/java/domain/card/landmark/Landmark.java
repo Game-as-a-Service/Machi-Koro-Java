@@ -16,10 +16,16 @@ public class Landmark extends Card {
 
     public void takeEffect(Game game, Player player) {
 
-
     }
-
     public enum CardSide {
         FRONT, BACK
+    }
+
+    public CardSide getCardSide() {
+        return cardSide;
+    }
+
+    public void setCardSide(CardSide cardSide) {
+        this.cardSide = cardSide;
     }
 }
