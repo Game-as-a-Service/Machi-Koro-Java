@@ -15,7 +15,7 @@ public class Stadium extends Establishment {
     @Override
     public void takeEffect(Game game, Player owner) {
         // 當你自己骰出這個數字時，每位玩家都必須給你2元。
-        if (isDicePointToTakeEffect(game.getCurrentDicePoint()) && isTurnPlayer(game, owner)) {
+        if (isTurnPlayer(game, owner)) {
             var otherPlayers = game.getPlayers()
                     .stream()
                     .filter(player -> !player.equals(owner) && player.getTotalCoin() >= 0)
