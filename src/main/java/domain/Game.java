@@ -34,6 +34,8 @@ public class Game {
         this.turnPlayer = turnPlayer;
     }
 
+    public boolean isTurnPlayer(Player player) {return this.getTurnPlayer().equals(player);}
+
     public void setCurrentDicePoint(int currentDicePoint) {
         this.currentDicePoint = currentDicePoint;
     }
@@ -61,10 +63,5 @@ public class Game {
     public List<Player> getPlayers() {
         return players;
     }
-
-    public boolean isTurnPlayer(Player player) {
-        return this.getTurnPlayer().equals(player);
-    }
-
 
 }
