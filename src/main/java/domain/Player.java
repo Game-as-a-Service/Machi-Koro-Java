@@ -19,6 +19,7 @@ public class Player {
     }
 
     public void addCardToHandCard(Establishment establishment) {
+        establishment.setOwner(this);
         this.ownedEstablishment.add(establishment);
     }
 
@@ -68,7 +69,7 @@ public class Player {
     }
 
     public void ownedEstablishmentTakeEffect(Game game) {
-        ownedEstablishment.forEach(establishment -> establishment.doTakeEffect(game, this));
+        ownedEstablishment.forEach(establishment -> establishment.doTakeEffect(game));
     }
 
     private boolean isBalanceEnough(int cost) {
