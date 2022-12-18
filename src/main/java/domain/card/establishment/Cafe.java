@@ -1,7 +1,6 @@
 package domain.card.establishment;
 
 import domain.Game;
-import domain.Player;
 import domain.card.CardType;
 
 import java.util.Set;
@@ -15,11 +14,11 @@ public class Cafe extends Establishment {
     }
 
     @Override
-    public void doTakeEffect(Game game, Player player) {
+    public void doTakeEffect(Game game) {
         // 如果別人骰出這個數字，他必須給你1元
-        if (!game.isTurnPlayer(player) && playerHasEnoughCoin(game)) {
+        if (!game.isTurnPlayer(getOwner()) && playerHasEnoughCoin(game)) {
             game.getTurnPlayer().payCoin(COIN_TO_PAY);
-            player.gainCoin(COIN_TO_GAIN);
+            getOwner().gainCoin(COIN_TO_GAIN);
         }
     }
     private boolean playerHasEnoughCoin(Game game) {

@@ -114,9 +114,9 @@ public class DistributeResourcesTest {
                     "then A、B、C玩家從玩家D各獲得1元，玩家D少3元 (A,B,C玩家 coin = 4,D 玩家 coin = 0)")
     void playerABC_has_OneCafe() {
         // given
-        playerA.addCardToHandCard(cafe);
-        playerB.addCardToHandCard(cafe);
-        playerC.addCardToHandCard(cafe);
+        playerA.addCardToHandCard(new Cafe());
+        playerB.addCardToHandCard(new Cafe());
+        playerC.addCardToHandCard(new Cafe());
 
         // when
         game.setTurnPlayer(playerD);
@@ -138,8 +138,8 @@ public class DistributeResourcesTest {
     void playerBC_has_OneCafe() {
         // given
         playerD.gainCoin(1);
-        playerB.addCardToHandCard(cafe);
-        playerC.addCardToHandCard(cafe);
+        playerB.addCardToHandCard(new Cafe());
+        playerC.addCardToHandCard(new Cafe());
 
         // when
         game.setTurnPlayer(playerD);

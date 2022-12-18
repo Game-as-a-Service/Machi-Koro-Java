@@ -1,7 +1,6 @@
 package domain.card.landmark;
 
 import domain.Game;
-import domain.Player;
 import domain.card.Card;
 import domain.card.CardType;
 
@@ -14,7 +13,7 @@ public class Landmark extends Card {
 
     @Override
 
-    public void takeEffect(Game game, Player player) {
+    public void takeEffect(Game game) {
 
     }
     public enum CardSide {

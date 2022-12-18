@@ -28,9 +28,10 @@ class FurnitureFactoryTest {
         player.getOwnedEstablishment().addAll(List.of(new Forest(), new Mine()));
         int originalBalanceOfBank = game.getBank().getTotalCoin();
         int originalBalanceOfPlayer = player.getTotalCoin();
+        player.addCardToHandCard(furnitureFactory);
 
         game.setTurnPlayer(player);
-        furnitureFactory.takeEffect(game, player);
+        furnitureFactory.takeEffect(game);
 
         int balanceOfBank = game.getBank().getTotalCoin();
         int balanceOfPlayer = player.getTotalCoin();
@@ -43,9 +44,10 @@ class FurnitureFactoryTest {
     void takeEffectWithoutNatureResources() {
         int originalBalanceOfBank = game.getBank().getTotalCoin();
         int originalBalanceOfPlayer = player.getTotalCoin();
+        player.addCardToHandCard(furnitureFactory);
 
         game.setTurnPlayer(player);
-        furnitureFactory.takeEffect(game, player);
+        furnitureFactory.takeEffect(game);
 
         int balanceOfBank = game.getBank().getTotalCoin();
         int balanceOfPlayer = player.getTotalCoin();

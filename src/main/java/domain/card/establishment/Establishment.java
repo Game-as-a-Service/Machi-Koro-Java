@@ -1,7 +1,6 @@
 package domain.card.establishment;
 
 import domain.Game;
-import domain.Player;
 import domain.card.Card;
 import domain.card.CardType;
 
@@ -18,13 +17,13 @@ public abstract class Establishment extends Card {
     }
 
     @Override
-    public void takeEffect(Game game, Player player) {
+    public void takeEffect(Game game) {
         if (isDicePointToTakeEffect(game.getCurrentDicePoint())) {
-            doTakeEffect(game, player);
+            doTakeEffect(game);
         }
     }
 
-    protected abstract void doTakeEffect(Game game, Player player);
+    protected abstract void doTakeEffect(Game game);
 
     public Set<Integer> getDiceRollNeededToActivateEffect() {
         return diceRollNeededToActivateEffect;
