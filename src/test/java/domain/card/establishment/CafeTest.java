@@ -40,6 +40,7 @@ class CafeTest {
         };
         int originalBalanceOfPlayerA = playerA.getTotalCoin();
         int originalBalanceOfPlayerB = playerB.getTotalCoin();
+        playerB.addCardToHandCard(cafe);
 
         //when
         game.setTurnPlayer(playerA);
