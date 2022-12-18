@@ -24,7 +24,7 @@ public abstract class Establishment extends Card {
         }
     }
 
-    public abstract void doTakeEffect(Game game, Player player);
+    protected abstract void doTakeEffect(Game game, Player player);
 
     public Set<Integer> getDiceRollNeededToActivateEffect() {
         return diceRollNeededToActivateEffect;
