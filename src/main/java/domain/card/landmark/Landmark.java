@@ -1,7 +1,6 @@
 package domain.card.landmark;
 
 import domain.Game;
-import domain.Player;
 import domain.card.Card;
 import domain.card.CardType;
 

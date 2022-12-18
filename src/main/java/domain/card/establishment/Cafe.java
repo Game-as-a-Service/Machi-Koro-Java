@@ -14,7 +14,7 @@ public class Cafe extends Establishment {
     }
 
     @Override
-    public void takeEffect(Game game) {
+    protected void doTakeEffect(Game game) {
         // 如果別人骰出這個數字，他必須給你1元
         if (!game.isTurnPlayer(getOwner()) && playerHasEnoughCoin(game)) {
             game.getTurnPlayer().payCoin(COIN_TO_PAY);

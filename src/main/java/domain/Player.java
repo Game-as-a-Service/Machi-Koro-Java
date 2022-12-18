@@ -69,7 +69,7 @@ public class Player {
     }
 
     public void ownedEstablishmentTakeEffect(Game game) {
-        ownedEstablishment.forEach(establishment -> establishment.doTakeEffect(game));
+        ownedEstablishment.forEach(establishment -> establishment.takeEffect(game));
     }
 
     private boolean isBalanceEnough(int cost) {
