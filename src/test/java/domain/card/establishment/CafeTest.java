@@ -1,7 +1,6 @@
 package domain.card.establishment;
 
 import domain.Bank;
-import domain.card.establishment.Cafe;
 import domain.Game;
 import domain.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,10 +40,11 @@ class CafeTest {
         };
         int originalBalanceOfPlayerA = playerA.getTotalCoin();
         int originalBalanceOfPlayerB = playerB.getTotalCoin();
+        playerB.addCardToHandCard(cafe);
 
         //when
         game.setTurnPlayer(playerA);
-        cafe.takeEffect(game, playerB);
+        cafe.takeEffect(game);
 
         //then
         assertEquals(originalBalanceOfPlayerA - 1, playerA.getTotalCoin());

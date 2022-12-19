@@ -21,11 +21,12 @@ class AppleOrchardTest {
     void takeEffect() {
         game = new TestGameBuilder().setFixedDicePoint(10).setPlayers(1).build();
         var player = game.getPlayers().get(0);
+        player.addCardToHandCard(appleOrchard);
 
         var originalBalanceOfBank = game.getBank().getTotalCoin();
         var originalBalanceOfPlayer = player.getTotalCoin();
 
-        appleOrchard.takeEffect(game, player);
+        appleOrchard.takeEffect(game);
         
         var balanceOfBank = game.getBank().getTotalCoin();
         var balanceOfPlayer = player.getTotalCoin();

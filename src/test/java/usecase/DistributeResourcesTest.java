@@ -114,9 +114,9 @@ public class DistributeResourcesTest {
                     "then A、B、C玩家從玩家D各獲得1元，玩家D少3元 (A,B,C玩家 coin = 4,D 玩家 coin = 0)")
     void playerABC_has_OneCafe() {
         // given
-        playerA.addCardToHandCard(cafe);
-        playerB.addCardToHandCard(cafe);
-        playerC.addCardToHandCard(cafe);
+        playerA.addCardToHandCard(new Cafe());
+        playerB.addCardToHandCard(new Cafe());
+        playerC.addCardToHandCard(new Cafe());
 
         // when
         game.setTurnPlayer(playerD);
@@ -138,8 +138,8 @@ public class DistributeResourcesTest {
     void playerBC_has_OneCafe() {
         // given
         playerD.gainCoin(1);
-        playerB.addCardToHandCard(cafe);
-        playerC.addCardToHandCard(cafe);
+        playerB.addCardToHandCard(new Cafe());
+        playerC.addCardToHandCard(new Cafe());
 
         // when
         game.setTurnPlayer(playerD);
@@ -186,6 +186,26 @@ public class DistributeResourcesTest {
         // then
         assertThat(game.getBank().getTotalCoin()).isEqualTo(97);
         assertThat(playerA.getTotalCoin()).isEqualTo(6);
+    }
+
+    @Test
+    @DisplayName(
+            "given 有銀行(100 coin)、A 玩家(3 coin)，A 玩家手牌裡有便利商店 " +
+                    "when A 玩家擲骰子是1時，系統分配資源後 " +
+                    "then 無發生任何影響(銀行: 100 coin、A 玩家: 3 coin)")
+    void test() {
+        // given
+        playerA.addCardToHandCard(new ConvenienceStore());
+        int originalBankTotalCoin = game.getBank().getTotalCoin();
+        int originalPlayerTotalCoin = playerA.getTotalCoin();
+
+        // when
+        game.setTurnPlayer(playerA);
+        game.distributeResources(1);
+
+        // then
+        assertThat(originalBankTotalCoin).isEqualTo(game.getBank().getTotalCoin());
+        assertThat(originalPlayerTotalCoin).isEqualTo(playerA.getTotalCoin());
     }
 
     private void setDicePointAndTakeEffect(int point, Game game) {
