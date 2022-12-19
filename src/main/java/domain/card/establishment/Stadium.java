@@ -15,10 +15,7 @@ public class Stadium extends Establishment {
     protected void doTakeEffect(Game game) {
         var owner = getOwner();
         if (game.isTurnPlayer(owner)) {
-            var otherPlayers = game.getPlayers()
-                    .stream()
-                    .filter(player -> !player.equals(owner) && player.getTotalCoin() >= 0)
-                    .toList();
+            var otherPlayers = game.getOtherPlayers(owner).stream().filter(player -> player.getTotalCoin() >= 0).toList();
 
             var totalCoinShouldBeGain = otherPlayers.stream().reduce(
                     0,
