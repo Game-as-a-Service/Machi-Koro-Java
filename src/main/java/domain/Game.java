@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -73,4 +74,13 @@ public class Game {
                 .toList();
     }
 
+    public Marketplace getMarketplace() {
+        return marketplace;
+    }
+
+    public List<Dice> getDice() {
+        dices.add(new Dice());
+        dices.add(new Dice());
+        return dices;
+    }
 }
