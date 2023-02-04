@@ -210,6 +210,11 @@ public class DistributeResourcesTest {
         assertThat(originalPlayerTotalCoin).isEqualTo(playerA.getTotalCoin());
     }
     @Test
+    @DisplayName(
+            "given 當前每位玩家餘額:A玩家(0 coin)、B玩家(0 coin)、C玩家(2 coins)、D玩家(4 coins)，目前A玩家擁有一張體育館" +
+                    "when 輪到玩家A且骰到數字6" +
+                    "then B玩家因為餘額為0所以未支付任何金額給A玩家，其餘玩家各支付 2 coins 給A玩家"
+    )
     void testPaycoin_playerA_has_Stadium() {
         //given
         playerA.payCoin(3);
