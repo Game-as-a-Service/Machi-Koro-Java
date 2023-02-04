@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Player {
+
+
     private final String name;
     private int totalCoin = 3;
     private List<Establishment> ownedEstablishment = new ArrayList<>();
@@ -57,7 +59,19 @@ public class Player {
                     this.payCoin(cost);
                     return targetlandmark;
                 })
-                .orElseThrow(()-> new NoSuchElementException("This LandMark has been flipped"));
+                .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));
+    }
+
+    public Integer checkEffectMoneyEnough(int effectMoney) {
+        Integer actualCoin;
+        if (effectMoney > this.getTotalCoin()) {
+            actualCoin = this.getTotalCoin();
+            this.totalCoin = 0;
+        } else {
+            actualCoin = effectMoney;
+            this.payCoin(effectMoney);
+        }
+        return actualCoin;
     }
 
     public void payCoin(int coin) {
@@ -74,5 +88,9 @@ public class Player {
 
     private boolean isBalanceEnough(int cost) {
         return getTotalCoin() >= cost;
+    }
+
+    public String getName() {
+        return name;
     }
 }

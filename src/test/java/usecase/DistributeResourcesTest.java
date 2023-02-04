@@ -19,6 +19,7 @@ public class DistributeResourcesTest {
     private Establishment wheatField;
     private Establishment cafe;
     private Game game;
+    private Establishment stadium;
 
     @BeforeEach
     void setUP() {
@@ -28,6 +29,7 @@ public class DistributeResourcesTest {
         playerD = new Player("D");
         wheatField = new WheatField();
         cafe = new Cafe();
+        stadium = new Stadium();
         game = new Game(new Bank(100), List.of(playerA, playerB, playerC, playerD), List.of(new Dice()), new Marketplace());
     }
 
@@ -207,7 +209,24 @@ public class DistributeResourcesTest {
         assertThat(originalBankTotalCoin).isEqualTo(game.getBank().getTotalCoin());
         assertThat(originalPlayerTotalCoin).isEqualTo(playerA.getTotalCoin());
     }
+    @Test
+    void testPaycoin_playerA_has_Stadium() {
+        //given
+        playerA.payCoin(3);
+        playerB.payCoin(3);
+        playerC.payCoin(1);
+        playerD.gainCoin(1);
 
+        setPlayerCardAndNumber(playerA, stadium, 1);
+        //when
+        game.setTurnPlayer(playerA);
+        setDicePointAndTakeEffect(6, game);
+        //then
+        assertEquals(4, playerA.getTotalCoin());
+        assertEquals(0, playerB.getTotalCoin());
+        assertEquals(0, playerC.getTotalCoin());
+        assertEquals(2, playerD.getTotalCoin());
+    }
     private void setDicePointAndTakeEffect(int point, Game game) {
         game.setCurrentDicePoint(point);
         game.distributeResources(game.getCurrentDicePoint());
