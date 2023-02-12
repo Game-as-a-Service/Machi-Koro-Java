@@ -6,6 +6,6 @@ import domain.card.landmark.Landmark;
 public class BusinessCenter extends Landmark {
 
     public BusinessCenter() {
-        super("°Ó·~¤¤¤ß", 8, CardType.MAJOR_ESTABLISHMENT);
+        super("å•†æ¥­ä¸­å¿ƒ", 8, CardType.MAJOR_ESTABLISHMENT);
     }
 }
