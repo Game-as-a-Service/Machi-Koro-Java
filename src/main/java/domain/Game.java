@@ -5,7 +5,7 @@ import java.util.List;
 public class Game {
     private final Bank bank;
     private final List<Player> players;
-    private final List<Dice> dices;
+    private Integer dices;
     private int currentDicePoint;
     private Player turnPlayer;
     private final Marketplace marketplace;
@@ -13,12 +13,12 @@ public class Game {
     public Game(Bank bank, List<Player> players, List<Dice> dices, Marketplace marketplace) {
         this.bank = bank;
         this.players = players;
-        this.dices = dices;
+//        this.dices = dices;
         this.marketplace = marketplace;
     }
 
-    public void distributeResources(int dicePoint) {
-        this.setCurrentDicePoint(dicePoint);
+    public void distributeResources(List<Integer> twoDicePoint) {
+        this.setCurrentDicePoint(twoDicePoint);
         this.getPlayers().forEach(player -> player.ownedEstablishmentTakeEffect(this));
     }
 
@@ -38,14 +38,21 @@ public class Game {
         return this.getTurnPlayer().equals(player);
     }
 
-    public void setCurrentDicePoint(int currentDicePoint) {
-        this.currentDicePoint = currentDicePoint;
+    public void setCurrentDicePoint(List<Integer> twoDicePoint) {
+        int sumDice = twoDicePoint.stream().reduce(Integer::sum).orElse(0);
+        this.currentDicePoint = sumDice;
     }
 
     public Bank getBank() {
         return bank;
     }
+    public void setChooseNumberOfDice(int dices) {
+        this.dices = dices;
+    }
 
+    public int getChooseNumberOfDice() {
+        return this.dices;
+    }
     public void setUp() {
 
     }

@@ -2,6 +2,8 @@ package usecase;
 
 import domain.*;
 import domain.card.establishment.*;
+import domain.card.landmark.Landmark;
+import domain.card.landmark.TrainStation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,19 @@ public class DistributeResourcesTest {
     private Player playerC;
     private Player playerD;
     private Establishment wheatField;
+    private Establishment bakery;
+    private Establishment bakery1;
+    private Establishment bakery2;
     private Establishment cafe;
+    private Establishment cafe1;
+    private Establishment cafe2;
+    private Establishment mine1;
+    private Establishment mine2;
+    private Establishment furnitureFactory1;
+    private Establishment furnitureFactory2;
+    private Establishment convenienceStore;
+    private Landmark trainstation;
+    private Landmark shoppingMall;
     private Game game;
 
     @BeforeEach
@@ -27,6 +41,9 @@ public class DistributeResourcesTest {
         playerC = new Player("C");
         playerD = new Player("D");
         wheatField = new WheatField();
+        trainstation = new TrainStation();
+        convenienceStore = new ConvenienceStore();
+        bakery = new Bakery();
         cafe = new Cafe();
         game = new Game(new Bank(100), List.of(playerA, playerB, playerC, playerD), List.of(new Dice()), new Marketplace());
     }
@@ -163,7 +180,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerB);
-        game.distributeResources(2);
+        game.distributeResources(List.of(2));
 
         // then
         assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
@@ -181,7 +198,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        game.distributeResources(4);
+        game.distributeResources(List.of(4));
 
         // then
         assertThat(game.getBank().getTotalCoin()).isEqualTo(97);
@@ -201,16 +218,81 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        game.distributeResources(1);
+        game.distributeResources(List.of(1));
 
         // then
         assertThat(originalBankTotalCoin).isEqualTo(game.getBank().getTotalCoin());
         assertThat(originalPlayerTotalCoin).isEqualTo(playerA.getTotalCoin());
     }
 
+    @Test
+    @DisplayName("given B玩家(有小麥田、麵包店、便利商店、火車站、餘額6 coins)" +
+            "when 該回合輪到B玩家且B玩家有火車站決定本回合要用一顆骰子" +
+            "then 發動骰子數字對應的卡牌效果"
+    )
+    void test_playerB_has_TrainStation() {
+        //given
+        playerB.gainCoin(7);//創造B玩家餘額 6 coins 的情境(3+7-4)
+        playerB.flipLandMark(trainstation);
+        playerB.addCardToHandCard(wheatField);//任何人骰出這個數字時，你都可以從銀行獲得1元。
+        playerB.addCardToHandCard(bakery);//當你自己骰出這個數字時，可以從銀行獲得1元。
+        playerB.addCardToHandCard(convenienceStore);// 當你自己骰出這個數字時，可以從銀行獲得3元。
+        game.setTurnPlayer(playerB);
+        //when
+        game.distributeResources(List.of(4));//B玩家決定用一顆骰子
+        //then
+        assertEquals(9, playerB.getTotalCoin());//6+3
+    }
+
+    @Test
+    @DisplayName("given A玩家(有小麥田、麵包店、礦場、火車站，餘額7coins)、B玩家(有礦場 餘額4coins)" +
+            "when 該回合輪到A玩家(有火車站)並決定只用兩個骰子" +
+            "then 發動骰子數字對應的卡牌效果")
+    void test_playerA_has_Trainstation_useTwoDice1() {
+        mine1 = new Mine();
+        mine2 = new Mine();
+        //given
+        playerA.gainCoin(8);//創造A玩家餘額 7 coins 的情境(初始3+8-4(買火車站))
+        playerA.flipLandMark(trainstation);
+        playerA.addCardToHandCard(wheatField);//任何人骰出這個數字時，你都可以從銀行獲得1元。
+        playerA.addCardToHandCard(bakery);//當你自己骰出這個數字時，可以從銀行獲得1元。
+        playerA.addCardToHandCard(mine1);//任何人骰出這個數字時，你都可以從銀行獲得5元。
+        playerB.gainCoin(1);//創造B玩家餘額4coins 的情境(初始3+1)
+        playerB.addCardToHandCard(mine2);
+        game.setTurnPlayer(playerA);
+
+        //when A玩家決定用兩顆骰子
+        //then
+        game.distributeResources(List.of(5,4));
+        assertEquals(12, playerA.getTotalCoin());//7+5
+        assertEquals(9, playerB.getTotalCoin());//4+5
+    }
+
+
+    @Test
+    @DisplayName("given A玩家(有小麥田、麵包店、礦場、火車站，餘額7coins)、B玩家(有礦場 餘額4coins)" +
+            "when 該回合輪到A玩家(有火車站)並決定用兩個骰子" +
+            "then 發動骰子數字對應的卡牌效果")
+    void test_playerA_has_Trainstation_useTwoDice2() {
+        mine1 = new Mine();
+        mine2 = new Mine();
+        //given
+        playerA.gainCoin(8);//創造A玩家餘額 7 coins 的情境(初始3+8-4(買火車站))
+        playerA.flipLandMark(trainstation);
+        playerA.addCardToHandCard(wheatField);//任何人骰出這個數字時，你都可以從銀行獲得1元。
+        playerA.addCardToHandCard(bakery);//當你自己骰出這個數字時，可以從銀行獲得1元。
+        playerA.addCardToHandCard(mine1);//任何人骰出這個數字時，你都可以從銀行獲得5元。
+        playerB.gainCoin(1);//創造B玩家餘額4coins 的情境(初始3+1)
+        playerB.addCardToHandCard(mine2);
+        //when
+        game.setTurnPlayer(playerA);
+        game.distributeResources(List.of(6, 5));//點數11 沒有發動任何對應的卡牌效果
+        assertEquals(7, playerA.getTotalCoin());//7
+        assertEquals(4, playerB.getTotalCoin());//4
+    }
     private void setDicePointAndTakeEffect(int point, Game game) {
-        game.setCurrentDicePoint(point);
-        game.distributeResources(game.getCurrentDicePoint());
+        game.setCurrentDicePoint(List.of(point));
+        game.distributeResources(List.of(point));
     }
 
     private void setPlayerCardAndNumber(Player player, Establishment establishment, int times) {

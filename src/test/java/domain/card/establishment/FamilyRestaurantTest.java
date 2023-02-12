@@ -34,7 +34,7 @@ public class FamilyRestaurantTest {
 
         game.setTurnPlayer(playerA);
 
-        game.setCurrentDicePoint(10);
+        game.setCurrentDicePoint(List.of(10));
         familyRestaurant.doTakeEffect(game);
         assertEquals(1,playerA.getTotalCoin());
         assertEquals(5,playerB.getTotalCoin());
