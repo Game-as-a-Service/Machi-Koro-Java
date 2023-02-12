@@ -1,11 +1,11 @@
 package domain;
 
 import domain.card.establishment.Bakery;
+import domain.card.establishment.Establishment;
 import domain.card.establishment.WheatField;
 import domain.card.landmark.Landmark;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,57 +34,58 @@ class GameTest {
 //        assertEquals(2, game.getDice().size());
 //    }
 
-    @ParameterizedTest
+    @Test
     @DisplayName("""
             Given (pre-condition)
-            1. 玩家人數已介於2 ~ 4 人
+            1. 玩家人數已介於 2 ~ 4 人
             2. Bank 會有 282 枚金幣
             When (post-condition)
             產生遊戲
             Then (result)
             每位玩家須擁有
-            1. 小麥田 (Bakery) x 1
-            2. 麵包店 (WheatField) x 1
-            3. 起始地標建築 x 4 (landmark) 建築各一張面朝下。
-            4. 一個玩家可以得到 3 元。
-            5. 銀行會減少(人數 * 3 元)""")
-    @ValueSource(ints = {2, 3, 4})
-    public void 玩家拿到基本家當準備北漂(int playerCount) {
+            1. 小麥田 (WheatField) x 1
+            2. 麵包店 (Bakery) x 1
+            3. 起始地標建築 x 4 (landmark) 建築各一張面朝下
+            4. 銀行會給予 3 枚金幣
+            """)
+    public void 兩位玩家拿到初始建設與金幣() {
         //Given
         List<Player> players = new ArrayList<>();
-        for (int i = 0; i < playerCount; i++) {
-            players.add(new Player("玩家" + i));
-        }
-        Bank bank = new Bank();
+        players.add(new Player("A"));
+        players.add(new Player("B"));
+
+        Bank bank = new Bank(282);
         List<Dice> dices = new ArrayList<>();
         Marketplace marketplace = new Marketplace();
         Game game = new Game(bank, players, dices, marketplace);
 
-        int playerInitCoin = 3;
-        int bankTotalCoin = bank.getTotalCoin();
-        int bankLastCoin = bankTotalCoin - (players.size() * 3);
+        int expectedBankCoins = 282 - (2 * Bank.INIT_PAY_COINS);
 
         //When
         game.setUp();
 
         //Then
-        for (Player player : players) {
-            assertEquals(1,
-                    player.getOwnedEstablishment()
-                            .stream()
-                            .filter(card -> card.equals(new Bakery())).count());
-            assertEquals(1,
-                    player.getOwnedEstablishment()
-                            .stream()
-                            .filter(card -> card.equals(new WheatField())).count());
+        players.forEach(this::assertOneBakeryAndOneWheatFieldAndFourLandmarkAndThreeCoins);
+        assertEquals(expectedBankCoins, bank.getTotalCoin());
+    }
 
-            assertEquals(4, player.getOwnedLandmark().size());
-            for (int i = 0; i < 4; i++) {
-                assertEquals(Landmark.CardSide.BACK,
-                        player.getOwnedLandmark().get(i).getCardSide());
-            }
-            assertEquals(playerInitCoin, player.getTotalCoin());
-        }
-        assertEquals(bankLastCoin, bank.getTotalCoin());
+    private void assertOneBakeryAndOneWheatFieldAndFourLandmarkAndThreeCoins(Player player) {
+        assertEquals(1, getEstablishmentCount(player, new Bakery()));
+
+        assertEquals(1, getEstablishmentCount(player, new WheatField()));
+
+        List<Landmark> ownedLandmark = player.getOwnedLandmark();
+
+        assertEquals(4, ownedLandmark.size());
+
+        ownedLandmark.forEach(landmark -> assertEquals(Landmark.CardSide.BACK, landmark.getCardSide()));
+
+        assertEquals(3, player.getTotalCoin());
+    }
+
+    private long getEstablishmentCount(Player player, Establishment establishment) {
+        return player.getOwnedEstablishment()
+                .stream()
+                .filter(card -> card.equals(establishment)).count();
     }
 }

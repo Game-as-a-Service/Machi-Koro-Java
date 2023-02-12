@@ -1,8 +1,5 @@
 package domain;
 
-import domain.card.establishment.Bakery;
-import domain.card.establishment.WheatField;
-
 import java.util.List;
 
 public class Game {
@@ -50,18 +47,11 @@ public class Game {
     }
 
     public void setUp() {
-        int totalPayCoin = 0;
 
         for (Player player : players) {
-            player.getOwnedLandmark();
-            var establishment = player.getOwnedEstablishment();
-            establishment.add(new Bakery());
-            establishment.add(new WheatField());
-
-            totalPayCoin += player.getTotalCoin();
+            player.gainCoin(3);
+            bank.payCoin(3);
         }
-
-        bank.payCoin(totalPayCoin);
     }
 
     public void start() {
