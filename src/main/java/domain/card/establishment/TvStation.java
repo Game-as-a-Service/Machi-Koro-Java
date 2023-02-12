@@ -5,6 +5,6 @@ import domain.card.landmark.Landmark;
 
 public class TvStation extends Landmark {
     public TvStation() {
-        super("¹qµø¥x", 7, CardType.MAJOR_ESTABLISHMENT);
+        super("é›»è¦–å°", 7, CardType.MAJOR_ESTABLISHMENT);
     }
 }
