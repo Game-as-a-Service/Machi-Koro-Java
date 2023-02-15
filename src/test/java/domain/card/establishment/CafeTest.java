@@ -34,7 +34,7 @@ class CafeTest {
         //given
         game = new Game(new Bank(100), List.of(playerA, playerB), null, null) {
             @Override
-            public int getCurrentDicePoint() {
+            public Integer getCurrentDicePoint() {
                 return 3;
             }
         };

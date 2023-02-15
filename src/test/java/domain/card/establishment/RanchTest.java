@@ -12,7 +12,7 @@ public class RanchTest {
         // given
         Game game = new Game(new Bank(100), null, null, null) {
             @Override
-            public int getCurrentDicePoint() {
+            public Integer getCurrentDicePoint() {
                 return 2;
             }
         };

@@ -2,6 +2,9 @@ package usecase;
 
 import domain.*;
 import domain.card.establishment.*;
+import domain.card.landmark.Landmark;
+import domain.card.landmark.ShoppingMall;
+import domain.card.landmark.TrainStation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +20,19 @@ public class DistributeResourcesTest {
     private Player playerC;
     private Player playerD;
     private Establishment wheatField;
+    private Establishment bakery;
+    private Establishment bakery1;
+    private Establishment bakery2;
     private Establishment cafe;
+    private Establishment cafe1;
+    private Establishment cafe2;
+    private Establishment mine1;
+    private Establishment mine2;
+    private Establishment furnitureFactory1;
+    private Establishment furnitureFactory2;
+    private Establishment convenienceStore;
+    private Landmark trainstation;
+    private Landmark shoppingMall;
     private Game game;
 
     @BeforeEach
@@ -26,6 +41,8 @@ public class DistributeResourcesTest {
         playerB = new Player("B");
         playerC = new Player("C");
         playerD = new Player("D");
+        trainstation = new TrainStation();
+        shoppingMall = new ShoppingMall();
         wheatField = new WheatField();
         cafe = new Cafe();
         game = new Game(new Bank(100), List.of(playerA, playerB, playerC, playerD), List.of(new Dice()), new Marketplace());
@@ -163,7 +180,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerB);
-        game.distributeResources(2);
+        game.distributeResources(List.of(2));
 
         // then
         assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
@@ -181,7 +198,7 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        game.distributeResources(4);
+        game.distributeResources(List.of(4));
 
         // then
         assertThat(game.getBank().getTotalCoin()).isEqualTo(97);
@@ -201,16 +218,71 @@ public class DistributeResourcesTest {
 
         // when
         game.setTurnPlayer(playerA);
-        game.distributeResources(1);
+        game.distributeResources(List.of(1));
 
         // then
         assertThat(originalBankTotalCoin).isEqualTo(game.getBank().getTotalCoin());
         assertThat(originalPlayerTotalCoin).isEqualTo(playerA.getTotalCoin());
     }
 
+    @Test
+    @DisplayName("given A玩家(有麵包店、咖啡館、購物中心，餘額15coins)、B玩家(有麵包店、咖啡館 餘額3coins)" +
+            "when 該回合輪到B玩家且B玩家骰到3" +
+            "then A玩家除了咖啡館獲得的收入外，還可以再多得到一塊錢")
+    void playerA_has_shoppingMall_setTurnplayerB_red() {
+        bakery1 = new Bakery();
+        bakery2 = new Bakery();
+        cafe1 = new Cafe();
+        cafe2 = new Cafe();
+        //--A玩家目前有 green麵包店23、red咖啡館3、購物中心
+        playerA.addCardToHandCard(bakery1);//當你自己骰出這個數字時，可以從銀行獲得1元。
+        playerA.addCardToHandCard(cafe1);//如果別人骰出這個數字，他必須給你1元。
+        playerA.gainCoin(12);//A目前餘額:15
+        playerA.flipLandMark(playerA.getOwnedLandmark().get(1));//A目前餘額:5 //你的每間(紅色卡牌)和(綠色卡牌)類型的建築獲得收入時,都可以額外再多得到1元。
+        //--B玩家目前有 麵包店、咖啡館
+        playerB.addCardToHandCard(bakery2);//當你自己骰出這個數字時，可以從銀行獲得1元。
+        playerB.addCardToHandCard(cafe2);//如果別人骰出這個數字，他必須給你1元。
+
+        //when 輪到B玩家且骰到3
+        game.setTurnPlayer(playerB);
+        game.distributeResources(List.of(3));
+        assertEquals(7, playerA.getTotalCoin());//5+1(咖啡館)+1(購物中心)
+        assertEquals(3, playerB.getTotalCoin());//3-1(咖啡館)+1(麵包店)
+    }
+
+    @Test
+    @DisplayName("given A玩家(有麵包店、礦場、家具工廠、火車站、購物中心，餘額15coins)、B玩家(有麵包店、礦場、家具工廠 餘額3coins)" +
+            "when 該回合輪到A玩家且B玩家骰到" +
+            "then A玩家除了礦場獲得的收入外，還可以再多得到一塊錢")
+    void playerA_has_shoppingMall_setTurnplayerB_green() {
+        bakery1 = new Bakery();
+        bakery2 = new Bakery();
+        mine1 = new Mine();
+        mine2 = new Mine();
+        furnitureFactory1 = new FurnitureFactory();
+        furnitureFactory2 = new FurnitureFactory();
+        game = new Game(new Bank(100), List.of(playerA, playerB), null, null);
+        //--A玩家目前有 green麵包店23、green家具工廠8、blue礦場9、購物中心、火車站
+        playerA.addCardToHandCard(bakery1);//當你自己骰出這個數字時，可以從銀行獲得1元。
+        playerA.addCardToHandCard(mine1);// 任何人骰出這個數字時，你都可以從銀行獲得5元。[CardType.NATURE_RESOURCES]
+        playerA.addCardToHandCard(furnitureFactory1);// 當你自己骰出這個數字時，每擁有一張[CardType.NATURE_RESOURCES]符號的建築，就可以從銀行獲得3元。
+        playerA.gainCoin(12);//A目前餘額:15
+        playerA.flipLandMark(trainstation);//可以有兩顆骰子
+        playerA.flipLandMark(shoppingMall);//A目前餘額:15-14=1//你的每間(紅色卡牌)和(綠色卡牌)類型的建築獲得收入時,都可以額外再多得到1元。
+        //--B玩家目前有 green麵包店23、green家具工廠8、blue礦場9
+        playerB.addCardToHandCard(bakery2);//當你自己骰出這個數字時，可以從銀行獲得1元。
+        playerB.addCardToHandCard(mine2);/// 任何人骰出這個數字時，你都可以從銀行獲得5元。[CardType.NATURE_RESOURCES]
+        playerB.addCardToHandCard(furnitureFactory2);// 當你自己骰出這個數字時，每擁有一張[CardType.NATURE_RESOURCES]符號的建築，就可以從銀行獲得3元。
+
+        //when 輪到A玩家且骰到8
+        game.setTurnPlayer(playerA);
+        game.distributeResources(List.of(5,3));
+        assertEquals(5,playerA.getTotalCoin());//1(init)+3(家具工廠)+1(購物中心)
+        assertEquals(3,playerB.getTotalCoin());//3
+    }
     private void setDicePointAndTakeEffect(int point, Game game) {
-        game.setCurrentDicePoint(point);
-        game.distributeResources(game.getCurrentDicePoint());
+        game.setCurrentDicePoint(List.of(point));
+        game.distributeResources(List.of(point));
     }
 
     private void setPlayerCardAndNumber(Player player, Establishment establishment, int times) {

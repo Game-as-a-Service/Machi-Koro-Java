@@ -18,9 +18,7 @@ public abstract class Establishment extends Card {
 
     @Override
     public void takeEffect(Game game) {
-        if (isDicePointToTakeEffect(game.getCurrentDicePoint())) {
-            doTakeEffect(game);
-        }
+        isDicePointToTakeEffect(game);
     }
 
     protected abstract void doTakeEffect(Game game);
@@ -30,8 +28,16 @@ public abstract class Establishment extends Card {
     }
 
 
-    protected boolean isDicePointToTakeEffect(int dicePoint) {
-        return this.getDiceRollNeededToActivateEffect().contains(dicePoint);
+    protected void isDicePointToTakeEffect(Game game) {
+        Boolean isTakeEffect = getDiceRollNeededToActivateEffect().contains(game.getCurrentDicePoint());
+        if (isTakeEffect) {
+            doTakeEffect(game);
+        }
+    }
+
+
+    public Industry getIndustry() {
+        return industry;
     }
 
 

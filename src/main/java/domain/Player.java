@@ -75,4 +75,5 @@ public class Player {
     private boolean isBalanceEnough(int cost) {
         return getTotalCoin() >= cost;
     }
+    public String getName() { return name;}
 }

@@ -58,7 +58,7 @@ public class TestGameBuilder extends GameBuilder {
                 marketplace
         ) {
             @Override
-            public int getCurrentDicePoint() {
+            public Integer getCurrentDicePoint() {
                 return fixedDicePoint;
             }
         };
