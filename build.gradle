@@ -26,3 +26,9 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+allprojects {
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+}
