@@ -6,7 +6,10 @@ import domain.card.establishment.Establishment;
 import domain.card.establishment.WheatField;
 import domain.card.landmark.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Player {
     private final String name;
