@@ -57,12 +57,10 @@ class GameTest {
         Bank bank = new Bank(282);
         List<Dice> dices = new ArrayList<>();
         Marketplace marketplace = new Marketplace();
-        Game game = new Game(bank, players, dices, marketplace);
-
         int expectedBankCoins = 282 - (2 * Bank.INIT_PAY_COINS);
 
         //When
-        game.setUp();
+        Game game = new Game(bank, players, dices, marketplace);
 
         //Then
         players.forEach(this::assertOneBakeryAndOneWheatFieldAndFourLandmarkAndThreeCoins);

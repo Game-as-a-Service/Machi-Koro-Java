@@ -29,6 +29,9 @@ class CafeTest {
         assertEquals("咖啡館", cafe.getName());
     }
 
+    /*
+    * 測試咖啡店的卡片效果
+    * */
     @Test
     void testTakeEffect() {
         //given
@@ -47,7 +50,7 @@ class CafeTest {
         cafe.takeEffect(game);
 
         //then
-        assertEquals(originalBalanceOfPlayerA - 1, playerA.getTotalCoin());
-        assertEquals(originalBalanceOfPlayerB + 1, playerB.getTotalCoin());
+        assertEquals(originalBalanceOfPlayerA - Cafe.COIN_TO_PAY, playerA.getTotalCoin());
+        assertEquals(originalBalanceOfPlayerB + Cafe.COIN_TO_GAIN, playerB.getTotalCoin());
     }
 }

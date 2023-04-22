@@ -15,11 +15,16 @@ public class Game {
         this.players = players;
         this.dices = dices;
         this.marketplace = marketplace;
+        this.setUp();
     }
 
     public void distributeResources(int dicePoint) {
         this.setCurrentDicePoint(dicePoint);
-        this.getPlayers().forEach(player -> player.ownedEstablishmentTakeEffect(this));
+//        this.getPlayers().forEach(player -> player.ownedEstablishmentTakeEffect(this));
+
+        for (Player player : players) {
+            player.ownedEstablishmentTakeEffect(this);
+        }
     }
 
     public int getCurrentDicePoint() {
@@ -46,7 +51,7 @@ public class Game {
         return bank;
     }
 
-    public void setUp() {
+    private void setUp() {
 
         for (Player player : players) {
             player.gainCoin(3);

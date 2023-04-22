@@ -20,20 +20,29 @@ class FruitAndVegetableMarketTest {
         player = game.getPlayers().get(0);
     }
 
+    /*
+     *
+     * */
     @Test
     void testTakeEffect() {
+        //小麥田 +2
         WheatField wheatField = new WheatField();
+        //蘋果園 +2
         AppleOrchard appleOrchard = new AppleOrchard();
         player.addCardToHandCard(wheatField);
         player.addCardToHandCard(appleOrchard);
-        int originalPlayerTotalCoin = player.getTotalCoin();
+        int originalPlayerTotalCoin = player.getTotalCoin(); // 初始金額 +3
         int originalBankTotalCoin = game.getBank().getTotalCoin();
         player.addCardToHandCard(fruitAndVegetableMarket);
 
         game.setTurnPlayer(player);
         fruitAndVegetableMarket.takeEffect(game);
 
-        assertThat(player.getTotalCoin()).isEqualTo(originalPlayerTotalCoin + 4);
-        assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankTotalCoin - 4);
+        // 起始手牌 小麥田 +2
+        // 新增手牌 小麥田 +2
+        // 新增手牌 頻果園 +2
+        // 玩家起始金額 + 3
+        assertThat(player.getTotalCoin()).isEqualTo(originalPlayerTotalCoin + 6);
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankTotalCoin - 6);
     }
 }

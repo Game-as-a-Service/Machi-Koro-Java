@@ -21,6 +21,7 @@ class PlayerTest {
         player.gainCoin(97);
     }
 
+
     @Test
     void buyCard() {
         //given
@@ -31,8 +32,8 @@ class PlayerTest {
         player.buyCard(card);
 
         //then
-        assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - 1);
-        assertThat(player.getOwnedEstablishment().get(0)).isEqualTo(card);
+        assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - card.getConstructionCost());
+        assertThat(player.getHandCard(2)).isEqualTo(card);
     }
 
     @Test
