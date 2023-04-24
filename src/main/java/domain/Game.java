@@ -1,5 +1,8 @@
 package domain;
 
+import domain.card.establishment.Bakery;
+import domain.card.establishment.WheatField;
+
 import java.util.List;
 
 public class Game {
@@ -20,11 +23,7 @@ public class Game {
 
     public void distributeResources(int dicePoint) {
         this.setCurrentDicePoint(dicePoint);
-//        this.getPlayers().forEach(player -> player.ownedEstablishmentTakeEffect(this));
-
-        for (Player player : players) {
-            player.ownedEstablishmentTakeEffect(this);
-        }
+        this.getPlayers().forEach(player -> player.ownedEstablishmentTakeEffect(this));
     }
 
     public int getCurrentDicePoint() {
@@ -56,6 +55,8 @@ public class Game {
         for (Player player : players) {
             player.gainCoin(3);
             bank.payCoin(3);
+            player.addCardToHandCard(new Bakery());
+            player.addCardToHandCard(new WheatField());
         }
     }
 

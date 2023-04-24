@@ -1,9 +1,7 @@
 package domain;
 
 import domain.card.Card;
-import domain.card.establishment.Bakery;
 import domain.card.establishment.Establishment;
-import domain.card.establishment.WheatField;
 import domain.card.landmark.*;
 
 import java.util.ArrayList;
@@ -19,10 +17,6 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-//        ownedEstablishment.add(new Bakery());
-//        ownedEstablishment.add(new WheatField());
-        addCardToHandCard(new Bakery());
-        addCardToHandCard(new WheatField());
     }
 
     public void addCardToHandCard(Establishment establishment) {
@@ -73,10 +67,7 @@ public class Player {
     }
 
     public void ownedEstablishmentTakeEffect(Game game) {
-//        ownedEstablishment.forEach(establishment -> establishment.takeEffect(game));
-        for (Establishment establishment : ownedEstablishment) {
-            establishment.takeEffect(game);
-        }
+        ownedEstablishment.forEach(establishment -> establishment.takeEffect(game));
     }
 
     private boolean isBalanceEnough(int cost) {

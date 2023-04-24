@@ -14,26 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GameTest {
 
-//             Given 條件
-//             需要 108 張卡牌、282 枚 1元錢幣、2 顆骰子、2 ~ 4名玩家。
-//             When
-//             new game()
-//             Then
-//    @Test
-//    public void givenEmptyWhenGameInitThenGenerateCardsAndCoinAndDices() {
-//        //when
-//        Bank bank = new Bank();
-//        List<Player> players = new ArrayList<>();
-//        List<Dice> dices = new ArrayList<>();
-//        Marketplace marketplace = new Marketplace();
-//        Game game = new Game(bank, players, dices, marketplace);
-//
-//        //then
-//        assertEquals(108, game.getMarketplace().getCards().size());
-//        assertEquals(282, game.getBank().getTotalCoin());
-//        assertEquals(2, game.getDice().size());
-//    }
-
     @Test
     @DisplayName("""
             Given (pre-condition)
