@@ -1,5 +1,8 @@
 package domain;
 
+import domain.card.establishment.Bakery;
+import domain.card.establishment.WheatField;
+
 import java.util.List;
 
 public class Game {
@@ -15,6 +18,7 @@ public class Game {
         this.players = players;
         this.dices = dices;
         this.marketplace = marketplace;
+        this.setUp();
     }
 
     public void distributeResources(int dicePoint) {
@@ -46,8 +50,14 @@ public class Game {
         return bank;
     }
 
-    public void setUp() {
+    private void setUp() {
 
+        for (Player player : players) {
+            player.gainCoin(3);
+            bank.payCoin(3);
+            player.addCardToHandCard(new Bakery());
+            player.addCardToHandCard(new WheatField());
+        }
     }
 
     public void start() {
@@ -73,4 +83,13 @@ public class Game {
                 .toList();
     }
 
+    public Marketplace getMarketplace() {
+        return marketplace;
+    }
+
+    public List<Dice> getDice() {
+        dices.add(new Dice());
+        dices.add(new Dice());
+        return dices;
+    }
 }

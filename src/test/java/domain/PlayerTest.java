@@ -1,25 +1,32 @@
 package domain;
 
-import domain.card.landmark.AmusementPark;
 import domain.card.establishment.WheatField;
+import domain.card.landmark.AmusementPark;
 import domain.card.landmark.Landmark;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PlayerTest {
 
+    private Bank bank;
+    private Game game;
     private Player player;
 
     @BeforeEach
     void setUp() {
         player = new Player("m1wt9ILw");
-        player.gainCoin(97);
+        bank = new Bank();
+        game = new Game(bank, Collections.singletonList(player), null, null);
+        bank.payCoin(100);
+        player.gainCoin(100);
     }
+
 
     @Test
     void buyCard() {
@@ -31,12 +38,12 @@ class PlayerTest {
         player.buyCard(card);
 
         //then
-        assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - 1);
-        assertThat(player.getOwnedEstablishment().get(0)).isEqualTo(card);
+        assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - card.getConstructionCost());
+        assertThat(player.getHandCard(2)).isEqualTo(card);
     }
 
     @Test
-    void flipBackLandMark()  {
+    void flipBackLandMark() {
         //given 玩家有背面的主題樂園
         var originalBalanceOfPlayer = player.getTotalCoin();
         var amusementPark = new AmusementPark();
