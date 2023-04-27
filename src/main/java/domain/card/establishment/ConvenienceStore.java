@@ -8,7 +8,7 @@ import java.util.Set;
 public class ConvenienceStore extends Establishment {
 
     public ConvenienceStore() {
-        super("便利商店", 1, CardType.SHOP, Set.of(4), Industry.GREEN);
+        super("便利商店", 1, CardType.SHOP, Set.of(4), IndustryColor.GREEN);
     }
 
     protected void doTakeEffect(Game game) {

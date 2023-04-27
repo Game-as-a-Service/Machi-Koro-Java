@@ -10,7 +10,7 @@ import static domain.card.CardType.ANIMAL_HUSBANDRY;
 public class CheeseFactory extends Establishment {
 
     public CheeseFactory() {
-        super("起司工廠", 5, CardType.SHOP, Set.of(7), Industry.GREEN);
+        super("起司工廠", 5, CardType.SHOP, Set.of(7), IndustryColor.GREEN);
     }
 
     protected void doTakeEffect(Game game) {
