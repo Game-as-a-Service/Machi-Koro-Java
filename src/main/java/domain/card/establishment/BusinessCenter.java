@@ -1,11 +1,18 @@
 package domain.card.establishment;
 
+import domain.Game;
 import domain.card.CardType;
-import domain.card.landmark.Landmark;
 
-public class BusinessCenter extends Landmark {
+import java.util.Set;
+
+public class BusinessCenter extends Establishment {
 
     public BusinessCenter() {
-        super("商業中心", 8, CardType.MAJOR_ESTABLISHMENT);
+        super("商業中心", 8, CardType.MAJOR_ESTABLISHMENT, Set.of(6), Industry.PURPLE);
+    }
+
+    @Override
+    protected void doTakeEffect(Game game) {
+
     }
 }
