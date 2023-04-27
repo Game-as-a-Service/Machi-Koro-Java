@@ -34,5 +34,7 @@ public abstract class Establishment extends Card {
         return this.getDiceRollNeededToActivateEffect().contains(dicePoint);
     }
 
-
+    public IndustryColor getIndustryColor() {
+        return this.industryColor;
+    }
 }
