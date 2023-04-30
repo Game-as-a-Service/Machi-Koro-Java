@@ -87,9 +87,7 @@ public class Game {
         return marketplace;
     }
 
-    public List<Dice> getDice() {
-        dices.add(new Dice());
-        dices.add(new Dice());
+    public List<Dice> getDices() {
         return dices;
     }
 }

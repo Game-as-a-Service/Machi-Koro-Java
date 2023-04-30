@@ -10,7 +10,7 @@ public class Cafe extends Establishment {
     public static final int COIN_TO_GAIN = 1;
 
     public Cafe() {
-        super("咖啡館", 2, CardType.RESTAURANT, Set.of(3), Industry.RED);
+        super("咖啡館", 2, CardType.RESTAURANT, Set.of(3), IndustryColor.RED);
     }
 
     @Override

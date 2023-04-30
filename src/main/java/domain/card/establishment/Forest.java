@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Forest extends Establishment {
     public Forest() {
-        super("森林", 3, CardType.NATURE_RESOURCES, Set.of(5), Industry.BLUE);
+        super("森林", 3, CardType.NATURE_RESOURCES, Set.of(5), IndustryColor.BLUE);
     }
 
     @Override

@@ -2,6 +2,7 @@ package domain;
 
 import domain.card.Card;
 import domain.card.establishment.Establishment;
+import domain.card.establishment.IndustryColor;
 import domain.card.landmark.*;
 
 import java.util.ArrayList;
@@ -41,6 +42,13 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
+        if (card.getIndustryColor().equals(IndustryColor.PURPLE)){
+            if(hasTheSamePurpleCard(card)){
+                //throw new RuntimeException("You already own this card!");
+                return; // FIXME: 2023/04/27 throw Exception or other way to handle this condition.
+            };
+        }
+
         this.payCoin(cost);
         addCardToHandCard(card);
     }
@@ -79,5 +87,10 @@ public class Player {
             throw new IllegalArgumentException();
         }
         return ownedEstablishment.get(index);
+    }
+
+    //購買紫色建築物時，判斷玩家手上是否已有相同建築物
+    private boolean hasTheSamePurpleCard(Establishment toBuyCard){
+       return this.getOwnedEstablishment().contains(toBuyCard);
     }
 }
