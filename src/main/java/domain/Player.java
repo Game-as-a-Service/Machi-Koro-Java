@@ -5,10 +5,7 @@ import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
 import domain.card.landmark.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Player {
     private final String name;
@@ -75,6 +72,7 @@ public class Player {
     }
 
     public void ownedEstablishmentTakeEffect(Game game) {
+        ownedEstablishment.sort(Comparator.comparing(establishment -> establishment.getIndustryColor().getOrder()));
         ownedEstablishment.forEach(establishment -> establishment.takeEffect(game));
     }
 
