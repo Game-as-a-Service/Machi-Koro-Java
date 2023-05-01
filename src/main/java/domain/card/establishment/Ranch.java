@@ -8,7 +8,7 @@ import java.util.Set;
 public class Ranch extends Establishment {
 
     public Ranch() {
-        super("牧場", 1, CardType.ANIMAL_HUSBANDRY, Set.of(2), Industry.BLUE,1);
+        super("牧場", 1, CardType.ANIMAL_HUSBANDRY, Set.of(2), Industry.BLUE);
     }
 
     protected void doTakeEffect(Game game) {

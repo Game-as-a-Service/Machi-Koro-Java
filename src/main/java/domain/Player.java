@@ -62,8 +62,8 @@ public class Player {
                 .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));
     }
 
-    public Integer checkEffectMoneyEnough(int effectMoney) {
-        Integer actualCoin;
+    public int checkEffectMoneyEnough(int effectMoney) {
+        int actualCoin;
         if (effectMoney > this.getTotalCoin()) {
             actualCoin = this.getTotalCoin();
             this.totalCoin = 0;
