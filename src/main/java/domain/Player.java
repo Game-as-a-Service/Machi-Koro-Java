@@ -68,8 +68,6 @@ public class Player {
                     return targetlandmark;
                 })
                 .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));
-        landmark.setCardSide(Landmark.CardSide.FRONT);
-        payCoin(cost);
     }
 
     public int checkEffectMoneyEnough(int effectMoney) {
