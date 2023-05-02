@@ -40,6 +40,7 @@ public class DistributeResourcesTest {
                     "then A 玩家從銀行獲得1元(銀行 coin = 99, A 玩家 coin = 4)")
     void testWheatField() {
         // given
+        // 玩家A小麥田 = 2
         playerA.addCardToHandCard(wheatField);
 
         // when
@@ -47,8 +48,9 @@ public class DistributeResourcesTest {
         setDicePointAndTakeEffect(1, game);
 
         // then
-        assertEquals(99, game.getBank().getTotalCoin());
-        assertEquals(4, playerA.getTotalCoin());
+
+        assertEquals(83, game.getBank().getTotalCoin());
+        assertEquals(5, playerA.getTotalCoin());
     }
 
     @Test
@@ -65,8 +67,8 @@ public class DistributeResourcesTest {
         setDicePointAndTakeEffect(3, game);
 
         // then
-        assertEquals(100, game.getBank().getTotalCoin());
-        assertEquals(2, playerA.getTotalCoin());
+        assertEquals(87, game.getBank().getTotalCoin());
+        assertEquals(3, playerA.getTotalCoin());
         assertEquals(4, playerB.getTotalCoin());
     }
 
@@ -74,7 +76,7 @@ public class DistributeResourcesTest {
     @DisplayName(
             "given 有銀行(100 coin)、A 玩家(3 coin)及 B 玩家(3 coin)，B 玩家手牌裡有三張咖啡館 " +
                     "when A 玩家擲骰子是3時，系統分配資源後 " +
-                    "then B 玩家從玩家A獲得3元(B玩家 coin = 6, A 玩家 coin = 0)")
+                    "then B 玩家從玩家A獲得3元(B玩家 coin = 6, A 玩家 coin = 1)")
     void playerB_has_threeCafe() {
         // given
         setPlayerCardAndNumber(playerB, cafe, 3);
@@ -84,8 +86,9 @@ public class DistributeResourcesTest {
         setDicePointAndTakeEffect(3, game);
 
         // then
-        assertEquals(100, game.getBank().getTotalCoin());
-        assertEquals(0, playerA.getTotalCoin());
+        //每位玩家初始金額 = 3 元
+        assertEquals(87, game.getBank().getTotalCoin());
+        assertEquals(1, playerA.getTotalCoin());
         assertEquals(6, playerB.getTotalCoin());
     }
 
@@ -104,9 +107,10 @@ public class DistributeResourcesTest {
         setDicePointAndTakeEffect(3, game);
 
         // then
-        assertEquals(100, game.getBank().getTotalCoin());
+        //每位玩家初始金額 = 3 元
+        assertEquals(87, game.getBank().getTotalCoin());
         assertEquals(0, playerA.getTotalCoin());
-        assertEquals(5, playerB.getTotalCoin());
+        assertEquals(6, playerB.getTotalCoin());
     }
 
     @Test
@@ -125,18 +129,23 @@ public class DistributeResourcesTest {
         setDicePointAndTakeEffect(3, game);
 
         // then
-        assertEquals(100, game.getBank().getTotalCoin());
+        //玩家初始金額 = 3 元
+        assertEquals(87, game.getBank().getTotalCoin());
         assertEquals(4, playerA.getTotalCoin());
         assertEquals(4, playerB.getTotalCoin());
         assertEquals(4, playerC.getTotalCoin());
-        assertEquals(0, playerD.getTotalCoin());
+        assertEquals(1, playerD.getTotalCoin());
     }
 
     @Test
     @DisplayName(
-            "given A,B,C,D 玩家 (A,B,C 各3 Coin) 玩家B、C各擁有一間咖啡館，玩家D有4元" +
-                    "when D 玩家擲骰子是3時，系統分配資源後 " +
-                    "then B、C玩家從玩家D各獲得1元，玩家D少2元 (A玩家 coin = 3 ,B,C玩家 coin = 4, D 玩家 coin = 0)")
+            """
+                    given A,B,C,D 玩家 (A,B,C 各3 Coin) 玩家B、C各擁有一間咖啡館，玩家D有4元
+                    此時銀行金額為(100 - (3*3 + 4) = 87)
+                    when D 玩家擲骰子是3時，系統分配資源後
+                    then B、C玩家從玩家D各獲得1元，玩家D少2元
+                    (A玩家 coin = 3 ,B,C玩家 coin = 4, D 玩家 coin = 2)")
+                    """)
     void playerBC_has_OneCafe() {
         // given
         playerD.gainCoin(1);
@@ -148,10 +157,11 @@ public class DistributeResourcesTest {
         setDicePointAndTakeEffect(3, game);
 
         // then
-        assertEquals(100, game.getBank().getTotalCoin());
+        // 銀行扣除 4個玩家的初始金額 12  + 咖啡館 = 1
+        assertEquals(87, game.getBank().getTotalCoin());
         assertEquals(4, playerB.getTotalCoin());
         assertEquals(4, playerC.getTotalCoin());
-        assertEquals(2, playerD.getTotalCoin());
+        assertEquals(3, playerD.getTotalCoin());
     }
 
     @Test
@@ -168,7 +178,7 @@ public class DistributeResourcesTest {
         game.distributeResources(2);
 
         // then
-        assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(86);
         assertThat(playerA.getTotalCoin()).isEqualTo(4);
     }
 
@@ -176,7 +186,7 @@ public class DistributeResourcesTest {
     @DisplayName(
             "given 有銀行(100 coin)、A 玩家(3 coin)，A 玩家手牌裡有便利商店 " +
                     "when A 玩家擲骰子是4時，系統分配資源後 " +
-                    "then A 玩家從銀行獲得3元(銀行 coin = 97, A 玩家 coin = 6)")
+                    "then A 玩家從銀行獲得3元(銀行 coin = 86, A 玩家 coin = 6)")
     void testConvenienceStore() {
         // given
         playerA.addCardToHandCard(new ConvenienceStore());
@@ -186,7 +196,8 @@ public class DistributeResourcesTest {
         game.distributeResources(4);
 
         // then
-        assertThat(game.getBank().getTotalCoin()).isEqualTo(97);
+        //每位玩家初始金額 = 3 元
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(85);
         assertThat(playerA.getTotalCoin()).isEqualTo(6);
     }
 
@@ -194,7 +205,7 @@ public class DistributeResourcesTest {
     @DisplayName(
             "given 有銀行(100 coin)、A 玩家(3 coin)，A 玩家手牌裡有便利商店 " +
                     "when A 玩家擲骰子是1時，系統分配資源後 " +
-                    "then 無發生任何影響(銀行: 100 coin、A 玩家: 3 coin)")
+                    "then 無發生任何影響(銀行: 84 coin、A 玩家: 3 coin)")
     void test() {
         // given
         playerA.addCardToHandCard(new ConvenienceStore());
@@ -206,8 +217,9 @@ public class DistributeResourcesTest {
         game.distributeResources(1);
 
         // then
-        assertThat(originalBankTotalCoin).isEqualTo(game.getBank().getTotalCoin());
-        assertThat(originalPlayerTotalCoin).isEqualTo(playerA.getTotalCoin());
+        assertEquals(originalBankTotalCoin - game.getPlayers().size(), game.getBank().getTotalCoin());
+        //初始小麥田效果 coin +1
+        assertEquals(originalPlayerTotalCoin + 1, playerA.getTotalCoin());
     }
     @Test
     @DisplayName(

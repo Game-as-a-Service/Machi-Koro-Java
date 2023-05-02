@@ -11,7 +11,7 @@ public class Stadium extends Establishment {
     private final int COIN_TO_GAIN = 2;
 
     public Stadium() {
-        super("體育館", 6, CardType.MAJOR_ESTABLISHMENT, Set.of(6), Industry.PURPLE);
+        super("體育館", 6, CardType.MAJOR_ESTABLISHMENT, Set.of(6), IndustryColor.PURPLE);
     }
 
     @Override
