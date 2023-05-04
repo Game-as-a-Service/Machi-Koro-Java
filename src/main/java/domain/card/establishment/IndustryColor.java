@@ -1,12 +1,12 @@
 package domain.card.establishment;
 
 public enum IndustryColor {
+    RED(1),
     BLUE(2),
     GREEN(3),
-    RED(1),
     PURPLE(4);
 
-    private int order;
+    private final int order;
 
     IndustryColor(int order) {
         this.order = order;

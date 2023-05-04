@@ -231,13 +231,15 @@ public class DistributeResourcesTest {
         }
     }
 
-    ///玩家擁有咖啡館、小麥田、麵包店
+    ///玩家擁有咖啡館、小麥田、麵包店、體育館
     ///當玩家骰出 3 點
     ///重新依照產業顏色(red->blue->green->purple)排序
     @Test
     public void givenPlayerHasCafeAndBreadWhenRollThreePointThenTakeEffectOrderByCustomPriority() {
         Cafe cafe = new Cafe();
+        Stadium stadium = new Stadium();
         playerA.addCardToHandCard(cafe);
+        playerA.addCardToHandCard(stadium);
 
         game.setTurnPlayer(playerA);
         game.setCurrentDicePoint(3);
@@ -246,6 +248,7 @@ public class DistributeResourcesTest {
         assertEquals(playerA.getHandCard(0), cafe);
         assertEquals(playerA.getHandCard(1), new WheatField());
         assertEquals(playerA.getHandCard(2), new Bakery());
+        assertEquals(playerA.getHandCard(3), stadium);
     }
 
 }
