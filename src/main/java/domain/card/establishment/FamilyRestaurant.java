@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class FamilyRestaurant extends Establishment{
 
-    private final int EFFECT_COIN = 2;
+    public static final int EFFECT_COIN = 2;
     public FamilyRestaurant() { super("家庭餐廳",3, CardType.RESTAURANT, Set.of(9,10) , IndustryColor.RED); }
 
     @Override

@@ -50,7 +50,7 @@ class CafeTest {
         cafe.takeEffect(game);
 
         //then
-        assertEquals(originalBalanceOfPlayerA - Cafe.COIN_TO_PAY, playerA.getTotalCoin());
-        assertEquals(originalBalanceOfPlayerB + Cafe.COIN_TO_GAIN, playerB.getTotalCoin());
+        assertEquals(originalBalanceOfPlayerA - Cafe.EFFECT_COIN, playerA.getTotalCoin());
+        assertEquals(originalBalanceOfPlayerB + Cafe.EFFECT_COIN, playerB.getTotalCoin());
     }
 }
