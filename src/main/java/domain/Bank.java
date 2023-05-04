@@ -1,24 +1,28 @@
 package domain;
 
 public class Bank {
-    private int totalCoin = 282;
+
+    public static final int TOTAL_COINS = 282;
+    public static final int INIT_PAY_COINS = 3;
+    private int coins;
 
     public Bank() {
+        this(TOTAL_COINS);
     }
 
-    public Bank(int coin) {
-        this.totalCoin = coin;
+    public Bank(int coins) {
+        this.coins = coins;
     }
 
     public int getTotalCoin() {
-        return totalCoin;
+        return coins;
     }
 
-    public void payCoin(int coin) {
-        this.totalCoin -= coin;
+    public void payCoin(int coins) {
+        this.coins -= coins;
     }
 
-    public void gainCoin(int coin) {
-        this.totalCoin += coin;
+    public void gainCoin(int coins) {
+        this.coins += coins;
     }
 }

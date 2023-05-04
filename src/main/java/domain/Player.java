@@ -1,6 +1,8 @@
 package domain;
 
+import domain.card.Card;
 import domain.card.establishment.Establishment;
+import domain.card.establishment.IndustryColor;
 import domain.card.landmark.*;
 
 import java.util.ArrayList;
@@ -9,12 +11,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Player {
-
-
     private final String name;
-    private int totalCoin = 3;
-    private List<Establishment> ownedEstablishment = new ArrayList<>();
-    private List<Landmark> ownedLandmark = new ArrayList<>(Arrays.asList(new TrainStation(), new ShoppingMall(), new AmusementPark(), new RadioTower())); //FIXME: Do we need to initialize?
+    private int coins;
+    private final List<Establishment> ownedEstablishment = new ArrayList<>();
+    private final List<Landmark> ownedLandmark = Arrays.asList(new TrainStation(), new ShoppingMall(), new AmusementPark(), new RadioTower()); //FIXME: Do we need to initialize?
 
     public Player(String name) {
         this.name = name;
@@ -26,7 +26,7 @@ public class Player {
     }
 
     public int getTotalCoin() {
-        return totalCoin;
+        return coins;
     }
 
     public List<Establishment> getOwnedEstablishment() {
@@ -42,6 +42,14 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
+        if (card.getIndustryColor().equals(IndustryColor.PURPLE)) {
+            if (hasTheSamePurpleCard(card)) {
+                //throw new RuntimeException("You already own this card!");
+                return; // FIXME: 2023/04/27 throw Exception or other way to handle this condition.
+            }
+            ;
+        }
+
         this.payCoin(cost);
         addCardToHandCard(card);
     }
@@ -51,8 +59,8 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        getOwnedLandmark().stream()
-                .filter(landmark -> landmark.equals(card) && landmark.getCardSide().equals(Landmark.CardSide.BACK))
+        Landmark landmark = getOwnedLandmark().stream()
+                .filter(l -> l.equals(card) && l.getCardSide().equals(Landmark.CardSide.BACK))
                 .findFirst()
                 .map(targetlandmark -> {
                     targetlandmark.setCardSide(Landmark.CardSide.FRONT);
@@ -66,7 +74,7 @@ public class Player {
         int actualCoin;
         if (effectMoney > this.getTotalCoin()) {
             actualCoin = this.getTotalCoin();
-            this.totalCoin = 0;
+            this.coins = 0;
         } else {
             actualCoin = effectMoney;
             this.payCoin(effectMoney);
@@ -75,11 +83,11 @@ public class Player {
     }
 
     public void payCoin(int coin) {
-        this.totalCoin -= coin;
+        this.coins -= coin;
     }
 
     public void gainCoin(int coin) {
-        this.totalCoin += coin;
+        this.coins += coin;
     }
 
     public void ownedEstablishmentTakeEffect(Game game) {
@@ -90,7 +98,20 @@ public class Player {
         return getTotalCoin() >= cost;
     }
 
+
     public String getName() {
         return name;
+    }
+
+    public Card getHandCard(int index) {
+        if (index < 0 || index >= ownedEstablishment.size()) {
+            throw new IllegalArgumentException();
+        }
+        return ownedEstablishment.get(index);
+    }
+
+    //購買紫色建築物時，判斷玩家手上是否已有相同建築物
+    private boolean hasTheSamePurpleCard(Establishment toBuyCard) {
+        return this.getOwnedEstablishment().contains(toBuyCard);
     }
 }

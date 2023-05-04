@@ -1,6 +1,6 @@
 package domain.card.establishment;
 
-public enum Industry {
+public enum IndustryColor {
     BLUE,
     GREEN,
     RED,
