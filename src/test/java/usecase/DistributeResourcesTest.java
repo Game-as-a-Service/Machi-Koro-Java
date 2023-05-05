@@ -19,6 +19,7 @@ public class DistributeResourcesTest {
     private Establishment wheatField;
     private Establishment cafe;
     private Game game;
+    private Establishment stadium;
 
     @BeforeEach
     void setUP() {
@@ -28,6 +29,7 @@ public class DistributeResourcesTest {
         playerD = new Player("D");
         wheatField = new WheatField();
         cafe = new Cafe();
+        stadium = new Stadium();
         game = new Game(new Bank(100), List.of(playerA, playerB, playerC, playerD), List.of(new Dice()), new Marketplace());
     }
 
@@ -219,7 +221,29 @@ public class DistributeResourcesTest {
         //初始小麥田效果 coin +1
         assertEquals(originalPlayerTotalCoin + 1, playerA.getTotalCoin());
     }
+    @Test
+    @DisplayName(
+            "given 當前每位玩家餘額:A玩家(0 coin)、B玩家(0 coin)、C玩家(2 coins)、D玩家(4 coins)，目前A玩家擁有一張體育館" +
+                    "when 輪到玩家A且骰到數字6" +
+                    "then B玩家因為餘額為0所以未支付任何金額給A玩家，其餘玩家各支付 2 coins 給A玩家"
+    )
+    void testPaycoin_playerA_has_Stadium() {
+        //given
+        playerA.payCoin(3);
+        playerB.payCoin(3);
+        playerC.payCoin(1);
+        playerD.gainCoin(1);
 
+        setPlayerCardAndNumber(playerA, stadium, 1);
+        //when
+        game.setTurnPlayer(playerA);
+        setDicePointAndTakeEffect(6, game);
+        //then
+        assertEquals(4, playerA.getTotalCoin());
+        assertEquals(0, playerB.getTotalCoin());
+        assertEquals(0, playerC.getTotalCoin());
+        assertEquals(2, playerD.getTotalCoin());
+    }
     private void setDicePointAndTakeEffect(int point, Game game) {
         game.setCurrentDicePoint(point);
         game.distributeResources(game.getCurrentDicePoint());

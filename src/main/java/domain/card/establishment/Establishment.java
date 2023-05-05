@@ -10,7 +10,8 @@ public abstract class Establishment extends Card {
     private final Set<Integer> diceRollNeededToActivateEffect;
     private final IndustryColor industryColor;
 
-    public Establishment(String name, int constructionCost, CardType cardType, Set<Integer> diceRollNeededToActivateEffect, IndustryColor industryColor) {
+
+public Establishment(String name, int constructionCost, CardType cardType, Set<Integer> diceRollNeededToActivateEffect, IndustryColor industryColor) {
         super(name, constructionCost, cardType);
         this.diceRollNeededToActivateEffect = diceRollNeededToActivateEffect;
         this.industryColor = industryColor;

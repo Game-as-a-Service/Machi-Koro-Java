@@ -39,11 +39,12 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        if (card.getIndustryColor().equals(IndustryColor.PURPLE)){
-            if(hasTheSamePurpleCard(card)){
+        if (card.getIndustryColor().equals(IndustryColor.PURPLE)) {
+            if (hasTheSamePurpleCard(card)) {
                 //throw new RuntimeException("You already own this card!");
                 return; // FIXME: 2023/04/27 throw Exception or other way to handle this condition.
-            };
+            }
+            ;
         }
 
         this.payCoin(cost);
@@ -58,9 +59,24 @@ public class Player {
         Landmark landmark = getOwnedLandmark().stream()
                 .filter(l -> l.equals(card) && l.getCardSide().equals(Landmark.CardSide.BACK))
                 .findFirst()
+                .map(targetlandmark -> {
+                    targetlandmark.setCardSide(Landmark.CardSide.FRONT);
+                    this.payCoin(cost);
+                    return targetlandmark;
+                })
                 .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));
-        landmark.setCardSide(Landmark.CardSide.FRONT);
-        payCoin(cost);
+    }
+
+    public int checkEffectMoneyEnough(int effectMoney) {
+        int actualCoin;
+        if (effectMoney > this.getTotalCoin()) {
+            actualCoin = this.getTotalCoin();
+            this.coins = 0;
+        } else {
+            actualCoin = effectMoney;
+            this.payCoin(effectMoney);
+        }
+        return actualCoin;
     }
 
     public void payCoin(int coin) {
@@ -80,15 +96,20 @@ public class Player {
         return getTotalCoin() >= cost;
     }
 
+
+    public String getName() {
+        return name;
+    }
+
     public Card getHandCard(int index) {
-        if (index < 0 || index >= ownedEstablishment.size()){
+        if (index < 0 || index >= ownedEstablishment.size()) {
             throw new IllegalArgumentException();
         }
         return ownedEstablishment.get(index);
     }
 
     //購買紫色建築物時，判斷玩家手上是否已有相同建築物
-    private boolean hasTheSamePurpleCard(Establishment toBuyCard){
-       return this.getOwnedEstablishment().contains(toBuyCard);
+    private boolean hasTheSamePurpleCard(Establishment toBuyCard) {
+        return this.getOwnedEstablishment().contains(toBuyCard);
     }
 }
