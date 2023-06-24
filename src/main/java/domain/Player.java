@@ -10,16 +10,16 @@ import java.util.*;
 public class Player {
     private final String name;
     private int coins;
-    private final List<Establishment> ownedEstablishment = new ArrayList<>();
-    private final List<Landmark> ownedLandmark = Arrays.asList(new TrainStation(), new ShoppingMall(), new AmusementPark(), new RadioTower()); //FIXME: Do we need to initialize?
+    private HandCard handCard = new HandCard();
 
     public Player(String name) {
         this.name = name;
+        handCard.setPlayer(this);
     }
 
     public void addCardToHandCard(Establishment establishment) {
         establishment.setOwner(this);
-        this.ownedEstablishment.add(establishment);
+        handCard.addCardToHandCard(establishment);
     }
 
     public int getTotalCoin() {
@@ -27,11 +27,11 @@ public class Player {
     }
 
     public List<Establishment> getOwnedEstablishment() {
-        return ownedEstablishment;
+        return handCard.getOwnedEstablishment();
     }
 
     public List<Landmark> getOwnedLandmark() {
-        return ownedLandmark;
+        return handCard.getOwnedLandmark();
     }
 
     public void buyCard(Establishment card) {
@@ -44,11 +44,9 @@ public class Player {
                 //throw new RuntimeException("You already own this card!");
                 return; // FIXME: 2023/04/27 throw Exception or other way to handle this condition.
             }
-            ;
         }
-
         this.payCoin(cost);
-        addCardToHandCard(card);
+        handCard.addCardToHandCard(card);
     }
 
     public void flipLandMark(Landmark card) {
@@ -56,7 +54,8 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        Landmark landmark = getOwnedLandmark().stream()
+        handCard.getOwnedLandmark()
+                .stream()
                 .filter(l -> l.equals(card) && l.getCardSide().equals(Landmark.CardSide.BACK))
                 .findFirst()
                 .map(targetlandmark -> {
@@ -88,8 +87,8 @@ public class Player {
     }
 
     public void ownedEstablishmentTakeEffect(Game game) {
-        ownedEstablishment.sort(Comparator.comparing(establishment -> establishment.getIndustryColor().getOrder()));
-        ownedEstablishment.forEach(establishment -> establishment.takeEffect(game));
+        handCard.getOwnedEstablishment().sort(Comparator.comparing(establishment -> establishment.getIndustryColor().getOrder()));
+        handCard.getOwnedEstablishment().forEach(establishment -> establishment.takeEffect(game));
     }
 
     private boolean isBalanceEnough(int cost) {
@@ -102,14 +101,11 @@ public class Player {
     }
 
     public Card getHandCard(int index) {
-        if (index < 0 || index >= ownedEstablishment.size()) {
-            throw new IllegalArgumentException();
-        }
-        return ownedEstablishment.get(index);
+        return handCard.getHandCard(index);
     }
 
     //購買紫色建築物時，判斷玩家手上是否已有相同建築物
     private boolean hasTheSamePurpleCard(Establishment toBuyCard) {
-        return this.getOwnedEstablishment().contains(toBuyCard);
+        return handCard.getOwnedEstablishment().contains(toBuyCard);
     }
 }
