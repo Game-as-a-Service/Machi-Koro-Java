@@ -25,7 +25,7 @@ class FurnitureFactoryTest {
 
     @Test
     void takeEffect() {
-        player.getOwnedEstablishment().addAll(List.of(new Forest(), new Mine()));
+        player.getEstablishments().addAll(List.of(new Forest(), new Mine()));
         int originalBalanceOfBank = game.getBank().getTotalCoin();
         int originalBalanceOfPlayer = player.getTotalCoin();
         player.addCardToHandCard(furnitureFactory);

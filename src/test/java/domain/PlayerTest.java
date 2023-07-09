@@ -56,7 +56,7 @@ class PlayerTest {
 
         //then
         assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - 16);
-        assertThat(player.getOwnedLandmark().get(2).getCardSide()).isEqualTo(Landmark.CardSide.FRONT);
+        assertThat(player.getLandmarks().get(2).isFlipped()).isTrue();
     }
 
     @Test
@@ -64,7 +64,7 @@ class PlayerTest {
         //given 玩家有正面的主題樂園
         var originalBalanceOfPlayer = player.getTotalCoin();
         var amusementPark = new AmusementPark();
-        player.getOwnedLandmark().get(2).setCardSide(Landmark.CardSide.FRONT);
+        player.getLandmarks().get(2).setFlipped(true);
 
         //when
         NoSuchElementException actualException = Assertions.assertThrows(NoSuchElementException.class,
@@ -80,7 +80,7 @@ class PlayerTest {
     void givenPlayerNoHaveBusinessCenterWhenBuyTheSameCardThenSuccess() {
         var businessCenter = new BusinessCenter();
         //given 玩家沒有商業中心建築
-        List<Establishment> playerOriginalOwnedEstablishment = player.getOwnedEstablishment();
+        List<Establishment> playerOriginalOwnedEstablishment = player.getEstablishments();
 
         Assertions.assertFalse(playerOriginalOwnedEstablishment.contains(businessCenter));
 
@@ -88,7 +88,7 @@ class PlayerTest {
         player.buyCard(businessCenter);
 
         //then  購買成功
-        List<Establishment> playerOwnedEstablishment = player.getOwnedEstablishment();
+        List<Establishment> playerOwnedEstablishment = player.getEstablishments();
 
         Assertions.assertTrue(playerOwnedEstablishment.contains(businessCenter));
     }
@@ -103,7 +103,7 @@ class PlayerTest {
         var businessCenter = new BusinessCenter();
         //given 玩家有商業中心建築
         player.addCardToHandCard(businessCenter);
-        List<Establishment> playerOriginalOwnedEstablishment = player.getOwnedEstablishment();
+        List<Establishment> playerOriginalOwnedEstablishment = player.getEstablishments();
 
         Assertions.assertTrue(playerOriginalOwnedEstablishment.contains(businessCenter));
 
@@ -111,7 +111,7 @@ class PlayerTest {
         player.buyCard(businessCenter);
 
         //then  購買失敗，只能擁有一座商業中心
-        List<Establishment> playerOwnedEstablishment = player.getOwnedEstablishment();
+        List<Establishment> playerOwnedEstablishment = player.getEstablishments();
         long businessCenterCount = playerOwnedEstablishment
                 .stream()
                 .filter(card -> card.equals(businessCenter))
