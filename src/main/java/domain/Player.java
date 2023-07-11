@@ -1,11 +1,15 @@
 package domain;
 
 import domain.card.Card;
+import domain.card.CardType;
 import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
-import domain.card.landmark.*;
+import domain.card.landmark.Landmark;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class Player {
     private final String name;
@@ -30,8 +34,18 @@ public class Player {
         return handCard.getEstablishments();
     }
 
+    public List<Establishment> getEstablishments(CardType cardType) {
+        return handCard.getEstablishments().stream()
+                .filter(establishment -> establishment.getCardType().equals(CardType.CROP))
+                .collect(Collectors.toList());
+    }
+
     public List<Landmark> getLandmarks() {
         return handCard.getLandmarks();
+    }
+
+    public Landmark getLandmark(int index) {
+        return handCard.getLandmarks().get(index);
     }
 
     public void buyCard(Establishment card) {

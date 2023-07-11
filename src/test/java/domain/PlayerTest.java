@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlayerTest {
 
@@ -56,7 +57,7 @@ class PlayerTest {
 
         //then
         assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - 16);
-        assertThat(player.getLandmarks().get(2).isFlipped()).isTrue();
+        assertTrue(player.getLandmark(2).isFlipped());
     }
 
     @Test
@@ -64,7 +65,7 @@ class PlayerTest {
         //given 玩家有正面的主題樂園
         var originalBalanceOfPlayer = player.getTotalCoin();
         var amusementPark = new AmusementPark();
-        player.getLandmarks().get(2).setFlipped(true);
+        player.getLandmark(2).setFlipped(true);
 
         //when
         NoSuchElementException actualException = Assertions.assertThrows(NoSuchElementException.class,
@@ -90,7 +91,7 @@ class PlayerTest {
         //then  購買成功
         List<Establishment> playerOwnedEstablishment = player.getEstablishments();
 
-        Assertions.assertTrue(playerOwnedEstablishment.contains(businessCenter));
+        assertTrue(playerOwnedEstablishment.contains(businessCenter));
     }
 
     /*
@@ -105,7 +106,7 @@ class PlayerTest {
         player.addCardToHandCard(businessCenter);
         List<Establishment> playerOriginalOwnedEstablishment = player.getEstablishments();
 
-        Assertions.assertTrue(playerOriginalOwnedEstablishment.contains(businessCenter));
+        assertTrue(playerOriginalOwnedEstablishment.contains(businessCenter));
 
         //when  玩家買下商業中心
         player.buyCard(businessCenter);
