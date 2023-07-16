@@ -30,6 +30,11 @@ class StadiumTest {
 
     @Test
     void takeEffect() {
+        player1.gainCoin(3);
+        player2.gainCoin(3);
+        player3.gainCoin(3);
+        player4.gainCoin(3);
+
         player1.addCardToHandCard(stadium);
         var originalBalanceOfPlayer1 = player1.getTotalCoin();
         var originalBalanceOfPlayer2 = player2.getTotalCoin();
@@ -52,6 +57,11 @@ class StadiumTest {
 
     @Test
     void takeEffectWhenPlayerDontHaveEnoughMoney() {
+        player1.gainCoin(3);
+        player2.gainCoin(3);
+        player3.gainCoin(3);
+        player4.gainCoin(3);
+
         player3.payCoin(2); // left 1 coin
         player4.payCoin(3); // left 0 coin
 

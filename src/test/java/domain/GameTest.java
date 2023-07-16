@@ -41,6 +41,7 @@ class GameTest {
 
         //When
         Game game = new Game(bank, players, dices, marketplace);
+        game.setUp();
 
         //Then
         players.forEach(this::assertOneBakeryAndOneWheatFieldAndFourLandmarkAndThreeCoins);

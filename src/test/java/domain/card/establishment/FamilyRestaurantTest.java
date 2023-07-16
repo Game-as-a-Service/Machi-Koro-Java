@@ -31,6 +31,8 @@ public class FamilyRestaurantTest {
     void testTakeEffect(){
         game = new Game(new Bank(200), List.of(playerA,playerB),null,null);
         playerB.addCardToHandCard(familyRestaurant);
+        playerA.gainCoin(3);
+        playerB.gainCoin(3);
 
         game.setTurnPlayer(playerA);
 

@@ -43,7 +43,7 @@ class PlayerTest {
 
         //then
         assertThat(player.getTotalCoin()).isEqualTo(originalBalanceOfPlayer - card.getConstructionCost());
-        assertThat(player.getHandCard(2)).isEqualTo(card);
+        assertThat(player.getHandCard(0)).isEqualTo(card);
     }
 
     @Test

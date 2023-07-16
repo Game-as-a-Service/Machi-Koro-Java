@@ -31,6 +31,7 @@ public class DistributeResourcesTest {
         cafe = new Cafe();
         stadium = new Stadium();
         game = new Game(new Bank(100), List.of(playerA, playerB, playerC, playerD), List.of(new Dice()), new Marketplace());
+        game.setUp();
     }
 
     @Test

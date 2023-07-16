@@ -41,6 +41,8 @@ class CafeTest {
                 return 3;
             }
         };
+        playerA.gainCoin(3);
+        playerB.gainCoin(3);
         int originalBalanceOfPlayerA = playerA.getTotalCoin();
         int originalBalanceOfPlayerB = playerB.getTotalCoin();
         playerB.addCardToHandCard(cafe);

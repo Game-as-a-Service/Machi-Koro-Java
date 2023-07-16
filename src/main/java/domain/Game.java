@@ -18,7 +18,6 @@ public class Game {
         this.players = players;
         this.dices = dices;
         this.marketplace = marketplace;
-        this.setUp();
     }
 
     public void distributeResources(int dicePoint) {
@@ -50,7 +49,7 @@ public class Game {
         return bank;
     }
 
-    private void setUp() {
+    public void setUp() {
 
         for (Player player : players) {
             player.gainCoin(3);

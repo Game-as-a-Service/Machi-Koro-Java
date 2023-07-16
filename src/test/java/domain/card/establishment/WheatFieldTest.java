@@ -28,7 +28,7 @@ class WheatFieldTest {
         wheatField.takeEffect(game);
 
         // then
-        assertThat(game.getBank().getTotalCoin()).isEqualTo(96);
-        assertThat(playerA.getTotalCoin()).isEqualTo(4);
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
+        assertThat(playerA.getTotalCoin()).isEqualTo(1);
     }
 }

@@ -33,7 +33,7 @@ public class RanchTest {
 
         // then
         //初始金額 = 3 元、牧場 = 1 元
-        assertThat(game.getBank().getTotalCoin()).isEqualTo(96);
-        assertThat(playerA.getTotalCoin()).isEqualTo(4);
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(99);
+        assertThat(playerA.getTotalCoin()).isEqualTo(1);
     }
 }
