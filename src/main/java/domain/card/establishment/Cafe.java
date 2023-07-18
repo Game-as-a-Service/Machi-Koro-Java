@@ -9,7 +9,7 @@ public class Cafe extends Establishment {
     public static final int EFFECT_COIN = 1;
 
     public Cafe() {
-        super("咖啡館", 2, CardType.RESTAURANT, Set.of(3), IndustryColor.RED);
+        super("咖啡館", 2, CardType.RESTAURANT, Set.of(3), IndustryColor.RED, 1);
     }
 
     @Override
@@ -17,6 +17,7 @@ public class Cafe extends Establishment {
         // 如果別人骰出這個數字，他必須給你1元
         if (!game.isTurnPlayer(getOwner())) {
             int actualRevenue = game.getTurnPlayer().checkEffectMoneyEnough(EFFECT_COIN);
+            game.getTurnPlayer().payCoin(actualRevenue);
             getOwner().gainCoin(actualRevenue);
         }
     }

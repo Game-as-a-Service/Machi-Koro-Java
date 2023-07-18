@@ -17,6 +17,10 @@ public class HandCard {
         establishments.add(establishment);
     }
 
+    public void removeEstablishment(int index) {
+        establishments.remove(index);
+    }
+
     public Card getHandCard(int index){
         if (index < 0 || index >= getLandmarks().size()) {
             throw new IllegalArgumentException();

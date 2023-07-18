@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class TvStation extends Establishment {
     public TvStation() {
-        super("電視台", 7, CardType.MAJOR_ESTABLISHMENT, Set.of(6), IndustryColor.PURPLE);
+        super("電視台", 7, CardType.MAJOR_ESTABLISHMENT, Set.of(6), IndustryColor.PURPLE, 5);
     }
 
     @Override

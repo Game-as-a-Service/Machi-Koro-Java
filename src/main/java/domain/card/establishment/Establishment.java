@@ -9,12 +9,14 @@ import java.util.Set;
 public abstract class Establishment extends Card {
     private final Set<Integer> diceRollNeededToActivateEffect;
     private final IndustryColor industryColor;
+    private final int effectCoins;
 
 
-public Establishment(String name, int constructionCost, CardType cardType, Set<Integer> diceRollNeededToActivateEffect, IndustryColor industryColor) {
+    public Establishment(String name, int constructionCost, CardType cardType, Set<Integer> diceRollNeededToActivateEffect, IndustryColor industryColor, int effectCoins) {
         super(name, constructionCost, cardType);
         this.diceRollNeededToActivateEffect = diceRollNeededToActivateEffect;
         this.industryColor = industryColor;
+        this.effectCoins = effectCoins;
     }
 
     @Override
@@ -37,5 +39,9 @@ public Establishment(String name, int constructionCost, CardType cardType, Set<I
 
     public IndustryColor getIndustryColor() {
         return this.industryColor;
+    }
+
+    public int getEffectCoins() {
+        return this.effectCoins;
     }
 }

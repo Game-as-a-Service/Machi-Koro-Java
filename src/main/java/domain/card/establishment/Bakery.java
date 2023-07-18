@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Bakery extends Establishment{
     public Bakery() {
-        super("麵包店", 1,CardType.SHOP, Set.of(2,3), IndustryColor.GREEN);
+        super("麵包店", 1,CardType.SHOP, Set.of(2,3), IndustryColor.GREEN, 1);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package domain;
 
 import domain.card.establishment.Bakery;
+import domain.card.establishment.IndustryColor;
 import domain.card.establishment.WheatField;
 
 import java.util.List;
@@ -89,4 +90,31 @@ public class Game {
     public List<Dice> getDices() {
         return dices;
     }
+
+    public void forLoopTakeEffect() {
+        EffectHandler effectHandler = new EffectHandler();
+
+        var redOwnCardPlayers = effectHandler.getOwnCardsPlayers(getPlayersExcludeTurnPlayer(), currentDicePoint, IndustryColor.RED);
+        redOwnCardPlayers.forEach((player, establishments) -> establishments
+                .forEach(redEstablishment -> effectHandler.takeEffectRed
+                        (turnPlayer, player, redEstablishment.getEffectCoins())));
+
+        var blueOwnCardPlayers = effectHandler.getOwnCardsPlayers(players, currentDicePoint, IndustryColor.BLUE);
+        blueOwnCardPlayers.forEach((player, establishments) -> {
+            establishments.forEach(blueEstablishment -> {
+                effectHandler.takeEffectBlue(player, bank, blueEstablishment.getEffectCoins());
+            });
+        });
+
+        var turnPlayerGreenCards = turnPlayer.getEstablishments(currentDicePoint, IndustryColor.GREEN);
+        turnPlayerGreenCards.forEach(greenEstablishment -> {
+            effectHandler.takeEffectGreen(turnPlayer, bank, greenEstablishment.getEffectCoins());
+        });
+    }
+
+
+    public List<Player> getPlayersExcludeTurnPlayer() {
+        return players.stream().filter(player -> !player.equals(turnPlayer)).toList();
+    }
+
 }

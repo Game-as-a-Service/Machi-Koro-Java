@@ -24,11 +24,15 @@ class MineTest {
         var player = game.getPlayers().get(0);
         var originalBalanceOfPlayer = player.getTotalCoin();
         player.addCardToHandCard(mine);
+        game.setTurnPlayer(player);
 
+
+        var mineFromTurnPlayer = (Establishment) player.getHandCard(0);
+        game.setCurrentDicePoint(mineFromTurnPlayer.getDiceRollNeededToActivateEffect().stream().findFirst().orElseThrow());
         mine.takeEffect(game);
 
         var balanceOfBank = game.getBank().getTotalCoin();
-        var balanceOfPlayer = player.getTotalCoin();
+        var balanceOfPlayer = game.getTurnPlayer().getTotalCoin();
 
         assertThat(balanceOfPlayer).isEqualTo(originalBalanceOfPlayer + 5);
         assertThat(balanceOfBank).isEqualTo(originalBalanceOfBank - 5);

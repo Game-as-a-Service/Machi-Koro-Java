@@ -12,9 +12,10 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class Player {
+    private String id;
     private final String name;
     private int coins;
-    private HandCard handCard = new HandCard();
+    private final HandCard handCard = new HandCard();
 
     public Player(String name) {
         this.name = name;
@@ -30,8 +31,27 @@ public class Player {
         return coins;
     }
 
+    public void setTotalCoin(int coins) {
+        this.coins = coins;
+    }
+
     public List<Establishment> getEstablishments() {
         return handCard.getEstablishments();
+    }
+
+    public List<Establishment> getEstablishments(int dicePoint, IndustryColor industryColor) {
+        return handCard.getEstablishments().stream()
+                .filter(establishment ->
+                        establishment.getDiceRollNeededToActivateEffect().contains(dicePoint) &&
+                        establishment.getIndustryColor().equals(industryColor)).toList();
+    }
+
+    public List<Establishment> getEstablishments(IndustryColor industryColor) {
+        return handCard.getEstablishments().stream().filter(establishment -> establishment.getIndustryColor().equals(industryColor)).toList();
+    }
+
+    public List<Establishment> getEstablishments(int dicePoint) {
+        return handCard.getEstablishments().stream().filter(establishment -> establishment.getDiceRollNeededToActivateEffect().contains(dicePoint)).toList();
     }
 
     public List<Establishment> getEstablishments(CardType cardType) {
@@ -81,15 +101,7 @@ public class Player {
     }
 
     public int checkEffectMoneyEnough(int effectMoney) {
-        int actualCoin;
-        if (effectMoney > this.getTotalCoin()) {
-            actualCoin = this.getTotalCoin();
-            this.coins = 0;
-        } else {
-            actualCoin = effectMoney;
-            this.payCoin(effectMoney);
-        }
-        return actualCoin;
+        return Math.min(effectMoney, this.getTotalCoin());
     }
 
     public void payCoin(int coin) {
@@ -122,4 +134,13 @@ public class Player {
     private boolean hasTheSamePurpleCard(Establishment toBuyCard) {
         return handCard.getEstablishments().contains(toBuyCard);
     }
+
+    public boolean hasLandmarkFlipped(Landmark landmark) {
+        return handCard.getLandmarks().stream().anyMatch(lm -> lm.equals(landmark) && lm.isFlipped());
+    }
+
+    public void removeEstablishment(int index) {
+
+    }
+
 }
