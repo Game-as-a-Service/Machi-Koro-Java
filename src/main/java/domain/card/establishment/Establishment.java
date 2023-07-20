@@ -19,15 +19,6 @@ public abstract class Establishment extends Card {
         this.effectCoins = effectCoins;
     }
 
-    @Override
-    public void takeEffect(Game game) {
-        if (isDicePointToTakeEffect(game.getCurrentDicePoint())) {
-            doTakeEffect(game);
-        }
-    }
-
-    protected abstract void doTakeEffect(Game game);
-
     public Set<Integer> getDiceRollNeededToActivateEffect() {
         return diceRollNeededToActivateEffect;
     }

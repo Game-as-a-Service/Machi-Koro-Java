@@ -20,12 +20,6 @@ public class Game {
         this.dices = dices;
         this.marketplace = marketplace;
     }
-
-    public void distributeResources(int dicePoint) {
-        this.setCurrentDicePoint(dicePoint);
-        this.getPlayers().forEach(player -> player.establishmentTakeEffect(this));
-    }
-
     public int getCurrentDicePoint() {
         return currentDicePoint;
     }
@@ -60,18 +54,6 @@ public class Game {
         }
     }
 
-    public void start() {
-
-    }
-
-    public void startNewTurn() {
-
-    }
-
-    public void end() {
-
-    }
-
     public List<Player> getPlayers() {
         return players;
     }
@@ -95,23 +77,17 @@ public class Game {
         EffectHandler effectHandler = new EffectHandler();
 
         var redOwnCardPlayers = effectHandler.getOwnCardsPlayers(getPlayersExcludeTurnPlayer(), currentDicePoint, IndustryColor.RED);
-        redOwnCardPlayers.forEach((player, establishments) -> establishments
-                .forEach(redEstablishment -> effectHandler.takeEffectRed
-                        (turnPlayer, player, redEstablishment.getEffectCoins())));
+        redOwnCardPlayers.forEach((player, establishments) ->
+                establishments.forEach(redEstablishment -> effectHandler.takeEffectRed(
+                        turnPlayer, player, redEstablishment.getEffectCoins())));
 
         var blueOwnCardPlayers = effectHandler.getOwnCardsPlayers(players, currentDicePoint, IndustryColor.BLUE);
-        blueOwnCardPlayers.forEach((player, establishments) -> {
-            establishments.forEach(blueEstablishment -> {
-                effectHandler.takeEffectBlue(player, bank, blueEstablishment.getEffectCoins());
-            });
-        });
+        blueOwnCardPlayers.forEach((player, establishments) ->
+                establishments.forEach(blueEstablishment -> effectHandler.takeEffectBlue(player, bank, blueEstablishment.getEffectCoins())));
 
         var turnPlayerGreenCards = turnPlayer.getEstablishments(currentDicePoint, IndustryColor.GREEN);
-        turnPlayerGreenCards.forEach(greenEstablishment -> {
-            effectHandler.takeEffectGreen(turnPlayer, bank, greenEstablishment.getEffectCoins());
-        });
+        turnPlayerGreenCards.forEach(greenEstablishment -> effectHandler.takeEffectGreen(turnPlayer, bank, greenEstablishment));
     }
-
 
     public List<Player> getPlayersExcludeTurnPlayer() {
         return players.stream().filter(player -> !player.equals(turnPlayer)).toList();

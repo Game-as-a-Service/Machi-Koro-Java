@@ -6,7 +6,6 @@ import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
 import domain.card.landmark.Landmark;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -23,7 +22,6 @@ public class Player {
     }
 
     public void addCardToHandCard(Establishment establishment) {
-        establishment.setOwner(this);
         handCard.addCardToHandCard(establishment);
     }
 
@@ -43,7 +41,7 @@ public class Player {
         return handCard.getEstablishments().stream()
                 .filter(establishment ->
                         establishment.getDiceRollNeededToActivateEffect().contains(dicePoint) &&
-                        establishment.getIndustryColor().equals(industryColor)).toList();
+                                establishment.getIndustryColor().equals(industryColor)).toList();
     }
 
     public List<Establishment> getEstablishments(IndustryColor industryColor) {
@@ -112,15 +110,9 @@ public class Player {
         this.coins += coin;
     }
 
-    public void establishmentTakeEffect(Game game) {
-        handCard.getEstablishments().sort(Comparator.comparing(establishment -> establishment.getIndustryColor().getOrder()));
-        handCard.getEstablishments().forEach(establishment -> establishment.takeEffect(game));
-    }
-
     private boolean isBalanceEnough(int cost) {
         return getTotalCoin() >= cost;
     }
-
 
     public String getName() {
         return name;

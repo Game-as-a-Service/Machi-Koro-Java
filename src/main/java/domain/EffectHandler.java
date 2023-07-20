@@ -1,7 +1,11 @@
 package domain;
 
+import domain.card.CardType;
 import domain.card.establishment.BusinessCenter;
+import domain.card.establishment.CheeseFactory;
 import domain.card.establishment.Establishment;
+import domain.card.establishment.FruitAndVegetableMarket;
+import domain.card.establishment.FurnitureFactory;
 import domain.card.establishment.IndustryColor;
 import domain.card.establishment.Stadium;
 import domain.card.establishment.TvStation;
@@ -29,7 +33,16 @@ public class EffectHandler {
         bank.payCoin(effectCoins);
     }
 
-    public void takeEffectGreen(Player turnPlayer, Bank bank, int effectCoins) {
+    public void takeEffectGreen(Player turnPlayer, Bank bank, Establishment establishment) {
+        int effectCoins = establishment.getEffectCoins();
+        if (establishment.equals(new CheeseFactory())) {
+            effectCoins *= turnPlayer.getEstablishments(CardType.ANIMAL_HUSBANDRY).size();
+        } else if (establishment.equals(new FurnitureFactory())) {
+            effectCoins *= turnPlayer.getEstablishments(CardType.NATURE_RESOURCES).size();
+        } else if (establishment.equals(new FruitAndVegetableMarket())) {
+            effectCoins *= turnPlayer.getEstablishments(CardType.CROP).size();
+        }
+
         // green: 當你自己骰出這個數字時，可以從銀行獲得x元
         if (turnPlayer.hasLandmarkFlipped(new ShoppingMall())) {
             effectCoins += 1;
@@ -43,8 +56,8 @@ public class EffectHandler {
         var tradeEstablishment = (Establishment) turnPlayer.getHandCard(tradeEstablishmentIndex);
         var targetEstablishment = (Establishment) targetPlayer.getHandCard(targetEstablishmentIndex);
 
-        if (!new BusinessCenter().canTradeEstablishment(tradeEstablishment) ||
-                !new BusinessCenter().canTradeEstablishment(targetEstablishment)) {
+        if (new BusinessCenter().canNotTradeEstablishment(tradeEstablishment) ||
+                new BusinessCenter().canNotTradeEstablishment(targetEstablishment)) {
             return;
         }
         turnPlayer.removeEstablishment(tradeEstablishmentIndex);

@@ -10,16 +10,11 @@ public abstract class Card {
     private final int constructionCost;
     private final CardType cardType;
 
-    private Player owner;
-
     public Card(String name, int constructionCost, CardType cardType) {
         this.name = name;
         this.constructionCost = constructionCost;
         this.cardType = cardType;
     }
-
-
-    public abstract void takeEffect(Game game);
 
     public String getName() {
         return name;
@@ -31,14 +26,6 @@ public abstract class Card {
 
     public CardType getCardType() {
         return cardType;
-    }
-
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
-    public Player getOwner() {
-        return owner;
     }
 
     @Override
