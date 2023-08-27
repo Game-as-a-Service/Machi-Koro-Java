@@ -5,24 +5,33 @@ import domain.card.CardType;
 import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
 import domain.card.landmark.Landmark;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+@Builder
+@AllArgsConstructor
 public class Player {
     private String id;
     private final String name;
     private int coins;
-    private final HandCard handCard = new HandCard();
+    @Builder.Default
+    private HandCard handCard = new HandCard();
 
     public Player(String name) {
         this.name = name;
-        handCard.setPlayer(this);
+        this.handCard = new HandCard();
     }
 
     public void addCardToHandCard(Establishment establishment) {
         handCard.addCardToHandCard(establishment);
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public int getTotalCoin() {
@@ -31,6 +40,10 @@ public class Player {
 
     public void setTotalCoin(int coins) {
         this.coins = coins;
+    }
+
+    public HandCard getHandCard() {
+        return this.handCard;
     }
 
     public List<Establishment> getEstablishments() {
@@ -86,16 +99,9 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        handCard.getLandmarks()
-                .stream()
-                .filter(l -> l.equals(card) && l.isFlipped() == false)
-                .findFirst()
-                .map(targetlandmark -> {
-                    targetlandmark.setFlipped(true);
-                    this.payCoin(cost);
-                    return targetlandmark;
-                })
-                .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));
+        handCard.flipLandMark(card);
+        this.payCoin(cost);
+
     }
 
     public int checkEffectMoneyEnough(int effectMoney) {

@@ -10,10 +10,6 @@ public class Landmark extends Card {
         super(name, constructionCost, cardType);
     }
 
-    public enum CardSide {
-        FRONT, BACK
-    }
-
     public boolean isFlipped() {
         return flipped;
     }

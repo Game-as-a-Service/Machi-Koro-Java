@@ -26,7 +26,7 @@ class PlayerTest {
     void setUp() {
         player = new Player("m1wt9ILw");
         bank = new Bank();
-        game = new Game(bank, Collections.singletonList(player), null, null);
+        game = new Game(bank, Collections.singletonList(player), null);
         bank.payCoin(100);
         player.gainCoin(100);
     }

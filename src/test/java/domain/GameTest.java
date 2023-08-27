@@ -3,6 +3,7 @@ package domain;
 import domain.card.establishment.AppleOrchard;
 import domain.card.establishment.Bakery;
 import domain.card.establishment.Cafe;
+import domain.card.establishment.ConvenienceStore;
 import domain.card.establishment.Establishment;
 import domain.card.establishment.WheatField;
 import domain.card.landmark.Landmark;
@@ -13,8 +14,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 class GameTest {
@@ -40,12 +42,11 @@ class GameTest {
         players.add(new Player("B"));
 
         Bank bank = new Bank(282);
-        List<Dice> dices = new ArrayList<>();
         Marketplace marketplace = new Marketplace();
         int expectedBankCoins = 282 - (2 * Bank.INIT_PAY_COINS);
 
         //When
-        Game game = new Game(bank, players, dices, marketplace);
+        Game game = new Game(bank, players, marketplace);
         game.setUp();
 
         //Then
@@ -62,7 +63,7 @@ class GameTest {
 
         assertEquals(4, landmarks.size());
 
-        landmarks.forEach(landmark -> assertEquals(false, landmark.isFlipped()));
+        landmarks.forEach(landmark -> assertFalse(landmark.isFlipped()));
 
         assertEquals(3, player.getTotalCoin());
     }
@@ -76,7 +77,7 @@ class GameTest {
     @Test
     void test1() {
         var players = List.of(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
-        Game game = new Game(new Bank(), players, List.of(new Dice(), new Dice()), new Marketplace());
+        Game game = new Game(new Bank(), players, new Marketplace());
         var playerA = players.get(0);
         var playerB = players.get(1);
         var playerC = players.get(2);
@@ -114,6 +115,39 @@ class GameTest {
         assertThat(playerA.getTotalCoin()).isEqualTo(36);
         assertThat(playerB.getTotalCoin()).isEqualTo(30);
         assertThat(playerC.getTotalCoin()).isEqualTo(33);
+
+
+    }
+
+    @Test
+    @DisplayName("""
+            當玩家A有便利商店2張，並且有購物中心
+            當骰子擲出點數為4時
+            A可以從銀行得到8元
+            """)
+    void 當A有便利商店2張_並且有購物中心_可以得到8元() {
+        // given
+        HandCard handCard = new HandCard();
+        handCard.addCardToHandCard(new ConvenienceStore());
+        handCard.addCardToHandCard(new ConvenienceStore());
+        handCard.flipLandMark(new ShoppingMall());
+        Player playerA = Player.builder().name("A").coins(0).handCard(handCard).build();
+
+        Game game = Game.builder()
+                .players(List.of(playerA))
+                .turnPlayer(playerA)
+                .currentDicePoint(4)
+                .bank(new Bank())
+                .build();
+
+        var originalBankCoins = game.getBank().getTotalCoin();
+        // when
+        game.forLoopTakeEffect();
+
+        // then
+        var effectCoins = (new ConvenienceStore().getEffectCoins() + 1) * 2;
+        assertThat(playerA.getTotalCoin()).isEqualTo(effectCoins);
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankCoins - effectCoins);
 
 
     }

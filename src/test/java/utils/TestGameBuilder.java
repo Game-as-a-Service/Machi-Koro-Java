@@ -54,7 +54,6 @@ public class TestGameBuilder extends GameBuilder {
         return new Game(
                 createBankWithFixedCoin(initialCoinForBank),
                 createPlayerArrayWithFixedNumber(numberOfPlayers),
-                createDiceArrayWithFixedNumber(numberOfDices),
                 marketplace
         ) {
             @Override
@@ -70,14 +69,6 @@ public class TestGameBuilder extends GameBuilder {
             players[i] = new Player(String.valueOf(i + 1));
 
         return Arrays.asList(players);
-    }
-
-    private static List<Dice> createDiceArrayWithFixedNumber(int numberOfDices) {
-        var dices = new Dice[numberOfDices];
-        for (int i = 0; i < numberOfDices; i++)
-            dices[i] = new Dice();
-
-        return Arrays.asList(dices);
     }
 
     private static Bank createBankWithFixedCoin(int initialCoinForBank) {

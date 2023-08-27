@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 java {
@@ -7,6 +9,7 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
 group 'org.example'
 version '1.0-SNAPSHOT'
 
@@ -15,12 +18,23 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.5'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.7.5'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.7.5'
-    //todo embedded test db
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    // embedded test MongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
 test {

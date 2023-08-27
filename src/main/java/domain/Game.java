@@ -3,23 +3,33 @@ package domain;
 import domain.card.establishment.Bakery;
 import domain.card.establishment.IndustryColor;
 import domain.card.establishment.WheatField;
+import domain.card.landmark.TrainStation;
+import domain.events.DomainEvent;
+import domain.events.RollDiceEvent;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
 
+@Builder
+@Data
+@AllArgsConstructor
 public class Game {
+    private String id;
     private final Bank bank;
     private final List<Player> players;
-    private final List<Dice> dices;
+    private final List<Dice> dices = List.of(new Dice(), new Dice());
     private int currentDicePoint;
     private Player turnPlayer;
     private final Marketplace marketplace;
 
-    public Game(Bank bank, List<Player> players, List<Dice> dices, Marketplace marketplace) {
+    public Game(Bank bank, List<Player> players, Marketplace marketplace) {
         this.bank = bank;
         this.players = players;
-        this.dices = dices;
         this.marketplace = marketplace;
     }
+
     public int getCurrentDicePoint() {
         return currentDicePoint;
     }
@@ -51,6 +61,7 @@ public class Game {
             bank.payCoin(3);
             player.addCardToHandCard(new Bakery());
             player.addCardToHandCard(new WheatField());
+            marketplace.initial();
         }
     }
 
@@ -93,4 +104,23 @@ public class Game {
         return players.stream().filter(player -> !player.equals(turnPlayer)).toList();
     }
 
+    public List<DomainEvent> rollDice(String playerId, int diceCount) {
+        if (!playerId.equals(turnPlayer.getId())) {
+            throw new IllegalArgumentException("Turn player id is incorrect");
+        }
+
+        if ((diceCount > 1 && !turnPlayer.hasLandmarkFlipped(new TrainStation())) || diceCount > 2 || diceCount < 1) {
+            throw new IllegalArgumentException("Invalid quantity of dice");
+        }
+
+        currentDicePoint = 0;
+        for (int i = 0; i < diceCount; i++) {
+            var dice = dices.get(i);
+            dice.throwDice();
+            currentDicePoint += dice.getPoint();
+        }
+
+        var event = RollDiceEvent.builder().dicePoint(currentDicePoint).build();
+        return List.of(event);
+    }
 }
