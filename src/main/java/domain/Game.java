@@ -23,7 +23,7 @@ public class Game {
 
     public void distributeResources(int dicePoint) {
         this.setCurrentDicePoint(dicePoint);
-        this.getPlayers().forEach(player -> player.ownedEstablishmentTakeEffect(this));
+        this.getPlayers().forEach(player -> player.establishmentTakeEffect(this));
     }
 
     public int getCurrentDicePoint() {

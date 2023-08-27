@@ -1,11 +1,15 @@
 package domain;
 
 import domain.card.Card;
+import domain.card.CardType;
 import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
-import domain.card.landmark.*;
+import domain.card.landmark.Landmark;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class Player {
     private final String name;
@@ -26,12 +30,22 @@ public class Player {
         return coins;
     }
 
-    public List<Establishment> getOwnedEstablishment() {
-        return handCard.getOwnedEstablishment();
+    public List<Establishment> getEstablishments() {
+        return handCard.getEstablishments();
     }
 
-    public List<Landmark> getOwnedLandmark() {
-        return handCard.getOwnedLandmark();
+    public List<Establishment> getEstablishments(CardType cardType) {
+        return handCard.getEstablishments().stream()
+                .filter(establishment -> establishment.getCardType().equals(CardType.CROP))
+                .collect(Collectors.toList());
+    }
+
+    public List<Landmark> getLandmarks() {
+        return handCard.getLandmarks();
+    }
+
+    public Landmark getLandmark(int index) {
+        return handCard.getLandmarks().get(index);
     }
 
     public void buyCard(Establishment card) {
@@ -54,12 +68,12 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        handCard.getOwnedLandmark()
+        handCard.getLandmarks()
                 .stream()
-                .filter(l -> l.equals(card) && l.getCardSide().equals(Landmark.CardSide.BACK))
+                .filter(l -> l.equals(card) && l.isFlipped() == false)
                 .findFirst()
                 .map(targetlandmark -> {
-                    targetlandmark.setCardSide(Landmark.CardSide.FRONT);
+                    targetlandmark.setFlipped(true);
                     this.payCoin(cost);
                     return targetlandmark;
                 })
@@ -86,9 +100,9 @@ public class Player {
         this.coins += coin;
     }
 
-    public void ownedEstablishmentTakeEffect(Game game) {
-        handCard.getOwnedEstablishment().sort(Comparator.comparing(establishment -> establishment.getIndustryColor().getOrder()));
-        handCard.getOwnedEstablishment().forEach(establishment -> establishment.takeEffect(game));
+    public void establishmentTakeEffect(Game game) {
+        handCard.getEstablishments().sort(Comparator.comparing(establishment -> establishment.getIndustryColor().getOrder()));
+        handCard.getEstablishments().forEach(establishment -> establishment.takeEffect(game));
     }
 
     private boolean isBalanceEnough(int cost) {
@@ -106,6 +120,6 @@ public class Player {
 
     //購買紫色建築物時，判斷玩家手上是否已有相同建築物
     private boolean hasTheSamePurpleCard(Establishment toBuyCard) {
-        return handCard.getOwnedEstablishment().contains(toBuyCard);
+        return handCard.getEstablishments().contains(toBuyCard);
     }
 }

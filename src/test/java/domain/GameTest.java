@@ -52,17 +52,17 @@ class GameTest {
 
         assertEquals(1, getEstablishmentCount(player, new WheatField()));
 
-        List<Landmark> ownedLandmark = player.getOwnedLandmark();
+        List<Landmark> landmarks = player.getLandmarks();
 
-        assertEquals(4, ownedLandmark.size());
+        assertEquals(4, landmarks.size());
 
-        ownedLandmark.forEach(landmark -> assertEquals(Landmark.CardSide.BACK, landmark.getCardSide()));
+        landmarks.forEach(landmark -> assertEquals(false, landmark.isFlipped()));
 
         assertEquals(3, player.getTotalCoin());
     }
 
     private long getEstablishmentCount(Player player, Establishment establishment) {
-        return player.getOwnedEstablishment()
+        return player.getEstablishments()
                 .stream()
                 .filter(card -> card.equals(establishment)).count();
     }
