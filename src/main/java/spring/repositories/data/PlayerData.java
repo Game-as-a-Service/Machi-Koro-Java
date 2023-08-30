@@ -29,7 +29,7 @@ public class PlayerData {
         return PlayerData.builder()
                 .id(player.getId())
                 .name(player.getName())
-                .coins(player.getTotalCoin())
+                .coins(player.getTotalCoins())
                 .handCard(HandCardData.toData(player.getHandCard()))
                 .build();
 

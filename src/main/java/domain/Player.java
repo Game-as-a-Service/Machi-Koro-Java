@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Builder
@@ -27,14 +26,14 @@ public class Player {
     }
 
     public void addCardToHandCard(Establishment establishment) {
-        handCard.addCardToHandCard(establishment);
+        handCard.addHandCard(establishment);
     }
 
     public String getId() {
         return this.id;
     }
 
-    public int getTotalCoin() {
+    public int getTotalCoins() {
         return coins;
     }
 
@@ -91,7 +90,7 @@ public class Player {
             }
         }
         this.payCoin(cost);
-        handCard.addCardToHandCard(card);
+        handCard.addHandCard(card);
     }
 
     public void flipLandMark(Landmark card) {
@@ -99,13 +98,13 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        handCard.flipLandMark(card);
+        handCard.flipLandMark(card.getClass());
         this.payCoin(cost);
 
     }
 
     public int checkEffectMoneyEnough(int effectMoney) {
-        return Math.min(effectMoney, this.getTotalCoin());
+        return Math.min(effectMoney, this.getTotalCoins());
     }
 
     public void payCoin(int coin) {
@@ -117,7 +116,7 @@ public class Player {
     }
 
     private boolean isBalanceEnough(int cost) {
-        return getTotalCoin() >= cost;
+        return getTotalCoins() >= cost;
     }
 
     public String getName() {
@@ -133,8 +132,8 @@ public class Player {
         return handCard.getEstablishments().contains(toBuyCard);
     }
 
-    public boolean hasLandmarkFlipped(Landmark landmark) {
-        return handCard.getLandmarks().stream().anyMatch(lm -> lm.equals(landmark) && lm.isFlipped());
+    public boolean hasLandmarkFlipped(Class<? extends Landmark> landmark) {
+        return handCard.getLandmarks().stream().anyMatch(lm -> lm.getClass() ==  landmark && lm.isFlipped());
     }
 
     public void removeEstablishment(int index) {

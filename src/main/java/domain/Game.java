@@ -19,7 +19,8 @@ public class Game {
     private String id;
     private final Bank bank;
     private final List<Player> players;
-    private final List<Dice> dices = List.of(new Dice(), new Dice());
+    @Builder.Default
+    private List<Dice> dices = List.of(new Dice(), new Dice());
     private int currentDicePoint;
     private Player turnPlayer;
     private final Marketplace marketplace;
@@ -28,6 +29,7 @@ public class Game {
         this.bank = bank;
         this.players = players;
         this.marketplace = marketplace;
+        this.dices = List.of(new Dice(), new Dice());
     }
 
     public int getCurrentDicePoint() {
@@ -84,7 +86,7 @@ public class Game {
         return dices;
     }
 
-    public void forLoopTakeEffect() {
+    public void takeAllPlayersEffect() {
         EffectHandler effectHandler = new EffectHandler();
 
         var redOwnCardPlayers = effectHandler.getOwnCardsPlayers(getPlayersExcludeTurnPlayer(), currentDicePoint, IndustryColor.RED);
@@ -109,18 +111,15 @@ public class Game {
             throw new IllegalArgumentException("Turn player id is incorrect");
         }
 
-        if ((diceCount > 1 && !turnPlayer.hasLandmarkFlipped(new TrainStation())) || diceCount > 2 || diceCount < 1) {
+        if ((diceCount > 1 && !turnPlayer.hasLandmarkFlipped(TrainStation.class)) || diceCount > 2 || diceCount < 1) {
             throw new IllegalArgumentException("Invalid quantity of dice");
         }
 
-        currentDicePoint = 0;
-        for (int i = 0; i < diceCount; i++) {
-            var dice = dices.get(i);
-            dice.throwDice();
-            currentDicePoint += dice.getPoint();
-        }
+        currentDicePoint = dices.stream().limit(diceCount).mapToInt(Dice::throwDice).sum();
 
         var event = RollDiceEvent.builder().dicePoint(currentDicePoint).build();
+
+        takeAllPlayersEffect();
         return List.of(event);
     }
 }

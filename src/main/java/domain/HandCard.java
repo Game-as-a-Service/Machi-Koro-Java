@@ -26,7 +26,7 @@ public class HandCard {
         this.landmarks = landmarks;
     }
 
-    public void addCardToHandCard(Establishment establishment) {
+    public void addHandCard(Establishment establishment) {
         establishments.add(establishment);
     }
 
@@ -49,13 +49,13 @@ public class HandCard {
         return landmarks;
     }
 
-    public void flipLandMark(Landmark card) {
+    public void flipLandMark(Class<? extends Landmark> landmark) {
         landmarks
                 .stream()
-                .filter(l -> l.equals(card) && l.isFlipped() == false)
+                .filter(l -> l.getClass() ==  landmark && !l.isFlipped())
                 .findFirst()
                 .map(targetlandmark -> {
-                    targetlandmark.setFlipped(true);
+                    targetlandmark.flipped();
                     return targetlandmark;
                 })
                 .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));

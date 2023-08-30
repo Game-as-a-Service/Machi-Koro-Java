@@ -10,6 +10,7 @@ import domain.card.landmark.Landmark;
 import domain.card.landmark.ShoppingMall;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ class GameTest {
 
         landmarks.forEach(landmark -> assertFalse(landmark.isFlipped()));
 
-        assertEquals(3, player.getTotalCoin());
+        assertEquals(3, player.getTotalCoins());
     }
 
     private long getEstablishmentCount(Player player, Establishment establishment) {
@@ -109,12 +110,12 @@ class GameTest {
         playerC.setTotalCoin(30);
         game.setCurrentDicePoint(10);
         game.setTurnPlayer(playerA);
-        game.forLoopTakeEffect();
+        game.takeAllPlayersEffect();
 
         // then
-        assertThat(playerA.getTotalCoin()).isEqualTo(36);
-        assertThat(playerB.getTotalCoin()).isEqualTo(30);
-        assertThat(playerC.getTotalCoin()).isEqualTo(33);
+        assertThat(playerA.getTotalCoins()).isEqualTo(36);
+        assertThat(playerB.getTotalCoins()).isEqualTo(30);
+        assertThat(playerC.getTotalCoins()).isEqualTo(33);
 
 
     }
@@ -127,28 +128,32 @@ class GameTest {
             """)
     void 當A有便利商店2張_並且有購物中心_可以得到8元() {
         // given
+        Dice dice = Mockito.mock(Dice.class);
+
         HandCard handCard = new HandCard();
-        handCard.addCardToHandCard(new ConvenienceStore());
-        handCard.addCardToHandCard(new ConvenienceStore());
-        handCard.flipLandMark(new ShoppingMall());
-        Player playerA = Player.builder().name("A").coins(0).handCard(handCard).build();
+        handCard.addHandCard(new ConvenienceStore());
+        handCard.addHandCard(new ConvenienceStore());
+        handCard.flipLandMark(ShoppingMall.class);
+        Player playerA = Player.builder().id("id").name("A").coins(0).handCard(handCard).build();
 
         Game game = Game.builder()
                 .players(List.of(playerA))
                 .turnPlayer(playerA)
                 .currentDicePoint(4)
+                .dices(List.of(dice))
                 .bank(new Bank())
                 .build();
 
         var originalBankCoins = game.getBank().getTotalCoin();
+
         // when
-        game.forLoopTakeEffect();
+        Mockito.when(dice.throwDice()).thenReturn(4);
+        game.rollDice(playerA.getId(), 1);
 
         // then
-        var effectCoins = (new ConvenienceStore().getEffectCoins() + 1) * 2;
-        assertThat(playerA.getTotalCoin()).isEqualTo(effectCoins);
+        var effectCoins = (ConvenienceStore.EFFECT_COINS + 1) * 2;
+        assertThat(playerA.getTotalCoins()).isEqualTo(effectCoins);
         assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankCoins - effectCoins);
-
 
     }
 }

@@ -5,13 +5,9 @@ import java.util.Random;
 public class Dice {
 
     private int point;
-    private final Random random = new Random();
+    private static final Random RANDOM = new Random();
 
-    public int getPoint() {
-        return point;
-    }
-
-    public void throwDice() {
-        this.point = random.nextInt(6) + 1;
+    public int throwDice() {
+        return RANDOM.nextInt(6) + 1;
     }
 }

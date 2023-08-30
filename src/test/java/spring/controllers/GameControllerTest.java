@@ -12,11 +12,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,30 +29,26 @@ class GameControllerTest {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     String gameId = "createGameId";
 
     @Test
-    void rollDiceApiTest() {
+    void rollDiceApiTest() throws Exception {
         createGame();
 
         GameController.RollDiceRequest request = new GameController.RollDiceRequest("123", 1);
 
-        try {
-            MvcResult result = mockMvc.perform(post("/api/games/{gameId}/roll-dice", gameId)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(new ObjectMapper().writeValueAsString(request)))
-                    .andExpect(status().isOk())
-                    .andReturn();
+        var result = mockMvc.perform(post("/api/games/{gameId}/roll-dice", gameId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
 
-            String responseContent = result.getResponse().getContentAsString();
+        var actualGame = gameRepository.findById(gameId).orElseThrow();
 
-            var actualGame = gameRepository.findAll().get(0);
-            var expect = "{\"dicePoint\":" + actualGame.getCurrentDicePoint() + "}";
-            assertThat(responseContent).isEqualTo(expect);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        result.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("dicePoint").value(actualGame.getCurrentDicePoint()))
+                .andReturn();
     }
 
     public void createGame() {

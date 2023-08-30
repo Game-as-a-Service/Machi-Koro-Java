@@ -1,5 +1,6 @@
 package app.usecase;
 
+import app.exception.NotFoundException;
 import app.output.GameRepository;
 import domain.Game;
 import domain.events.DomainEvent;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.NotFound;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public class RollDiceUseCase {
 
     private Game findGame(Request request) {
         String gameId = request.getGameId();
-        return gameRepository.findById(gameId).orElseThrow();
+        return gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("this game is not found! gameId: " + gameId));
     }
 
     @Data

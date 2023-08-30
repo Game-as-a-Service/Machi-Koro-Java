@@ -5,15 +5,13 @@ import domain.card.establishment.Stadium;
 import domain.card.establishment.TvStation;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class HandCardTest {
     @Test
     void name() {
         HandCard handCard = new HandCard();
-        handCard.addCardToHandCard(new Stadium());
-        handCard.addCardToHandCard(new TvStation());
-        handCard.addCardToHandCard(new Bakery());
+        handCard.addHandCard(new Stadium());
+        handCard.addHandCard(new TvStation());
+        handCard.addHandCard(new Bakery());
 
         handCard.removeEstablishment(1);
 

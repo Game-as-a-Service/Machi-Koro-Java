@@ -1,6 +1,5 @@
 package domain;
 
-import domain.Dice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,9 +17,8 @@ class DiceTest {
     @Test
     void throwDice() {
         for (int i = 0; i < 999; i++) {
-            dice.throwDice();
-            assertThat(dice.getPoint() > 0).isTrue();
-            assertThat(dice.getPoint() < 7).isTrue();
+            var point = dice.throwDice();
+            assertThat(point > 0 && point < 7).isTrue();
         }
     }
 }
