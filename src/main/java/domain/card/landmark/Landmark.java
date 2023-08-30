@@ -1,30 +1,21 @@
 package domain.card.landmark;
 
-import domain.Game;
 import domain.card.Card;
 import domain.card.CardType;
 
 public class Landmark extends Card {
-    private boolean flipped;
+    private boolean isFlipped = false;
 
     public Landmark(String name, int constructionCost, CardType cardType) {
         super(name, constructionCost, cardType);
     }
 
-    @Override
-    public void takeEffect(Game game) {
-
-    }
-    public enum CardSide {
-        FRONT, BACK
-    }
-
     public boolean isFlipped() {
-        return flipped;
+        return isFlipped;
     }
 
-    public void setFlipped(boolean flipped) {
-        this.flipped = flipped;
+    public void flipped() {
+        isFlipped = true;
     }
 
 }

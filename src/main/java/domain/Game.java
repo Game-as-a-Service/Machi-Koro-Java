@@ -1,29 +1,35 @@
 package domain;
 
 import domain.card.establishment.Bakery;
+import domain.card.establishment.IndustryColor;
 import domain.card.establishment.WheatField;
+import domain.card.landmark.TrainStation;
+import domain.events.DomainEvent;
+import domain.events.RollDiceEvent;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
 
+@Builder
+@Data
+@AllArgsConstructor
 public class Game {
+    private String id;
     private final Bank bank;
     private final List<Player> players;
-    private final List<Dice> dices;
+    @Builder.Default
+    private List<Dice> dices = List.of(new Dice(), new Dice());
     private int currentDicePoint;
     private Player turnPlayer;
     private final Marketplace marketplace;
 
-    public Game(Bank bank, List<Player> players, List<Dice> dices, Marketplace marketplace) {
+    public Game(Bank bank, List<Player> players, Marketplace marketplace) {
         this.bank = bank;
         this.players = players;
-        this.dices = dices;
         this.marketplace = marketplace;
-        this.setUp();
-    }
-
-    public void distributeResources(int dicePoint) {
-        this.setCurrentDicePoint(dicePoint);
-        this.getPlayers().forEach(player -> player.establishmentTakeEffect(this));
+        this.dices = List.of(new Dice(), new Dice());
     }
 
     public int getCurrentDicePoint() {
@@ -50,26 +56,15 @@ public class Game {
         return bank;
     }
 
-    private void setUp() {
+    public void setUp() {
 
         for (Player player : players) {
             player.gainCoin(3);
             bank.payCoin(3);
             player.addCardToHandCard(new Bakery());
             player.addCardToHandCard(new WheatField());
+            marketplace.initial();
         }
-    }
-
-    public void start() {
-
-    }
-
-    public void startNewTurn() {
-
-    }
-
-    public void end() {
-
     }
 
     public List<Player> getPlayers() {
@@ -89,5 +84,42 @@ public class Game {
 
     public List<Dice> getDices() {
         return dices;
+    }
+
+    public void takeAllPlayersEffect() {
+        EffectHandler effectHandler = new EffectHandler();
+
+        var redOwnCardPlayers = effectHandler.getOwnCardsPlayers(getPlayersExcludeTurnPlayer(), currentDicePoint, IndustryColor.RED);
+        redOwnCardPlayers.forEach((player, establishments) ->
+                establishments.forEach(redEstablishment -> effectHandler.takeEffectRed(
+                        turnPlayer, player, redEstablishment.getEffectCoins())));
+
+        var blueOwnCardPlayers = effectHandler.getOwnCardsPlayers(players, currentDicePoint, IndustryColor.BLUE);
+        blueOwnCardPlayers.forEach((player, establishments) ->
+                establishments.forEach(blueEstablishment -> effectHandler.takeEffectBlue(player, bank, blueEstablishment.getEffectCoins())));
+
+        var turnPlayerGreenCards = turnPlayer.getEstablishments(currentDicePoint, IndustryColor.GREEN);
+        turnPlayerGreenCards.forEach(greenEstablishment -> effectHandler.takeEffectGreen(turnPlayer, bank, greenEstablishment));
+    }
+
+    public List<Player> getPlayersExcludeTurnPlayer() {
+        return players.stream().filter(player -> !player.equals(turnPlayer)).toList();
+    }
+
+    public List<DomainEvent> rollDice(String playerId, int diceCount) {
+        if (!playerId.equals(turnPlayer.getId())) {
+            throw new IllegalArgumentException("Turn player id is incorrect");
+        }
+
+        if ((diceCount > 1 && !turnPlayer.hasLandmarkFlipped(TrainStation.class)) || diceCount > 2 || diceCount < 1) {
+            throw new IllegalArgumentException("Invalid quantity of dice");
+        }
+
+        currentDicePoint = dices.stream().limit(diceCount).mapToInt(Dice::throwDice).sum();
+
+        var event = RollDiceEvent.builder().dicePoint(currentDicePoint).build();
+
+        takeAllPlayersEffect();
+        return List.of(event);
     }
 }

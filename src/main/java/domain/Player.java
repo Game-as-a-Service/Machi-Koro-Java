@@ -5,33 +5,63 @@ import domain.card.CardType;
 import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
 import domain.card.landmark.Landmark;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+@Builder
+@AllArgsConstructor
 public class Player {
+    private String id;
     private final String name;
     private int coins;
+    @Builder.Default
     private HandCard handCard = new HandCard();
 
     public Player(String name) {
         this.name = name;
-        handCard.setPlayer(this);
+        this.handCard = new HandCard();
     }
 
     public void addCardToHandCard(Establishment establishment) {
-        establishment.setOwner(this);
-        handCard.addCardToHandCard(establishment);
+        handCard.addHandCard(establishment);
     }
 
-    public int getTotalCoin() {
+    public String getId() {
+        return this.id;
+    }
+
+    public int getTotalCoins() {
         return coins;
+    }
+
+    public void setTotalCoin(int coins) {
+        this.coins = coins;
+    }
+
+    public HandCard getHandCard() {
+        return this.handCard;
     }
 
     public List<Establishment> getEstablishments() {
         return handCard.getEstablishments();
+    }
+
+    public List<Establishment> getEstablishments(int dicePoint, IndustryColor industryColor) {
+        return handCard.getEstablishments().stream()
+                .filter(establishment ->
+                        establishment.getDiceRollNeededToActivateEffect().contains(dicePoint) &&
+                                establishment.getIndustryColor().equals(industryColor)).toList();
+    }
+
+    public List<Establishment> getEstablishments(IndustryColor industryColor) {
+        return handCard.getEstablishments().stream().filter(establishment -> establishment.getIndustryColor().equals(industryColor)).toList();
+    }
+
+    public List<Establishment> getEstablishments(int dicePoint) {
+        return handCard.getEstablishments().stream().filter(establishment -> establishment.getDiceRollNeededToActivateEffect().contains(dicePoint)).toList();
     }
 
     public List<Establishment> getEstablishments(CardType cardType) {
@@ -60,7 +90,7 @@ public class Player {
             }
         }
         this.payCoin(cost);
-        handCard.addCardToHandCard(card);
+        handCard.addHandCard(card);
     }
 
     public void flipLandMark(Landmark card) {
@@ -68,28 +98,13 @@ public class Player {
         if (!isBalanceEnough(cost))
             return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
 
-        handCard.getLandmarks()
-                .stream()
-                .filter(l -> l.equals(card) && l.isFlipped() == false)
-                .findFirst()
-                .map(targetlandmark -> {
-                    targetlandmark.setFlipped(true);
-                    this.payCoin(cost);
-                    return targetlandmark;
-                })
-                .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));
+        handCard.flipLandMark(card.getClass());
+        this.payCoin(cost);
+
     }
 
     public int checkEffectMoneyEnough(int effectMoney) {
-        int actualCoin;
-        if (effectMoney > this.getTotalCoin()) {
-            actualCoin = this.getTotalCoin();
-            this.coins = 0;
-        } else {
-            actualCoin = effectMoney;
-            this.payCoin(effectMoney);
-        }
-        return actualCoin;
+        return Math.min(effectMoney, this.getTotalCoins());
     }
 
     public void payCoin(int coin) {
@@ -100,15 +115,9 @@ public class Player {
         this.coins += coin;
     }
 
-    public void establishmentTakeEffect(Game game) {
-        handCard.getEstablishments().sort(Comparator.comparing(establishment -> establishment.getIndustryColor().getOrder()));
-        handCard.getEstablishments().forEach(establishment -> establishment.takeEffect(game));
-    }
-
     private boolean isBalanceEnough(int cost) {
-        return getTotalCoin() >= cost;
+        return getTotalCoins() >= cost;
     }
-
 
     public String getName() {
         return name;
@@ -122,4 +131,13 @@ public class Player {
     private boolean hasTheSamePurpleCard(Establishment toBuyCard) {
         return handCard.getEstablishments().contains(toBuyCard);
     }
+
+    public boolean hasLandmarkFlipped(Class<? extends Landmark> landmark) {
+        return handCard.getLandmarks().stream().anyMatch(lm -> lm.getClass() ==  landmark && lm.isFlipped());
+    }
+
+    public void removeEstablishment(int index) {
+
+    }
+
 }
