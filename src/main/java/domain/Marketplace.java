@@ -23,6 +23,7 @@ import org.apache.logging.log4j.util.Supplier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -62,5 +63,12 @@ public class Marketplace {
 
     public List<Establishment> getEstablishments() {
         return establishments;
+    }
+    public Establishment findEstablishmentByName(String cardName){
+        Establishment establishment = establishments.stream().filter(card -> cardName.equals(card.getName())).findFirst().orElseThrow(NoSuchElementException::new);
+        return establishment;
+    }
+    public void removeEstablishment(Establishment establishment) {
+        establishments.remove(establishment);
     }
 }

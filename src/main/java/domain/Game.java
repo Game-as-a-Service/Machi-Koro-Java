@@ -1,15 +1,18 @@
 package domain;
 
 import domain.card.establishment.Bakery;
+import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
 import domain.card.establishment.WheatField;
 import domain.card.landmark.TrainStation;
+import domain.events.BuyEstablishmentEvent;
 import domain.events.DomainEvent;
 import domain.events.RollDiceEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 @Builder
@@ -121,5 +124,16 @@ public class Game {
 
         takeAllPlayersEffect();
         return List.of(event);
+    }
+
+    public List<DomainEvent> turnPlayerBuyCard(String type, String cardName) {
+        if ("Establishment".equals(type)) {
+            Establishment establishment = marketplace.findEstablishmentByName(cardName);
+            turnPlayer.addCardToHandCard(establishment);
+            marketplace.removeEstablishment(establishment);
+            DomainEvent buyEstablishmentEvent = new BuyEstablishmentEvent(String.format("玩家 %s 花費了 %d 元 購買了 %s", turnPlayer.getId(), establishment.getConstructionCost(), establishment.getName()));
+            return List.of(buyEstablishmentEvent);
+        } else
+            return Collections.emptyList();
     }
 }
