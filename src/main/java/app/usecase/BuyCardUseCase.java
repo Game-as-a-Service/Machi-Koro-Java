@@ -1,5 +1,6 @@
 package app.usecase;
 
+import app.exception.NotFoundException;
 import app.output.GameRepository;
 import domain.Game;
 import domain.events.DomainEvent;
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.inject.Named;
 import java.util.List;
-import java.util.NoSuchElementException;
+
 @Named
 @RequiredArgsConstructor
 public class BuyCardUseCase {
@@ -18,13 +19,13 @@ public class BuyCardUseCase {
 
     public void execute(Request request, Presenter presenter) {
         Game game = findGameById(request.gameId);
-        List<DomainEvent> events = game.turnPlayerBuyCard(request.getType(), request.getCardName());
+        List<DomainEvent> events = game.turnPlayerBuyCard(request.getPlayerId(), request.getType(), request.getCardName());
         gameRepository.save(game);
         presenter.present(events);
     }
 
     private Game findGameById(String gameId) {
-        return gameRepository.findById(gameId).orElseThrow(NoSuchElementException::new);
+        return gameRepository.findById(gameId).orElseThrow(NotFoundException::new);
     }
 
 
@@ -36,6 +37,7 @@ public class BuyCardUseCase {
         private String playerId;
         private String type;
         private String cardName;
+
     }
 
     public interface Presenter {

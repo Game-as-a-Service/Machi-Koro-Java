@@ -29,12 +29,16 @@ import java.util.stream.IntStream;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class Marketplace {
     private final int IMPORTANT_ESTABLISHMENT_QUANTITY = 4;
     private final int ESTABLISHMENT_QUANTITY = 6;
     @Builder.Default
     private List<Establishment> establishments = new ArrayList<>();
+
+    public Marketplace() {
+        establishments = new ArrayList<>();
+        initial();
+    }
 
     public void initial() {
         establishments.addAll(generateCards(10, Bakery::new));
@@ -49,7 +53,6 @@ public class Marketplace {
         establishments.addAll(generateCards(6, FurnitureFactory::new));
         establishments.addAll(generateCards(6, Mine::new));
         establishments.addAll(generateCards(6, Ranch::new));
-
         establishments.addAll(generateCards(4, Stadium::new));
         establishments.addAll(generateCards(4, TvStation::new));
         establishments.addAll(generateCards(4, BusinessCenter::new));
@@ -64,10 +67,12 @@ public class Marketplace {
     public List<Establishment> getEstablishments() {
         return establishments;
     }
-    public Establishment findEstablishmentByName(String cardName){
+
+    public Establishment findEstablishmentByName(String cardName) {
         Establishment establishment = establishments.stream().filter(card -> cardName.equals(card.getName())).findFirst().orElseThrow(NoSuchElementException::new);
         return establishment;
     }
+
     public void removeEstablishment(Establishment establishment) {
         establishments.remove(establishment);
     }

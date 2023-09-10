@@ -35,7 +35,7 @@ public class RollDicePresenter implements RollDiceUseCase.Presenter {
         return ofNullable(viewModel);
     }
 
-    private static <T extends DomainEvent> Optional<T> getEvent(List<DomainEvent> events,
+    public static <T extends DomainEvent> Optional<T> getEvent(List<DomainEvent> events,
                                                                 Class<T> type) {
         return events.stream()
                 .filter(e -> type.isAssignableFrom(e.getClass()))

@@ -52,7 +52,7 @@ public class HandCard {
     public void flipLandMark(Class<? extends Landmark> landmark) {
         landmarks
                 .stream()
-                .filter(l -> l.getClass() ==  landmark && !l.isFlipped())
+                .filter(l -> l.getClass() == landmark && !l.isFlipped())
                 .findFirst()
                 .map(targetlandmark -> {
                     targetlandmark.flipped();

@@ -77,8 +77,9 @@ class GameTest {
 
     @Test
     void test1() {
+        Bank bank = new Bank();
         var players = List.of(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
-        Game game = new Game(new Bank(), players, new Marketplace());
+        Game game = new Game(bank, players, new Marketplace());
         var playerA = players.get(0);
         var playerB = players.get(1);
         var playerC = players.get(2);
@@ -89,19 +90,19 @@ class GameTest {
         playerC.gainCoin(30);
         playerD.gainCoin(30);
 
-        playerA.buyCard(new AppleOrchard());
-        playerA.buyCard(new AppleOrchard());
-        playerA.buyCard(new Cafe());
-        playerA.buyCard(new Bakery());
-        playerA.buyCard(new Bakery());
+        playerA.buyEstablishment(new AppleOrchard(), bank);
+        playerA.buyEstablishment(new AppleOrchard(), bank);
+        playerA.buyEstablishment(new Cafe(), bank);
+        playerA.buyEstablishment(new Bakery(), bank);
+        playerA.buyEstablishment(new Bakery(), bank);
 
-        playerB.buyCard(new Cafe());
-        playerB.buyCard(new Cafe());
+        playerB.buyEstablishment(new Cafe(), bank);
+        playerB.buyEstablishment(new Cafe(), bank);
 
-        playerB.flipLandMark(new ShoppingMall());
+        playerB.flipLandMark(new ShoppingMall(),bank);
 
 
-        playerC.buyCard(new AppleOrchard());
+        playerC.buyEstablishment(new AppleOrchard(), bank);
 
 
         // when

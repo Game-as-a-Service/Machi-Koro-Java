@@ -23,10 +23,10 @@ public class LandmarkData {
 
     public Landmark toDomain() {
         return switch (type) {
-            case AMUSEMENT_PARK -> new AmusementPark();
-            case RADIO_TOWER -> new RadioTower();
-            case SHOPPING_MALL -> new ShoppingMall();
-            case TRAIN_STATION -> new TrainStation();
+            case AMUSEMENT_PARK -> new AmusementPark(flipped);
+            case RADIO_TOWER -> new RadioTower(flipped);
+            case SHOPPING_MALL -> new ShoppingMall(flipped);
+            case TRAIN_STATION -> new TrainStation(flipped);
         };
     }
 

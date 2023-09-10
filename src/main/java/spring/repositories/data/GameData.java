@@ -1,6 +1,7 @@
 package spring.repositories.data;
 
 import domain.Game;
+import domain.Player;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,12 +20,14 @@ public class GameData {
     protected MarketplaceData marketplace;
 
     public Game toDomain() {
+        List<Player> playersDomain = mapToList(players, PlayerData::toDomain);
+        Player turnPlayerDomain = playersDomain.stream().filter(player -> player.getId().equals(turnPlayer.getId())).findFirst().orElseThrow();
         return Game.builder()
                 .id(id)
                 .bank(bank.toDomain())
-                .players(mapToList(players, PlayerData::toDomain))
+                .players(playersDomain)
                 .currentDicePoint(currentDicePoint)
-                .turnPlayer(turnPlayer.toDomain())
+                .turnPlayer(turnPlayerDomain)
                 .marketplace(marketplace.toDomain())
                 .build();
     }

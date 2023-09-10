@@ -3,7 +3,6 @@ package spring.controllers;
 import app.usecase.BuyCardUseCase;
 import app.usecase.RollDiceUseCase;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

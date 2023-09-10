@@ -5,10 +5,9 @@ import domain.Player;
 import java.util.Objects;
 
 public abstract class Card {
-
-    private final String name;
-    private final int constructionCost;
-    private final CardType cardType;
+    protected final String name;
+    protected final int constructionCost;
+    protected final CardType cardType;
 
     public Card(String name, int constructionCost, CardType cardType) {
         this.name = name;
