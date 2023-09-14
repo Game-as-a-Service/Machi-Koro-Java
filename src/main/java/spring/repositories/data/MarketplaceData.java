@@ -4,22 +4,24 @@ import domain.Marketplace;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.Map;
 
-import static domain.StreamUtils.mapToList;
+import static domain.StreamUtils.convertMapToAnotherMap;
 
 @Builder
 public class MarketplaceData {
     private List<EstablishmentData> establishments;
+    private Map<String, List<EstablishmentData>> establishmentMap;
 
     public Marketplace toDomain() {
         return Marketplace.builder()
-                .establishments(mapToList(this.establishments, EstablishmentData::toDomain))
+                .establishmentMap(convertMapToAnotherMap(this.establishmentMap, EstablishmentData::toDomain))
                 .build();
     }
 
     public static MarketplaceData toData(Marketplace marketplace) {
         return MarketplaceData.builder()
-                .establishments(mapToList(marketplace.getEstablishments(), EstablishmentData::toData))
+                .establishmentMap(convertMapToAnotherMap(marketplace.getEstablishmentMap(), EstablishmentData::toData))
                 .build();
     }
 }

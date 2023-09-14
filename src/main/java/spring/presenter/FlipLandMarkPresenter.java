@@ -24,16 +24,16 @@ public class FlipLandMarkPresenter implements FlipLandMarkUseCase.Presenter {
     @Override
     public void present(List<DomainEvent> events) {
         viewModel = getEvent(events, GameOverEvent.class)
-                .map(e -> new FlipLandMarkPresenter.FlipLandMarkViewModel(e.message))
+                .map(e -> new FlipLandMarkViewModel(e.message))
                 .orElse(getEvent(events, FlipLandMarkEvent.class)
-                        .map(e -> new FlipLandMarkPresenter.FlipLandMarkViewModel(e.message))
+                        .map(e -> new FlipLandMarkViewModel(e.message))
                         .orElse(null));
     }
 
     @AllArgsConstructor
     @Data
     @NoArgsConstructor
-    public class FlipLandMarkViewModel {
+    public static class FlipLandMarkViewModel {
         private String message;
     }
 }

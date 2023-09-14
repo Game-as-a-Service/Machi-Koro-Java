@@ -33,7 +33,7 @@ public class BuyCardPresenter implements BuyCardUseCase.Presenter {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public class BuyCardPresenterViewModel {
+    public static class BuyCardPresenterViewModel {
         private String message;
     }
 }

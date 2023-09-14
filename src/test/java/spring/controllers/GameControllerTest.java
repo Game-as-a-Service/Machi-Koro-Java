@@ -76,7 +76,7 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "小麥田");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "WheatField");
 
         mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -93,7 +93,7 @@ class GameControllerTest {
         assertEquals(List.of(new WheatField()), actualPlayerA.getEstablishments());
         assertEquals("124", turnPlayer.getId());
         assertEquals(283, bank.getTotalCoin());
-        assertEquals(91, actualGame.getMarketplace().getEstablishments().size());
+        assertEquals(9, actualGame.getMarketplace().getEstablishmentMap().get("WheatField").size());
     }
 
     @Test
@@ -114,7 +114,7 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "小麥田");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "WheatField");
 
         mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -132,6 +132,7 @@ class GameControllerTest {
         assertEquals(Collections.emptyList(), actualPlayerA.getEstablishments());
         assertEquals("123", turnPlayer.getId());
         assertEquals(282, bank.getTotalCoin());
+        assertEquals(10, actualGame.getMarketplace().getEstablishmentMap().get("WheatField").size());
     }
 
     @Test
@@ -157,7 +158,7 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "商業中心");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "BusinessCenter");
 
         mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -172,6 +173,7 @@ class GameControllerTest {
         assertEquals(8, actualPlayerA.getTotalCoins());
         assertEquals("123", turnPlayer.getId());
         assertEquals(282, bank.getTotalCoin());
+        assertEquals(4, actualGame.getMarketplace().getEstablishmentMap().get("BusinessCenter").size());
     }
 
     @Test
@@ -278,6 +280,7 @@ class GameControllerTest {
 
 
     private Game givenGameStarted(Player... player) {
+        Marketplace marketplace = new Marketplace();
         Game game = Game.builder()
                 .id("createGameId")
                 .bank(new Bank())
