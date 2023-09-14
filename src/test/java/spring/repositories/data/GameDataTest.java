@@ -6,6 +6,7 @@ import domain.Marketplace;
 import domain.Player;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,7 +39,7 @@ class GameDataTest {
 
         assertThat(gameData.getId()).isEqualTo(game.getId());
         assertThat(gameData.getPlayers().size()).isEqualTo(game.getPlayers().size());
-        assertThat(gameData.getTurnPlayer().getId()).isEqualTo(game.getTurnPlayer().getId());
+        assertThat(gameData.getTurnPlayerId()).isEqualTo(game.getTurnPlayer().getId());
     }
 
 
@@ -70,19 +71,22 @@ class GameDataTest {
                         .landmarks(List.of(new LandmarkData(false, LandmarkData.Type.AMUSEMENT_PARK)))
                         .build())
                 .build();
+        HashMap<String, List<EstablishmentData>> establishmentMap = new HashMap<>();
+        establishmentMap.put("AppleOrchard", List.of(new EstablishmentData(EstablishmentData.Type.APPLE_ORCHARD)));
+
         GameData gameData = GameData.builder()
                 .id(ID)
                 .bank(BankData.builder().coins(300).build())
                 .players(List.of(player1, player2, player3, player4))
                 .currentDicePoint(1)
-                .turnPlayer(player3)
-                .marketplace(MarketplaceData.builder().establishments(List.of(new EstablishmentData(EstablishmentData.Type.APPLE_ORCHARD))).build())
+                .turnPlayerId(player3.getId())
+                .marketplace(MarketplaceData.builder().establishmentMap(establishmentMap).build())
                 .build();
 
         Game game = gameData.toDomain();
 
         assertThat(game.getId()).isEqualTo(gameData.getId());
         assertThat(game.getPlayers().size()).isEqualTo(gameData.getPlayers().size());
-        assertThat(game.getTurnPlayer().getId()).isEqualTo(gameData.getTurnPlayer().getId());
+        assertThat(game.getTurnPlayer().getId()).isEqualTo(gameData.getTurnPlayerId());
     }
 }

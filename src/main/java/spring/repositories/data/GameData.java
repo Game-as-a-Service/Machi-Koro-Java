@@ -16,12 +16,12 @@ public class GameData {
     protected BankData bank;
     protected List<PlayerData> players;
     protected int currentDicePoint;
-    protected PlayerData turnPlayer;
+    protected String turnPlayerId;
     protected MarketplaceData marketplace;
 
     public Game toDomain() {
         List<Player> playersDomain = mapToList(players, PlayerData::toDomain);
-        Player turnPlayerDomain = playersDomain.stream().filter(player -> player.getId().equals(turnPlayer.getId())).findFirst().orElseThrow();
+        Player turnPlayerDomain = playersDomain.stream().filter(player -> player.getId().equals(turnPlayerId)).findFirst().orElseThrow();
         return Game.builder()
                 .id(id)
                 .bank(bank.toDomain())
@@ -38,7 +38,7 @@ public class GameData {
                 .bank(BankData.toData(game.getBank()))
                 .players(mapToList(game.getPlayers(), PlayerData::toData))
                 .currentDicePoint(game.getCurrentDicePoint())
-                .turnPlayer(PlayerData.toData(game.getTurnPlayer()))
+                .turnPlayerId(game.getTurnPlayer().getId())
                 .marketplace(MarketplaceData.toData(game.getMarketplace()))
                 .build();
     }
