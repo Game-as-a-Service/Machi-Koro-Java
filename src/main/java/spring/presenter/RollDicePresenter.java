@@ -34,9 +34,9 @@ public class RollDicePresenter implements RollDiceUseCase.Presenter {
     public Optional<RollDiceViewModel> getViewModel() {
         return ofNullable(viewModel);
     }
-
+    @SuppressWarnings("unchecked")
     public static <T extends DomainEvent> Optional<T> getEvent(List<DomainEvent> events,
-                                                                Class<T> type) {
+                                                               Class<T> type) {
         return events.stream()
                 .filter(e -> type.isAssignableFrom(e.getClass()))
                 .map(e -> (T) e)

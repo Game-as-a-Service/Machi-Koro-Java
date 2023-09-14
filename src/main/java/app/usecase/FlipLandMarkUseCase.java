@@ -8,18 +8,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import spring.presenter.BuyCardPresenter;
+import spring.presenter.FlipLandMarkPresenter;
 
 import javax.inject.Named;
 import java.util.List;
 
 @Named
 @RequiredArgsConstructor
-public class BuyCardUseCase {
+public class FlipLandMarkUseCase {
     private final GameRepository gameRepository;
 
-    public void execute(Request request, Presenter presenter) {
+    public void execute(FlipLandMarkUseCase.Request request, FlipLandMarkPresenter presenter) {
         Game game = findGameById(request.gameId);
-        List<DomainEvent> events = game.turnPlayerBuyCard(request.getPlayerId(), request.getCardName());
+        List<DomainEvent> events = game.turnPlayerFlipLandMark(request.getPlayerId(), request.getCardName());
         gameRepository.save(game);
         presenter.present(events);
     }
@@ -28,6 +30,9 @@ public class BuyCardUseCase {
         return gameRepository.findById(gameId).orElseThrow(NotFoundException::new);
     }
 
+    public interface Presenter {
+        void present(List<DomainEvent> events);
+    }
 
     @Data
     @NoArgsConstructor
@@ -36,12 +41,5 @@ public class BuyCardUseCase {
         private String gameId;
         private String playerId;
         private String cardName;
-
     }
-
-    public interface Presenter {
-        void present(List<DomainEvent> events);
-    }
-
-
 }

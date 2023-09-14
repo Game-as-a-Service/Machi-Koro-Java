@@ -1,6 +1,7 @@
 package spring.controllers;
 
 import app.usecase.BuyCardUseCase;
+import app.usecase.FlipLandMarkUseCase;
 import app.usecase.RollDiceUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring.presenter.BuyCardPresenter;
+import spring.presenter.FlipLandMarkPresenter;
 import spring.presenter.RollDicePresenter;
 
 import static org.springframework.http.ResponseEntity.noContent;
@@ -20,6 +22,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 public class GameController {
     private final RollDiceUseCase rollDiceUseCase;
     private final BuyCardUseCase buyCardUseCase;
+    private final FlipLandMarkUseCase flipLandMarkUseCase;
 
     @PostMapping("/{gameId}/roll-dice")
     public ResponseEntity<?> rollTheDice(@PathVariable String gameId, @RequestBody RollDiceRequest request) {
@@ -41,6 +44,16 @@ public class GameController {
                 .orElse(noContent().build());
     }
 
+    @PostMapping("/{gameId}/player:flipLandMark")
+    public ResponseEntity<?> flipLandMark(@PathVariable String gameId, @RequestBody FlipLandMarkRequest request) {
+        var presenter = new FlipLandMarkPresenter();
+        flipLandMarkUseCase.execute(request.toRequest(gameId), presenter);
+
+        return presenter.getViewModel()
+                .map(ResponseEntity::ok)
+                .orElse(noContent().build());
+    }
+
 
     public record RollDiceRequest(String playerId, int diceCount) {
         public RollDiceUseCase.Request toRequest(String gameId) {
@@ -49,9 +62,15 @@ public class GameController {
     }
 
 
-    public record BuyCardRequest(String playerId, String type, String cardName) {
+    public record BuyCardRequest(String playerId, String cardName) {
         public BuyCardUseCase.Request toRequest(String gameId) {
-            return new BuyCardUseCase.Request(gameId, playerId, type, cardName);
+            return new BuyCardUseCase.Request(gameId, playerId, cardName);
+        }
+    }
+
+    public record FlipLandMarkRequest(String playerId, String cardName) {
+        public FlipLandMarkUseCase.Request toRequest(String gameId) {
+            return new FlipLandMarkUseCase.Request(gameId, playerId, cardName);
         }
     }
 }

@@ -3,6 +3,7 @@ package spring.repositories;
 import app.output.GameRepository;
 import domain.Game;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Repository;
 import spring.repositories.dao.GameDAO;
 import spring.repositories.data.GameData;

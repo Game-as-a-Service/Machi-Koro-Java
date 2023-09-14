@@ -6,10 +6,7 @@ import domain.card.establishment.IndustryColor;
 import domain.card.establishment.WheatField;
 import domain.card.landmark.Landmark;
 import domain.card.landmark.TrainStation;
-import domain.events.BuyCardEvent;
-import domain.events.DomainEvent;
-import domain.events.GameOverEvent;
-import domain.events.RollDiceEvent;
+import domain.events.*;
 import domain.exceptions.MachiKoroException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -130,32 +127,16 @@ public class Game {
         return List.of(event);
     }
 
-    public List<DomainEvent> turnPlayerBuyCard(String playerId, String type, String cardName) {
+    public List<DomainEvent> turnPlayerBuyCard(String playerId, String cardName) {
         checkIsTurnPlayer(playerId);
-        if ("Establishment".equals(type)) {
-            Establishment establishment = marketplace.findEstablishmentByName(cardName);
-            turnPlayer.buyEstablishment(establishment, bank);
-            marketplace.removeEstablishment(establishment);
-            DomainEvent buyEstablishmentEvent = new BuyCardEvent(String.format("玩家 %s 花費了 %d 元 建造了 %s", turnPlayer.getId(), establishment.getConstructionCost(), establishment.getName()));
-            updateTurnPlayer();
-            return List.of(buyEstablishmentEvent);
-        } else {
-            Landmark landmark = turnPlayer.getHandCard().getLandmarks().stream().filter(lm -> cardName.equals(lm.getName())).findFirst().orElseThrow(NoSuchElementException::new);
-            turnPlayer.flipLandMark(landmark, bank);
-            if (isGameOver(turnPlayer)) {
-                DomainEvent GameOverEvent = new GameOverEvent(String.format("玩家 %s 勝利", turnPlayer.getId()));
-                return List.of(GameOverEvent);
-            } else {
-                DomainEvent flipLandMarkEvent = new BuyCardEvent(String.format("玩家 %s 花費了 %d 元 建造了 %s", turnPlayer.getId(), landmark.getConstructionCost(), landmark.getName()));
-                updateTurnPlayer();
-                return List.of(flipLandMarkEvent);
-            }
-        }
+        Establishment establishment = marketplace.findEstablishmentByName(cardName);
+        turnPlayer.buyEstablishment(establishment, bank);
+        marketplace.removeEstablishment(establishment);
+        DomainEvent buyEstablishmentEvent = new BuyCardEvent(String.format("玩家 %s 花費了 %d 元 建造了 %s", turnPlayer.getId(), establishment.getConstructionCost(), establishment.getName()));
+        updateTurnPlayerToNextOne();
+        return List.of(buyEstablishmentEvent);
     }
 
-    private boolean isGameOver(Player turnPlayer) {
-        return turnPlayer.getLandmarks().stream().allMatch(landmark -> landmark.isFlipped());
-    }
 
     private void checkIsTurnPlayer(String playerId) {
         if (!playerId.equals(turnPlayer.getId())) {
@@ -163,7 +144,25 @@ public class Game {
         }
     }
 
-    private void updateTurnPlayer() {
+    public List<DomainEvent> turnPlayerFlipLandMark(String playerId, String cardName) {
+        checkIsTurnPlayer(playerId);
+        Landmark landmark = turnPlayer.getHandCard().getLandmarks().stream().filter(lm -> cardName.equals(lm.getName())).findFirst().orElseThrow(NoSuchElementException::new);
+        turnPlayer.flipLandMark(landmark, bank);
+        if (isGameOver(turnPlayer)) {
+            DomainEvent GameOverEvent = new GameOverEvent(String.format("玩家 %s 勝利", turnPlayer.getId()));
+            return List.of(GameOverEvent);
+        } else {
+            DomainEvent flipLandMarkEvent = new FlipLandMarkEvent(String.format("玩家 %s 花費了 %d 元 建造了 %s", turnPlayer.getId(), landmark.getConstructionCost(), landmark.getName()));
+            updateTurnPlayerToNextOne();
+            return List.of(flipLandMarkEvent);
+        }
+    }
+
+    private boolean isGameOver(Player turnPlayer) {
+        return turnPlayer.getLandmarks().stream().allMatch(Landmark::isFlipped);
+    }
+
+    private void updateTurnPlayerToNextOne() {
         int index = players.indexOf(turnPlayer);
         turnPlayer = players.get((index + 1) % players.size());
     }

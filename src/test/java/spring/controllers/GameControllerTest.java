@@ -24,8 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest
 @AutoConfigureMockMvc
+@SpringBootTest
 class GameControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -62,12 +62,12 @@ class GameControllerTest {
     @Test
     @DisplayName(
             """
-            Given 玩家 PlayerA 1 coin 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
-            When  玩家 PlayerA 決定建設小麥田
-            Then  玩家A手牌擁有小麥田,0 coin
-                  TurnPlayer輪到PlayerB
-                  銀行有 283 coins           
-            """)
+                    Given 玩家 PlayerA 1 coin 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
+                    When  玩家 PlayerA 決定建設小麥田
+                    Then  玩家A手牌擁有小麥田,0 coin
+                          TurnPlayer輪到PlayerB
+                          銀行有 283 coins           
+                    """)
     void playerABuyWheatFieldWithEnoughCoinsTest() throws Exception {
         Player playerA = Player.builder().name("playerA").id("123").coins(1).build();
         Player playerB = Player.builder().name("playerB").id("124").build();
@@ -76,7 +76,7 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "Establishment", "小麥田");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "小麥田");
 
         mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -99,12 +99,12 @@ class GameControllerTest {
     @Test
     @DisplayName(
             """
-            Given 玩家 PlayerA 0 coin 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
-            When  玩家 PlayerA 決定建設小麥田
-            Then  玩家A購買失敗               
-                  TurnPlayer還是PlayerA
-                  銀行有 282 coins
-            """)
+                    Given 玩家 PlayerA 0 coin 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
+                    When  玩家 PlayerA 決定建設小麥田
+                    Then  玩家A購買失敗               
+                          TurnPlayer還是PlayerA
+                          銀行有 282 coins
+                    """)
     void playerABuyWheatFieldWithoutEnoughCoinsTest() throws Exception {
         Player playerA = Player.builder().name("playerA").id("123").build();
         Player playerB = Player.builder().name("playerB").id("124").build();
@@ -114,7 +114,7 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "Establishment", "小麥田");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "小麥田");
 
         mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -137,12 +137,52 @@ class GameControllerTest {
     @Test
     @DisplayName(
             """
-            Given 玩家 PlayerA 4 coins 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
-            When  玩家 PlayerA 決定建設火車站
-            Then  玩家A 0 coin,擁有的火車站已翻成正面             
-                  TurnPlayer是PlayerB
-                  銀行有 286 coins
-            """)
+                    Given 玩家 PlayerA 8 coins,1個商業中心,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
+                    When  玩家 PlayerA 決定建設商業中心
+                    Then  購買失敗，玩家A 8 coin,手牌擁有商業中心       
+                          TurnPlayer是PlayerA
+                          銀行有 282 coins
+                    """)
+    void playerABuyBusinessCenterWithBusinessCenterTest() throws Exception {
+        Player playerA = Player.builder()
+                .name("playerA").id("123")
+                .coins(8)
+                .handCard(new HandCard(List.of(new BusinessCenter()), List.of(new TrainStation(), new AmusementPark(), new ShoppingMall(), new RadioTower())))
+                .build();
+
+        Player playerB = Player.builder().name("playerB").id("124").build();
+        Player playerC = Player.builder().name("playerC").id("125").build();
+        Player playerD = Player.builder().name("playerD").id("126").build();
+
+
+        Game game = givenGameStarted(playerA, playerB, playerC, playerD);
+
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "商業中心");
+
+        mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        var actualGame = findGameById(game.getId());
+        Player actualPlayerA = actualGame.getPlayer("123");
+        Player turnPlayer = actualGame.getTurnPlayer();
+        Bank bank = actualGame.getBank();
+
+        assertEquals(8, actualPlayerA.getTotalCoins());
+        assertEquals("123", turnPlayer.getId());
+        assertEquals(282, bank.getTotalCoin());
+    }
+
+    @Test
+    @DisplayName(
+            """
+                    Given 玩家 PlayerA 4 coins 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
+                    When  玩家 PlayerA 決定建設火車站
+                    Then  玩家A 0 coin,擁有的火車站已翻成正面             
+                          TurnPlayer是PlayerB
+                          銀行有 286 coins
+                    """)
     void playerABuyTrainStationWithEnoughCoinsTest() throws Exception {
         Player playerA = Player.builder().name("playerA").id("123").coins(4).build();
         Player playerB = Player.builder().name("playerB").id("124").build();
@@ -152,9 +192,9 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "LandMark", "火車站");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "火車站");
 
-        mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
+        mockMvc.perform(post("/api/games/{gameId}/player:flipLandMark", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -175,12 +215,12 @@ class GameControllerTest {
     @Test
     @DisplayName(
             """
-            Given 玩家 PlayerA 0 coins 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
-            When  玩家 PlayerA 決定建設火車站
-            Then  玩家A 2 coin,擁有的火車站是背面          
-                  TurnPlayer是PlayerA
-                  銀行有 282 coins
-            """)
+                    Given 玩家 PlayerA 0 coins 0個建築物,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
+                    When  玩家 PlayerA 決定建設火車站
+                    Then  玩家A 2 coin,擁有的火車站是背面          
+                          TurnPlayer是PlayerA
+                          銀行有 282 coins
+                    """)
     void playerABuyTrainStationWithoutEnoughCoinsTest() throws Exception {
         Player playerA = Player.builder().name("playerA").id("123").coins(2).build();
         Player playerB = Player.builder().name("playerB").id("124").build();
@@ -190,9 +230,9 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "LandMark", "火車站");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "火車站");
 
-        mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
+        mockMvc.perform(post("/api/games/{gameId}/player:flipLandMark", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -209,55 +249,16 @@ class GameControllerTest {
         assertEquals(282, bank.getTotalCoin());
     }
 
-    @Test
-    @DisplayName(
-            """
-            Given 玩家 PlayerA 8 coins,1個商業中心,PlayerB,PlayerC,PlayerD，銀行有 282 coins，目前輪到PlayerA要決定建設建築物或Pass
-            When  玩家 PlayerA 決定建設商業中心
-            Then  購買失敗，玩家A 8 coin,手牌擁有商業中心       
-                  TurnPlayer是PlayerA
-                  銀行有 282 coins
-            """)
-    void playerABuyBusinessCenterWithBusinessCenterTest() throws Exception {
-        Player playerA = Player.builder()
-                .name("playerA").id("123")
-                .coins(8)
-                .handCard(new HandCard(List.of(new BusinessCenter()), List.of(new TrainStation(), new AmusementPark(), new ShoppingMall(), new RadioTower())))
-                .build();
-
-        Player playerB = Player.builder().name("playerB").id("124").build();
-        Player playerC = Player.builder().name("playerC").id("125").build();
-        Player playerD = Player.builder().name("playerD").id("126").build();
-
-
-        Game game = givenGameStarted(playerA, playerB, playerC, playerD);
-
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "Establishment", "商業中心");
-
-        mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        var actualGame = findGameById(game.getId());
-        Player actualPlayerA = actualGame.getPlayer("123");
-        Player turnPlayer = actualGame.getTurnPlayer();
-        Bank bank = actualGame.getBank();
-
-        assertEquals(8, actualPlayerA.getTotalCoins());
-        assertEquals("123", turnPlayer.getId());
-        assertEquals(282, bank.getTotalCoin());
-    }
 
     @Test
     @DisplayName(
             """
-            Given 玩家 PlayerA 擁有 22 coins ,正面的火車站,主題樂園,購物中心以及反面的廣播電台，目前輪到PlayerA要決定建設建築物或Pass
-            When  玩家 PlayerA 決定建設廣播電台
-            Then  玩家 playerA 勝利
-            """)
+                    Given 玩家 PlayerA 擁有 22 coins ,正面的火車站,主題樂園,購物中心以及反面的廣播電台，目前輪到PlayerA要決定建設建築物或Pass
+                    When  玩家 PlayerA 決定建設廣播電台
+                    Then  玩家 playerA 勝利
+                    """)
     void playerABuyBusinessCenterWithEnoughCoinsTest() throws Exception {
-        HandCard handCard = new HandCard(Collections.emptyList(), List.of(new TrainStation(true), new AmusementPark(true), new ShoppingMall(true),new RadioTower()));
+        HandCard handCard = new HandCard(Collections.emptyList(), List.of(new TrainStation(true), new AmusementPark(true), new ShoppingMall(true), new RadioTower()));
         Player playerA = Player.builder().name("playerA").id("123").coins(22).handCard(handCard).build();
         Player playerB = Player.builder().name("playerB").id("124").build();
         Player playerC = Player.builder().name("playerC").id("125").build();
@@ -266,9 +267,9 @@ class GameControllerTest {
 
         Game game = givenGameStarted(playerA, playerB, playerC, playerD);
 
-        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "LandMark", "廣播電台");
+        GameController.BuyCardRequest request = new GameController.BuyCardRequest("123", "廣播電台");
 
-        mockMvc.perform(post("/api/games/{gameId}/player:buyCard", game.getId())
+        mockMvc.perform(post("/api/games/{gameId}/player:flipLandMark", game.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
