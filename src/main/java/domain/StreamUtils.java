@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
 
 @UtilityClass
 public class StreamUtils {
@@ -24,4 +23,5 @@ public class StreamUtils {
         return inputMap.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> mapToList(entry.getValue(), mapping)));
     }
+
 }

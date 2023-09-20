@@ -8,7 +8,6 @@ public class RadioTower extends Landmark {
     }
 
     public RadioTower(boolean isFlipped) {
-        super("廣播電台", 22, CardType.MAJOR_ESTABLISHMENT);
-        this.isFlipped = isFlipped;
+        super("廣播電台", 22, CardType.MAJOR_ESTABLISHMENT,isFlipped);
     }
 }

@@ -280,7 +280,6 @@ class GameControllerTest {
 
 
     private Game givenGameStarted(Player... player) {
-        Marketplace marketplace = new Marketplace();
         Game game = Game.builder()
                 .id("createGameId")
                 .bank(new Bank())

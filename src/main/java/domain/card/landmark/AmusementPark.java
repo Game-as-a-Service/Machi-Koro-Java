@@ -8,7 +8,6 @@ public class AmusementPark extends Landmark {
     }
 
     public AmusementPark(boolean isFlipped) {
-        super("主題樂園", 16, CardType.MAJOR_ESTABLISHMENT);
-        this.isFlipped = isFlipped;
+        super("主題樂園", 16, CardType.MAJOR_ESTABLISHMENT,isFlipped);
     }
 }

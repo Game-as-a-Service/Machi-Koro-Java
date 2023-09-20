@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
+import static domain.Bank.TOTAL_COINS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -42,9 +43,9 @@ class GameTest {
         players.add(new Player("A"));
         players.add(new Player("B"));
 
-        Bank bank = new Bank(282);
+        Bank bank = new Bank();
         Marketplace marketplace = new Marketplace();
-        int expectedBankCoins = 282 - (2 * Bank.INIT_PAY_COINS);
+        int expectedBankCoins = TOTAL_COINS - (2 * Bank.INIT_PAY_COINS);
 
         //When
         Game game = new Game(bank, players, marketplace);
@@ -99,7 +100,7 @@ class GameTest {
         playerB.buyEstablishment(new Cafe(), bank);
         playerB.buyEstablishment(new Cafe(), bank);
 
-        playerB.flipLandMark(new ShoppingMall(),bank);
+        playerB.flipLandMark(new ShoppingMall(), bank);
 
 
         playerC.buyEstablishment(new AppleOrchard(), bank);
@@ -150,9 +151,10 @@ class GameTest {
         // when
         Mockito.when(dice.throwDice()).thenReturn(4);
         game.rollDice(playerA.getId(), 1);
+        int covenienceSize = handCard.getEstablishments(ConvenienceStore.class).size();
 
         // then
-        var effectCoins = (ConvenienceStore.EFFECT_COINS + 1) * 2;
+        var effectCoins = (ConvenienceStore.EFFECT_COINS + ShoppingMall.BONUS) * covenienceSize;
         assertThat(playerA.getTotalCoins()).isEqualTo(effectCoins);
         assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankCoins - effectCoins);
 

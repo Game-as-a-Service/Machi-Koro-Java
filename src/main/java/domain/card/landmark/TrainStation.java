@@ -9,7 +9,6 @@ public class TrainStation extends Landmark {
     }
 
     public TrainStation(boolean isFlipped) {
-        super("火車站", 4, CardType.MAJOR_ESTABLISHMENT);
-        this.isFlipped = isFlipped;
+        super("火車站", 4, CardType.MAJOR_ESTABLISHMENT, isFlipped);
     }
 }

@@ -113,6 +113,7 @@ public class Game {
     }
 
     public List<DomainEvent> rollDice(String playerId, int diceCount) {
+        // TODO : diceCount 可以用 true or false 判斷，因為我們只有一顆骰子或兩顆骰子的情況
         checkIsTurnPlayer(playerId);
 
         if ((diceCount > 1 && !turnPlayer.hasLandmarkFlipped(TrainStation.class)) || diceCount > 2 || diceCount < 1) {

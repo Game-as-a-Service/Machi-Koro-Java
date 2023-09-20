@@ -14,9 +14,10 @@ public class MarketplaceData {
 
     public Marketplace toDomain() {
         return Marketplace.builder()
-                .establishmentMap(convertMapToAnotherMap(this.establishmentMap, EstablishmentData::toDomain))
+                .establishmentMap(convertMapToAnotherMap(establishmentMap, EstablishmentData::toDomain))
                 .build();
     }
+
 
     public static MarketplaceData toData(Marketplace marketplace) {
         return MarketplaceData.builder()

@@ -10,6 +10,11 @@ public class Landmark extends Card {
         super(name, constructionCost, cardType);
     }
 
+    public Landmark(String name, int constructionCost, CardType cardType, boolean isFlipped) {
+        super(name, constructionCost, cardType);
+        this.isFlipped = isFlipped;
+    }
+
     public boolean isFlipped() {
         return isFlipped;
     }
