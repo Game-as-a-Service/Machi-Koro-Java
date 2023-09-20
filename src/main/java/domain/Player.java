@@ -5,6 +5,7 @@ import domain.card.CardType;
 import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
 import domain.card.landmark.Landmark;
+import domain.exceptions.MachiKoroException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
@@ -56,17 +57,9 @@ public class Player {
                                 establishment.getIndustryColor().equals(industryColor)).toList();
     }
 
-    public List<Establishment> getEstablishments(IndustryColor industryColor) {
-        return handCard.getEstablishments().stream().filter(establishment -> establishment.getIndustryColor().equals(industryColor)).toList();
-    }
-
-    public List<Establishment> getEstablishments(int dicePoint) {
-        return handCard.getEstablishments().stream().filter(establishment -> establishment.getDiceRollNeededToActivateEffect().contains(dicePoint)).toList();
-    }
-
     public List<Establishment> getEstablishments(CardType cardType) {
         return handCard.getEstablishments().stream()
-                .filter(establishment -> establishment.getCardType().equals(CardType.CROP))
+                .filter(establishment -> establishment.getCardType().equals(cardType))
                 .collect(Collectors.toList());
     }
 
@@ -78,28 +71,50 @@ public class Player {
         return handCard.getLandmarks().get(index);
     }
 
-    public void buyCard(Establishment card) {
-        int cost = card.getConstructionCost();
-        if (!isBalanceEnough(cost))
-            return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
+    public Landmark getLandMark(String landMarkName) {
+        return handCard.getLandmarks().stream().filter(landmark -> landMarkName.equals(landmark.getName())).findFirst().orElseThrow();
+    }
 
-        if (card.getIndustryColor().equals(IndustryColor.PURPLE)) {
-            if (hasTheSamePurpleCard(card)) {
-                //throw new RuntimeException("You already own this card!");
-                return; // FIXME: 2023/04/27 throw Exception or other way to handle this condition.
-            }
-        }
+    public void buyEstablishment(Establishment card, Bank bank) {
+        int cost = card.getConstructionCost();
+        checkBalanceIsEnough(cost);
+        checkHasTheSamePurpleEstablishment(card);
         this.payCoin(cost);
+        bank.gainCoin(cost);
         handCard.addHandCard(card);
     }
 
-    public void flipLandMark(Landmark card) {
+    public void flipLandMark(Landmark card, Bank bank) {
         int cost = card.getConstructionCost();
-        if (!isBalanceEnough(cost))
-            return; // FIXME: 2022/12/8 throw Exception or other way to handle this condition.
-
-        handCard.flipLandMark(card.getClass());
+        checkBalanceIsEnough(cost);
+        if (card.isFlipped()) {
+            throw new MachiKoroException("此地標已經翻面，無法再重新翻面");
+        }
+        card.flipped();
         this.payCoin(cost);
+        bank.gainCoin(cost);
+    }
+
+    private void checkBalanceIsEnough(int cost) {
+        if (!isBalanceEnough(cost))
+            throw new MachiKoroException("您沒有足夠的錢建造此建築物");
+    }
+
+    private void checkHasTheSamePurpleEstablishment(Establishment card) {
+        if (hasTheSamePurpleException(card))
+            throw new MachiKoroException("您已擁有此重要建築，不得重複建造");
+    }
+
+    //購買紫色建築物時，判斷玩家手上是否已有相同建築物
+    private boolean hasTheSamePurpleException(Establishment toBuyCard) {
+        return toBuyCard.getIndustryColor() == IndustryColor.PURPLE && handCard.getEstablishments().contains(toBuyCard);
+    }
+
+    public boolean hasLandmarkFlipped(Class<? extends Landmark> landmark) {
+        return handCard.getLandmarks().stream().anyMatch(lm -> lm.getClass() == landmark && lm.isFlipped());
+    }
+
+    public void removeEstablishment(int index) {
 
     }
 
@@ -126,18 +141,4 @@ public class Player {
     public Card getHandCard(int index) {
         return handCard.getHandCard(index);
     }
-
-    //購買紫色建築物時，判斷玩家手上是否已有相同建築物
-    private boolean hasTheSamePurpleCard(Establishment toBuyCard) {
-        return handCard.getEstablishments().contains(toBuyCard);
-    }
-
-    public boolean hasLandmarkFlipped(Class<? extends Landmark> landmark) {
-        return handCard.getLandmarks().stream().anyMatch(lm -> lm.getClass() ==  landmark && lm.isFlipped());
-    }
-
-    public void removeEstablishment(int index) {
-
-    }
-
 }

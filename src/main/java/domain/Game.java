@@ -1,16 +1,19 @@
 package domain;
 
 import domain.card.establishment.Bakery;
+import domain.card.establishment.Establishment;
 import domain.card.establishment.IndustryColor;
 import domain.card.establishment.WheatField;
+import domain.card.landmark.Landmark;
 import domain.card.landmark.TrainStation;
-import domain.events.DomainEvent;
-import domain.events.RollDiceEvent;
+import domain.events.*;
+import domain.exceptions.MachiKoroException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Builder
 @Data
@@ -57,7 +60,6 @@ public class Game {
     }
 
     public void setUp() {
-
         for (Player player : players) {
             player.gainCoin(3);
             bank.payCoin(3);
@@ -65,6 +67,10 @@ public class Game {
             player.addCardToHandCard(new WheatField());
             marketplace.initial();
         }
+    }
+
+    public Player getPlayer(String playerId) {
+        return players.stream().filter(player -> playerId.equals(player.getId())).findFirst().orElseThrow();
     }
 
     public List<Player> getPlayers() {
@@ -107,9 +113,8 @@ public class Game {
     }
 
     public List<DomainEvent> rollDice(String playerId, int diceCount) {
-        if (!playerId.equals(turnPlayer.getId())) {
-            throw new IllegalArgumentException("Turn player id is incorrect");
-        }
+        // TODO : diceCount 可以用 true or false 判斷，因為我們只有一顆骰子或兩顆骰子的情況
+        checkIsTurnPlayer(playerId);
 
         if ((diceCount > 1 && !turnPlayer.hasLandmarkFlipped(TrainStation.class)) || diceCount > 2 || diceCount < 1) {
             throw new IllegalArgumentException("Invalid quantity of dice");
@@ -121,5 +126,45 @@ public class Game {
 
         takeAllPlayersEffect();
         return List.of(event);
+    }
+
+    public List<DomainEvent> turnPlayerBuyCard(String playerId, String cardName) {
+        checkIsTurnPlayer(playerId);
+        Establishment establishment = marketplace.findEstablishmentByName(cardName);
+        turnPlayer.buyEstablishment(establishment, bank);
+        marketplace.removeEstablishment(establishment);
+        DomainEvent buyEstablishmentEvent = new BuyCardEvent(String.format("玩家 %s 花費了 %d 元 建造了 %s", turnPlayer.getId(), establishment.getConstructionCost(), establishment.getName()));
+        updateTurnPlayerToNextOne();
+        return List.of(buyEstablishmentEvent);
+    }
+
+
+    private void checkIsTurnPlayer(String playerId) {
+        if (!playerId.equals(turnPlayer.getId())) {
+            throw new MachiKoroException("Turn player id is incorrect");
+        }
+    }
+
+    public List<DomainEvent> turnPlayerFlipLandMark(String playerId, String cardName) {
+        checkIsTurnPlayer(playerId);
+        Landmark landmark = turnPlayer.getHandCard().getLandmarks().stream().filter(lm -> cardName.equals(lm.getName())).findFirst().orElseThrow(NoSuchElementException::new);
+        turnPlayer.flipLandMark(landmark, bank);
+        if (isGameOver(turnPlayer)) {
+            DomainEvent GameOverEvent = new GameOverEvent(String.format("玩家 %s 勝利", turnPlayer.getId()));
+            return List.of(GameOverEvent);
+        } else {
+            DomainEvent flipLandMarkEvent = new FlipLandMarkEvent(String.format("玩家 %s 花費了 %d 元 建造了 %s", turnPlayer.getId(), landmark.getConstructionCost(), landmark.getName()));
+            updateTurnPlayerToNextOne();
+            return List.of(flipLandMarkEvent);
+        }
+    }
+
+    private boolean isGameOver(Player turnPlayer) {
+        return turnPlayer.getLandmarks().stream().allMatch(Landmark::isFlipped);
+    }
+
+    private void updateTurnPlayerToNextOne() {
+        int index = players.indexOf(turnPlayer);
+        turnPlayer = players.get((index + 1) % players.size());
     }
 }

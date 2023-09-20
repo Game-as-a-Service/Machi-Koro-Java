@@ -14,29 +14,20 @@ import java.util.List;
 
 @Named
 @RequiredArgsConstructor
-public class RollDiceUseCase {
+public class BuyCardUseCase {
     private final GameRepository gameRepository;
 
     public void execute(Request request, Presenter presenter) {
-
-        // 查
-        Game game = findGame(request);
-
-        // 改
-        var events = game.rollDice(request.playerId, request.diceCount);
-
-        // 存
+        Game game = findGameById(request.gameId);
+        List<DomainEvent> events = game.turnPlayerBuyCard(request.getPlayerId(), request.getCardName());
         gameRepository.save(game);
-
-        // 推
         presenter.present(events);
-
     }
 
-    private Game findGame(Request request) {
-        String gameId = request.getGameId();
-        return gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("this game is not found! gameId: " + gameId));
+    private Game findGameById(String gameId) {
+        return gameRepository.findById(gameId).orElseThrow(NotFoundException::new);
     }
+
 
     @Data
     @NoArgsConstructor
@@ -44,12 +35,13 @@ public class RollDiceUseCase {
     public static class Request {
         private String gameId;
         private String playerId;
-        private int diceCount;
+        private String cardName;
+
     }
 
     public interface Presenter {
         void present(List<DomainEvent> events);
     }
 
-}
 
+}

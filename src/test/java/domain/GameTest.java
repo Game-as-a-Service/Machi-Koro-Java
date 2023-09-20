@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
+import static domain.Bank.TOTAL_COINS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -42,9 +43,9 @@ class GameTest {
         players.add(new Player("A"));
         players.add(new Player("B"));
 
-        Bank bank = new Bank(282);
+        Bank bank = new Bank();
         Marketplace marketplace = new Marketplace();
-        int expectedBankCoins = 282 - (2 * Bank.INIT_PAY_COINS);
+        int expectedBankCoins = TOTAL_COINS - (2 * Bank.INIT_PAY_COINS);
 
         //When
         Game game = new Game(bank, players, marketplace);
@@ -77,8 +78,9 @@ class GameTest {
 
     @Test
     void test1() {
+        Bank bank = new Bank();
         var players = List.of(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
-        Game game = new Game(new Bank(), players, new Marketplace());
+        Game game = new Game(bank, players, new Marketplace());
         var playerA = players.get(0);
         var playerB = players.get(1);
         var playerC = players.get(2);
@@ -89,19 +91,19 @@ class GameTest {
         playerC.gainCoin(30);
         playerD.gainCoin(30);
 
-        playerA.buyCard(new AppleOrchard());
-        playerA.buyCard(new AppleOrchard());
-        playerA.buyCard(new Cafe());
-        playerA.buyCard(new Bakery());
-        playerA.buyCard(new Bakery());
+        playerA.buyEstablishment(new AppleOrchard(), bank);
+        playerA.buyEstablishment(new AppleOrchard(), bank);
+        playerA.buyEstablishment(new Cafe(), bank);
+        playerA.buyEstablishment(new Bakery(), bank);
+        playerA.buyEstablishment(new Bakery(), bank);
 
-        playerB.buyCard(new Cafe());
-        playerB.buyCard(new Cafe());
+        playerB.buyEstablishment(new Cafe(), bank);
+        playerB.buyEstablishment(new Cafe(), bank);
 
-        playerB.flipLandMark(new ShoppingMall());
+        playerB.flipLandMark(new ShoppingMall(), bank);
 
 
-        playerC.buyCard(new AppleOrchard());
+        playerC.buyEstablishment(new AppleOrchard(), bank);
 
 
         // when
@@ -149,9 +151,10 @@ class GameTest {
         // when
         Mockito.when(dice.throwDice()).thenReturn(4);
         game.rollDice(playerA.getId(), 1);
+        int covenienceSize = handCard.getEstablishments(ConvenienceStore.class).size();
 
         // then
-        var effectCoins = (ConvenienceStore.EFFECT_COINS + 1) * 2;
+        var effectCoins = (ConvenienceStore.EFFECT_COINS + ShoppingMall.BONUS) * covenienceSize;
         assertThat(playerA.getTotalCoins()).isEqualTo(effectCoins);
         assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankCoins - effectCoins);
 

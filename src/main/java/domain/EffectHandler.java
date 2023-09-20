@@ -46,9 +46,10 @@ public class EffectHandler {
         }
 
         // green: 當你自己骰出這個數字時，可以從銀行獲得x元
-        if (turnPlayer.hasLandmarkFlipped(ShoppingMall.class)) {
+        if (turnPlayer.hasLandmarkFlipped(ShoppingMall.class) && establishment.getCardType() == CardType.SHOP) {
             effectCoins += 1;
         }
+
         turnPlayer.gainCoin(effectCoins);
         bank.payCoin(effectCoins);
     }

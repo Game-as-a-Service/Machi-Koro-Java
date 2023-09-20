@@ -8,34 +8,30 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import spring.presenter.BuyCardPresenter;
+import spring.presenter.FlipLandMarkPresenter;
 
 import javax.inject.Named;
 import java.util.List;
 
 @Named
 @RequiredArgsConstructor
-public class RollDiceUseCase {
+public class FlipLandMarkUseCase {
     private final GameRepository gameRepository;
 
-    public void execute(Request request, Presenter presenter) {
-
-        // 查
-        Game game = findGame(request);
-
-        // 改
-        var events = game.rollDice(request.playerId, request.diceCount);
-
-        // 存
+    public void execute(FlipLandMarkUseCase.Request request, FlipLandMarkPresenter presenter) {
+        Game game = findGameById(request.gameId);
+        List<DomainEvent> events = game.turnPlayerFlipLandMark(request.getPlayerId(), request.getCardName());
         gameRepository.save(game);
-
-        // 推
         presenter.present(events);
-
     }
 
-    private Game findGame(Request request) {
-        String gameId = request.getGameId();
-        return gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("this game is not found! gameId: " + gameId));
+    private Game findGameById(String gameId) {
+        return gameRepository.findById(gameId).orElseThrow(NotFoundException::new);
+    }
+
+    public interface Presenter {
+        void present(List<DomainEvent> events);
     }
 
     @Data
@@ -44,12 +40,6 @@ public class RollDiceUseCase {
     public static class Request {
         private String gameId;
         private String playerId;
-        private int diceCount;
+        private String cardName;
     }
-
-    public interface Presenter {
-        void present(List<DomainEvent> events);
-    }
-
 }
-

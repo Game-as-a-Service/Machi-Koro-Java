@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class HandCard {
 
@@ -52,12 +53,16 @@ public class HandCard {
     public void flipLandMark(Class<? extends Landmark> landmark) {
         landmarks
                 .stream()
-                .filter(l -> l.getClass() ==  landmark && !l.isFlipped())
+                .filter(l -> l.getClass() == landmark && !l.isFlipped())
                 .findFirst()
                 .map(targetlandmark -> {
                     targetlandmark.flipped();
                     return targetlandmark;
                 })
                 .orElseThrow(() -> new NoSuchElementException("This LandMark has been flipped"));
+    }
+
+    public List<Establishment> getEstablishments(Class<? extends Establishment> establishment) {
+        return establishments.stream().filter(e -> e.getClass() == establishment).collect(Collectors.toList());
     }
 }
