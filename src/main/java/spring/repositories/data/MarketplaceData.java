@@ -10,7 +10,6 @@ import static domain.StreamUtils.convertMapToAnotherMap;
 
 @Builder
 public class MarketplaceData {
-    private List<EstablishmentData> establishments;
     private Map<String, List<EstablishmentData>> establishmentMap;
 
     public Marketplace toDomain() {
