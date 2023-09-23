@@ -26,7 +26,7 @@ public class GameData {
         Player turnPlayer = players.stream().filter(player -> player.getId().equals(turnPlayerId)).findFirst().orElseThrow();
         return Game.builder()
                 .id(id)
-                .bank(new Bank())
+                .bank(new Bank(bankCoins))
                 .players(players)
                 .currentDicePoint(currentDicePoint)
                 .turnPlayer(turnPlayer)

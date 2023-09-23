@@ -316,7 +316,6 @@ class GameControllerTest {
                 .turnPlayer(player[0])
                 .marketplace(new Marketplace())
                 .build();
-
         return gameRepository.save(game);
     }
 
