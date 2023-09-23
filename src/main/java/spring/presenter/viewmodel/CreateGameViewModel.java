@@ -1,13 +1,12 @@
-package domain.events;
+package spring.presenter.viewmodel;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RollDiceEvent extends DomainEvent {
-    private int dicePoint;
+public class CreateGameViewModel {
+    private String gameId;
 }

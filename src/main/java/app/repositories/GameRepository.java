@@ -1,4 +1,4 @@
-package app.output;
+package app.repositories;
 
 import domain.Game;
 

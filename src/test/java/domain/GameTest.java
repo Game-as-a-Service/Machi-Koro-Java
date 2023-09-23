@@ -150,7 +150,7 @@ class GameTest {
 
         // when
         Mockito.when(dice.throwDice()).thenReturn(4);
-        game.rollDice(playerA.getId(), 1);
+        game.rollDice(playerA.getId(), false);
         int covenienceSize = handCard.getEstablishments(ConvenienceStore.class).size();
 
         // then

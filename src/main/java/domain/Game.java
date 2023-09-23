@@ -12,21 +12,36 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+
+import static java.util.Collections.singletonList;
 
 @Builder
 @Data
 @AllArgsConstructor
 public class Game {
     private String id;
-    private final Bank bank;
+    private Bank bank;
     private final List<Player> players;
     @Builder.Default
     private List<Dice> dices = List.of(new Dice(), new Dice());
-    private int currentDicePoint;
+    private int currentDicePoint = 0;
     private Player turnPlayer;
-    private final Marketplace marketplace;
+    private Marketplace marketplace;
+
+    public Game(List<Player> players) {
+        this(UUID.randomUUID().toString(), players);
+    }
+
+    public Game(String id, List<Player> players) {
+        players = Objects.requireNonNullElseGet(players, ArrayList::new);
+        this.id = id;
+        this.players = players;
+        this.bank = new Bank();
+        this.marketplace = new Marketplace();
+        this.dices = List.of(new Dice(), new Dice());
+        this.turnPlayer = !players.isEmpty() ? players.get(0) : null;
+    }
 
     public Game(Bank bank, List<Player> players, Marketplace marketplace) {
         this.bank = bank;
@@ -65,7 +80,6 @@ public class Game {
             bank.payCoin(3);
             player.addCardToHandCard(new Bakery());
             player.addCardToHandCard(new WheatField());
-            marketplace.initial();
         }
     }
 
@@ -112,15 +126,23 @@ public class Game {
         return players.stream().filter(player -> !player.equals(turnPlayer)).toList();
     }
 
-    public List<DomainEvent> rollDice(String playerId, int diceCount) {
-        // TODO : diceCount 可以用 true or false 判斷，因為我們只有一顆骰子或兩顆骰子的情況
+    public List<DomainEvent> toCreateGameEvent() {
+        return singletonList(new CreateGameEvent(id));
+    }
+
+    public List<DomainEvent> rollDice(String playerId, boolean isTwoDices) {
+        // TODO : isTwoDices 可以用 true or false 判斷，因為我們只有一顆骰子或兩顆骰子的情況
         checkIsTurnPlayer(playerId);
 
-        if ((diceCount > 1 && !turnPlayer.hasLandmarkFlipped(TrainStation.class)) || diceCount > 2 || diceCount < 1) {
+        if (isTwoDices && !turnPlayer.hasLandmarkFlipped(TrainStation.class)) {
             throw new IllegalArgumentException("Invalid quantity of dice");
         }
 
-        currentDicePoint = dices.stream().limit(diceCount).mapToInt(Dice::throwDice).sum();
+        if (isTwoDices) {
+            currentDicePoint = dices.stream().mapToInt(Dice::throwDice).sum();
+        }else {
+            currentDicePoint = dices.get(0).throwDice();
+        }
 
         var event = RollDiceEvent.builder().dicePoint(currentDicePoint).build();
 

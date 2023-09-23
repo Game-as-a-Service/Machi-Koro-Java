@@ -1,5 +1,6 @@
 package spring.repositories.data;
 
+import domain.Bank;
 import domain.Game;
 import domain.Player;
 import lombok.Builder;
@@ -13,21 +14,22 @@ import static domain.StreamUtils.mapToList;
 @Getter
 public class GameData {
     protected String id;
-    protected BankData bank;
+
+    protected int bankCoins;
     protected List<PlayerData> players;
     protected int currentDicePoint;
     protected String turnPlayerId;
     protected MarketplaceData marketplace;
 
     public Game toDomain() {
-        List<Player> playersDomain = mapToList(players, PlayerData::toDomain);
-        Player turnPlayerDomain = playersDomain.stream().filter(player -> player.getId().equals(turnPlayerId)).findFirst().orElseThrow();
+        List<Player> players = mapToList(this.players, PlayerData::toDomain);
+        Player turnPlayer = players.stream().filter(player -> player.getId().equals(turnPlayerId)).findFirst().orElseThrow();
         return Game.builder()
                 .id(id)
-                .bank(bank.toDomain())
-                .players(playersDomain)
+                .bank(new Bank())
+                .players(players)
                 .currentDicePoint(currentDicePoint)
-                .turnPlayer(turnPlayerDomain)
+                .turnPlayer(turnPlayer)
                 .marketplace(marketplace.toDomain())
                 .build();
     }
@@ -35,7 +37,7 @@ public class GameData {
     public static GameData toData(Game game) {
         return GameData.builder()
                 .id(game.getId())
-                .bank(BankData.toData(game.getBank()))
+                .bankCoins(game.getBank().getTotalCoin())
                 .players(mapToList(game.getPlayers(), PlayerData::toData))
                 .currentDicePoint(game.getCurrentDicePoint())
                 .turnPlayerId(game.getTurnPlayer().getId())

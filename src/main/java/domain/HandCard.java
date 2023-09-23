@@ -2,18 +2,15 @@ package domain;
 
 import domain.card.Card;
 import domain.card.establishment.Establishment;
-import domain.card.landmark.AmusementPark;
-import domain.card.landmark.Landmark;
-import domain.card.landmark.RadioTower;
-import domain.card.landmark.ShoppingMall;
-import domain.card.landmark.TrainStation;
+import domain.card.landmark.*;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
+@EqualsAndHashCode
 public class HandCard {
 
     private List<Establishment> establishments = new ArrayList<>();

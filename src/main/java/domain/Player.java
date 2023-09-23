@@ -8,11 +8,13 @@ import domain.card.landmark.Landmark;
 import domain.exceptions.MachiKoroException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
+@EqualsAndHashCode
 @AllArgsConstructor
 public class Player {
     private String id;
@@ -20,6 +22,11 @@ public class Player {
     private int coins;
     @Builder.Default
     private HandCard handCard = new HandCard();
+
+    public Player(String id, String name) {
+        this(name);
+        this.id = id;
+    }
 
     public Player(String name) {
         this.name = name;

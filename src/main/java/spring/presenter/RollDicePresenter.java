@@ -1,6 +1,5 @@
 package spring.presenter;
 
-import app.usecase.RollDiceUseCase;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import domain.events.DomainEvent;
 import domain.events.RollDiceEvent;
@@ -13,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
-public class RollDicePresenter implements RollDiceUseCase.Presenter {
+public class RollDicePresenter extends AbstractPresenter {
     public RollDiceViewModel viewModel;
 
     @Data
@@ -27,19 +26,12 @@ public class RollDicePresenter implements RollDiceUseCase.Presenter {
     @Override
     public void present(List<DomainEvent> events) {
         viewModel = getEvent(events, RollDiceEvent.class)
-                .map(e -> new RollDiceViewModel(e.dicePoint))
+                .map(e -> new RollDiceViewModel(e.getDicePoint()))
                 .orElse(null);
     }
 
     public Optional<RollDiceViewModel> getViewModel() {
         return ofNullable(viewModel);
     }
-    @SuppressWarnings("unchecked")
-    public static <T extends DomainEvent> Optional<T> getEvent(List<DomainEvent> events,
-                                                               Class<T> type) {
-        return events.stream()
-                .filter(e -> type.isAssignableFrom(e.getClass()))
-                .map(e -> (T) e)
-                .findFirst();
-    }
+
 }
