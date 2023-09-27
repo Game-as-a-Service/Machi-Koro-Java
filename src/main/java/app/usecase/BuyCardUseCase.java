@@ -1,7 +1,7 @@
 package app.usecase;
 
 import app.exception.NotFoundException;
-import app.output.GameRepository;
+import app.repositories.GameRepository;
 import domain.Game;
 import domain.events.DomainEvent;
 import lombok.AllArgsConstructor;
@@ -38,10 +38,4 @@ public class BuyCardUseCase {
         private String cardName;
 
     }
-
-    public interface Presenter {
-        void present(List<DomainEvent> events);
-    }
-
-
 }

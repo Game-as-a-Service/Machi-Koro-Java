@@ -1,15 +1,13 @@
 package app.usecase;
 
 import app.exception.NotFoundException;
-import app.output.GameRepository;
+import app.repositories.GameRepository;
 import domain.Game;
 import domain.events.DomainEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import spring.presenter.BuyCardPresenter;
-import spring.presenter.FlipLandMarkPresenter;
 
 import javax.inject.Named;
 import java.util.List;
@@ -19,7 +17,7 @@ import java.util.List;
 public class FlipLandMarkUseCase {
     private final GameRepository gameRepository;
 
-    public void execute(FlipLandMarkUseCase.Request request, FlipLandMarkPresenter presenter) {
+    public void execute(FlipLandMarkUseCase.Request request, Presenter presenter) {
         Game game = findGameById(request.gameId);
         List<DomainEvent> events = game.turnPlayerFlipLandMark(request.getPlayerId(), request.getCardName());
         gameRepository.save(game);
@@ -28,10 +26,6 @@ public class FlipLandMarkUseCase {
 
     private Game findGameById(String gameId) {
         return gameRepository.findById(gameId).orElseThrow(NotFoundException::new);
-    }
-
-    public interface Presenter {
-        void present(List<DomainEvent> events);
     }
 
     @Data

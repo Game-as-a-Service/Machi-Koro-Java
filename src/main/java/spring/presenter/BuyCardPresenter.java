@@ -1,6 +1,5 @@
 package spring.presenter;
 
-import app.usecase.BuyCardUseCase;
 import domain.events.BuyCardEvent;
 import domain.events.DomainEvent;
 import domain.events.GameOverEvent;
@@ -11,10 +10,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
-import static spring.presenter.RollDicePresenter.getEvent;
 
-
-public class BuyCardPresenter implements BuyCardUseCase.Presenter {
+public class BuyCardPresenter extends AbstractPresenter {
     private BuyCardPresenterViewModel viewModel;
 
     @Override

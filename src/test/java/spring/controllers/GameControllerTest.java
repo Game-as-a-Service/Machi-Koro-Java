@@ -1,11 +1,12 @@
 package spring.controllers;
 
-import app.output.GameRepository;
+import app.repositories.GameRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.*;
 import domain.card.establishment.BusinessCenter;
 import domain.card.establishment.WheatField;
 import domain.card.landmark.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import static org.junit.jupiter.api.Assertions.*;
+import spring.presenter.viewmodel.CreateGameViewModel;
+import spring.requests.CreateGameRequest;
 
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,7 +49,7 @@ class GameControllerTest {
 
         Game game = givenGameStarted(a, b, c, d);
 
-        GameController.RollDiceRequest request = new GameController.RollDiceRequest("123", 1);
+        GameController.RollDiceRequest request = new GameController.RollDiceRequest("123", false);
 
         var result = mockMvc.perform(post("/api/games/{gameId}/roll-dice", game.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +87,7 @@ class GameControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("玩家 123 花費了 1 元 建造了 小麥田"));
 
-        var actualGame = findGameById(game.getId());
+        var actualGame = findGame(game.getId());
         Player actualPlayerA = actualGame.getPlayer("123");
         Player turnPlayer = actualGame.getTurnPlayer();
         Bank bank = actualGame.getBank();
@@ -122,7 +125,7 @@ class GameControllerTest {
                 .andExpect(status().isBadRequest());
 
 
-        var actualGame = findGameById(game.getId());
+        var actualGame = findGame(game.getId());
         Player actualPlayerA = actualGame.getPlayer("123");
         Player turnPlayer = actualGame.getTurnPlayer();
         Bank bank = actualGame.getBank();
@@ -165,7 +168,7 @@ class GameControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
 
-        var actualGame = findGameById(game.getId());
+        var actualGame = findGame(game.getId());
         Player actualPlayerA = actualGame.getPlayer("123");
         Player turnPlayer = actualGame.getTurnPlayer();
         Bank bank = actualGame.getBank();
@@ -203,7 +206,7 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("玩家 123 花費了 4 元 建造了 火車站"));
 
 
-        var actualGame = findGameById(game.getId());
+        var actualGame = findGame(game.getId());
         Player actualPlayerA = actualGame.getPlayer("123");
         Player turnPlayer = actualGame.getTurnPlayer();
         Bank bank = actualGame.getBank();
@@ -239,7 +242,7 @@ class GameControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
 
-        var actualGame = findGameById(game.getId());
+        var actualGame = findGame(game.getId());
         Player actualPlayerA = actualGame.getPlayer("123");
         Player turnPlayer = actualGame.getTurnPlayer();
         Bank bank = actualGame.getBank();
@@ -278,6 +281,31 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("玩家 123 勝利"));
     }
 
+    @Test
+    @DisplayName("""
+            When 玩家 A 創建一局骰子街
+            Then 骰子街創建成功
+            """)
+    void whenPlayerACreateGameThenSuccess() throws Exception {
+        Player playerA = Player.builder().name("playerA").id("123").build();
+
+        CreateGameRequest createGameRequest = new CreateGameRequest(playerA.getId(), playerA.getName());
+
+        MvcResult result = mockMvc.perform(post("/api/games/createGame")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createGameRequest)))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("gameId").exists())
+                .andReturn();
+
+        CreateGameViewModel viewModel = objectMapper.readValue(result.getResponse().getContentAsString(), CreateGameViewModel.class);
+        Game game = findGame(viewModel.getGameId());
+
+        Assertions.assertNotNull(game.getPlayer(playerA.getId()));
+        Player turnPlayer = game.getTurnPlayer();
+        Assertions.assertEquals(turnPlayer, playerA);
+    }
+
 
     private Game givenGameStarted(Player... player) {
         Game game = Game.builder()
@@ -288,11 +316,10 @@ class GameControllerTest {
                 .turnPlayer(player[0])
                 .marketplace(new Marketplace())
                 .build();
-
         return gameRepository.save(game);
     }
 
-    private Game findGameById(String gameId) {
+    private Game findGame(String gameId) {
         return gameRepository.findById(gameId).orElseThrow();
     }
 

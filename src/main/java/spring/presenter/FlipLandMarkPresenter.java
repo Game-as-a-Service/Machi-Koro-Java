@@ -1,6 +1,5 @@
 package spring.presenter;
 
-import app.usecase.FlipLandMarkUseCase;
 import domain.events.DomainEvent;
 import domain.events.FlipLandMarkEvent;
 import domain.events.GameOverEvent;
@@ -11,9 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
-import static spring.presenter.RollDicePresenter.getEvent;
-
-public class FlipLandMarkPresenter implements FlipLandMarkUseCase.Presenter {
+public class FlipLandMarkPresenter extends AbstractPresenter {
     private FlipLandMarkViewModel viewModel;
 
     public Optional<Object> getViewModel() {

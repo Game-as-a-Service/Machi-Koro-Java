@@ -1,6 +1,6 @@
 package spring.repositories;
 
-import app.output.GameRepository;
+import app.repositories.GameRepository;
 import domain.Game;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -76,7 +76,7 @@ class GameDataTest {
 
         GameData gameData = GameData.builder()
                 .id(ID)
-                .bank(BankData.builder().coins(300).build())
+                .bankCoins(Bank.TOTAL_COINS)
                 .players(List.of(player1, player2, player3, player4))
                 .currentDicePoint(1)
                 .turnPlayerId(player3.getId())
