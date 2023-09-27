@@ -1,3 +1,11 @@
+---
+name: 'FeatureTemplate'
+about: Feature Issue 樣板
+title: 'Feature'
+labels: ''
+assignees: ''
+---
+
 ## Feature Title
 
 ### Description
