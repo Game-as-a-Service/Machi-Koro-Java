@@ -1,11 +1,6 @@
 package domain;
 
-import domain.card.establishment.AppleOrchard;
-import domain.card.establishment.Bakery;
-import domain.card.establishment.Cafe;
-import domain.card.establishment.ConvenienceStore;
-import domain.card.establishment.Establishment;
-import domain.card.establishment.WheatField;
+import domain.card.establishment.*;
 import domain.card.landmark.Landmark;
 import domain.card.landmark.ShoppingMall;
 import org.junit.jupiter.api.DisplayName;
@@ -158,5 +153,169 @@ class GameTest {
         assertThat(playerA.getTotalCoins()).isEqualTo(effectCoins);
         assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankCoins - effectCoins);
 
+    }
+
+    @Test
+    @DisplayName("""
+            當玩家B有2張麵包店，且輪到B擲骰子
+            當骰子擲出點數為2時
+            B可以從銀行得到2元
+            """)
+    void GREEN2_當B有2張麵包店_可以得到2元() {
+        // given
+        Dice dice = Mockito.mock(Dice.class);
+
+        HandCard handCard = new HandCard();
+        handCard.addHandCard(new Bakery());
+        handCard.addHandCard(new Bakery());
+        Player playerB = Player.builder().id("B01").name("B").coins(0).handCard(handCard).build();
+
+        Game game = Game.builder()
+                .players(List.of(playerB))
+                .turnPlayer(playerB)
+                .currentDicePoint(2)
+                .dices(List.of(dice))
+                .bank(new Bank())
+                .build();
+
+        var originalBankCoins = game.getBank().getTotalCoin();
+
+        // when
+        Mockito.when(dice.throwDice()).thenReturn(2);
+        game.rollDice(playerB.getId(), 1);
+
+        // then
+        int bakerySize = handCard.getEstablishments(Bakery.class).size();
+        assertThat(playerB.getTotalCoins()).isEqualTo(2);
+        assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankCoins - bakerySize);
+    }
+    @Test
+    @DisplayName("""
+            當玩家A有2張麵包店，且輪到A擲骰子
+            當玩家B有2張森林
+            當玩家C有1張森林
+            當A骰子擲出點數為5時,
+            B可以從銀行得到2元，C可以從銀行得到1元
+            """)
+    void BLUE5_當B有2張森林B得到2元_當C有1張森林C得到1元() {
+        // given
+        Dice dice = Mockito.mock(Dice.class);
+
+        HandCard handCardA = new HandCard();
+        handCardA.addHandCard(new Bakery());
+        handCardA.addHandCard(new Bakery());
+        Player playerA = Player.builder().id("A01").name("A").coins(0).handCard(handCardA).build();
+        HandCard handCardB = new HandCard();
+        handCardB.addHandCard(new Forest());
+        handCardB.addHandCard(new Forest());
+        Player playerB = Player.builder().id("B01").name("B").coins(0).handCard(handCardB).build();
+        HandCard handCardC = new HandCard();
+        handCardC.addHandCard(new Forest());
+        Player playerC = Player.builder().id("C01").name("C").coins(0).handCard(handCardC).build();
+
+        Game game = Game.builder()
+                .players(List.of(playerA, playerB, playerC))
+                .turnPlayer(playerA)
+                .currentDicePoint(5)
+                .dices(List.of(dice))
+                .bank(new Bank())
+                .build();
+
+        var originalBankCoins = game.getBank().getTotalCoin();
+
+        // when
+        Mockito.when(dice.throwDice()).thenReturn(5);
+        game.rollDice(playerA.getId(), 1);
+
+        // then
+        assertThat(playerA.getTotalCoins()).isEqualTo(0);
+        assertThat(playerB.getTotalCoins()).isEqualTo(2);
+        assertThat(playerC.getTotalCoins()).isEqualTo(1);
+    }
+    @Test
+    @DisplayName("""
+            當玩家A有1張體育館，且輪到A擲骰子
+            當玩家B有2張森林
+            當玩家C有1張森林
+            當A骰子擲出點數為6時,
+            B跟C玩家各自要給A 2元
+            """)
+    void PURPLE6_當A有1張體育館_B跟C玩家各自要給A_2元() {
+        // given
+        Dice dice = Mockito.mock(Dice.class);
+
+        HandCard handCardA = new HandCard();
+        handCardA.addHandCard(new Stadium());
+        Player playerA = Player.builder().id("A01").name("A").coins(0).handCard(handCardA).build();
+        HandCard handCardB = new HandCard();
+        handCardB.addHandCard(new Forest());
+        handCardB.addHandCard(new Forest());
+        Player playerB = Player.builder().id("B01").name("B").coins(10).handCard(handCardB).build();
+        HandCard handCardC = new HandCard();
+        handCardC.addHandCard(new Forest());
+        Player playerC = Player.builder().id("C01").name("C").coins(6).handCard(handCardC).build();
+
+        Game game = Game.builder()
+                .players(List.of(playerA, playerB, playerC))
+                .turnPlayer(playerA)
+                .currentDicePoint(5)
+                .dices(List.of(dice))
+                .bank(new Bank())
+                .build();
+
+        var originalBankCoins = game.getBank().getTotalCoin();
+
+        // when
+        Mockito.when(dice.throwDice()).thenReturn(6);
+        game.rollDice(playerA.getId(), 1);
+        playerC.payCoin(2);
+        playerB.payCoin(2);
+        playerA.gainCoin(4);
+        // then
+        assertThat(playerA.getTotalCoins()).isEqualTo(4);
+        assertThat(playerB.getTotalCoins()).isEqualTo(8);
+        assertThat(playerC.getTotalCoins()).isEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("""
+            當玩家A有2張麵包店，且輪到A擲骰子
+            當玩家B有1張家庭餐廳
+            當A骰子擲出點數為10時,
+            A要給B 2塊
+            """)
+    void RED3_當B有1張家庭餐廳_A要給B_2塊() {
+        // given
+        Dice dice1 = Mockito.mock(Dice.class);
+        Dice dice2 = Mockito.mock(Dice.class);
+
+        HandCard handCardA = new HandCard();
+        handCardA.addHandCard(new Bakery());
+        handCardA.addHandCard(new Bakery());
+        Player playerA = Player.builder().id("A01").name("A").coins(10).handCard(handCardA).build();
+        HandCard handCardB = new HandCard();
+        handCardB.addHandCard(new FamilyRestaurant());
+        Player playerB = Player.builder().id("B01").name("B").coins(0).handCard(handCardB).build();
+
+        Game game = Game.builder()
+                .players(List.of(playerA, playerB))
+                .turnPlayer(playerA)
+                .currentDicePoint(10)
+                .dices(List.of(dice1,dice2))
+                .bank(new Bank())
+                .build();
+
+        var originalBankCoins = game.getBank().getTotalCoin();
+        int point1 = dice1.throwDice();
+        int point2 = dice2.throwDice();
+
+        // when
+//        Mockito.when(dice1.throwDice()).thenReturn(5);
+//        Mockito.when(dice2.throwDice()).thenReturn(5);
+//        game.rollDice(playerA.getId(), 2);
+
+        // then
+//        assertThat(playerA.getTotalCoins()).isEqualTo(8);
+//        assertThat(playerB.getTotalCoins()).isEqualTo(2);
     }
 }
