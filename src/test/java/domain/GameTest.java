@@ -183,7 +183,7 @@ class GameTest {
 
         // when
         Mockito.when(dice.throwDice()).thenReturn(2);
-        game.rollDice(playerB.getId(), 1);
+        game.rollDice(playerB.getId(), false);
 
         // then
         int totalBakeryBonuses = handCard.getEstablishments(Bakery.class).size();
@@ -227,7 +227,7 @@ class GameTest {
 
         // when
         Mockito.when(dice.throwDice()).thenReturn(5);
-        game.rollDice(playerA.getId(), 1);
+        game.rollDice(playerA.getId(), false);
 
         // then
         assertThat(playerA.getTotalCoins()).isEqualTo(0);
@@ -261,7 +261,7 @@ class GameTest {
         Game game = Game.builder()
                 .players(List.of(playerA, playerB, playerC))
                 .turnPlayer(playerA)
-                .currentDicePoint(5)
+                .currentDicePoint(6)
                 .dices(List.of(dice))
                 .bank(new Bank())
                 .build();
@@ -270,7 +270,7 @@ class GameTest {
 
         // when
         Mockito.when(dice.throwDice()).thenReturn(6);
-        game.rollDice(playerA.getId(), 1);
+        game.rollDice(playerA.getId(), false);
         playerC.payCoin(2);
         playerB.payCoin(2);
         playerA.gainCoin(4);
@@ -282,7 +282,7 @@ class GameTest {
 
     @Test
     @DisplayName("""
-            當玩家A有2張麵包店，且輪到A擲骰子
+            當玩家A有2張麵包店跟火車站，且輪到A擲骰子
             當玩家B有1張家庭餐廳
             當A骰子擲出點數為10時,
             A要給B 2塊
@@ -314,7 +314,7 @@ class GameTest {
         // when
         Mockito.when(dice1.throwDice()).thenReturn(5);
         Mockito.when(dice2.throwDice()).thenReturn(5);
-        game.rollDice(playerA.getId(), 2);
+        game.rollDice(playerA.getId(), true);
 
         //then
         assertThat(playerA.getTotalCoins()).isEqualTo(4);
