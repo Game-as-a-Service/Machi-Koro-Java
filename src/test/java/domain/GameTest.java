@@ -4,6 +4,7 @@ import domain.card.establishment.*;
 import domain.card.landmark.Landmark;
 import domain.card.landmark.ShoppingMall;
 import domain.card.landmark.TrainStation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,6 +19,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 class GameTest {
+    private Bank bank;
+    private Player playerA;
+    private Player playerB;
+    private Player playerC;
+    private Player playerD;
+
+    @BeforeEach
+    void setUp() {
+        playerA = Player.builder().id("A01").name("A").build();
+        playerB = Player.builder().id("B01").name("B").build();
+        playerC = Player.builder().id("C01").name("C").build();
+        playerD = Player.builder().id("D01").name("D").build();
+        bank = new Bank();
+    }
 
     @Test
     @DisplayName("""
@@ -74,13 +89,8 @@ class GameTest {
 
     @Test
     void test1() {
-        Bank bank = new Bank();
-        var players = List.of(new Player("A"), new Player("B"), new Player("C"), new Player("D"));
+        var players = List.of(playerA, playerB, playerC, playerD);
         Game game = new Game(bank, players, new Marketplace());
-        var playerA = players.get(0);
-        var playerB = players.get(1);
-        var playerC = players.get(2);
-        var playerD = players.get(3);
 
         playerA.gainCoin(30);
         playerB.gainCoin(30);
@@ -128,18 +138,19 @@ class GameTest {
         // given
         Dice dice = Mockito.mock(Dice.class);
 
-        HandCard handCard = new HandCard();
-        handCard.addHandCard(new ConvenienceStore());
-        handCard.addHandCard(new ConvenienceStore());
-        handCard.flipLandMark(ShoppingMall.class);
-        Player playerA = Player.builder().id("id").name("A").coins(0).handCard(handCard).build();
+        Landmark shoppingMall = playerA.getLandMark("購物中心");
+        playerA.addCardToHandCard(new ConvenienceStore());
+        playerA.addCardToHandCard(new ConvenienceStore());
+        //避免玩家沒有足夠的錢建造購物中心建築物
+        playerA.gainCoin(10);
+        playerA.flipLandMark(shoppingMall, bank);
 
         Game game = Game.builder()
                 .players(List.of(playerA))
                 .turnPlayer(playerA)
                 .currentDicePoint(4)
                 .dices(List.of(dice))
-                .bank(new Bank())
+                .bank(bank)
                 .build();
 
         var originalBankCoins = game.getBank().getTotalCoin();
@@ -147,7 +158,9 @@ class GameTest {
         // when
         Mockito.when(dice.throwDice()).thenReturn(4);
         game.rollDice(playerA.getId(), false);
-        int covenienceSize = handCard.getEstablishments(ConvenienceStore.class).size();
+        int covenienceSize = playerA.getHandCard().getEstablishments().stream()
+                .mapToInt(e -> e instanceof ConvenienceStore ? 1 : 0)
+                .sum();
 
         // then
         var effectCoins = (ConvenienceStore.EFFECT_COINS + ShoppingMall.BONUS) * covenienceSize;
@@ -166,17 +179,15 @@ class GameTest {
         // given
         Dice dice = Mockito.mock(Dice.class);
 
-        HandCard handCard = new HandCard();
-        handCard.addHandCard(new Bakery());
-        handCard.addHandCard(new Bakery());
-        Player playerB = Player.builder().id("B01").name("B").coins(0).handCard(handCard).build();
+        playerB.addCardToHandCard(new Bakery());
+        playerB.addCardToHandCard(new Bakery());
 
         Game game = Game.builder()
                 .players(List.of(playerB))
                 .turnPlayer(playerB)
                 .currentDicePoint(2)
                 .dices(List.of(dice))
-                .bank(new Bank())
+                .bank(bank)
                 .build();
 
         var originalBankCoins = game.getBank().getTotalCoin();
@@ -186,8 +197,11 @@ class GameTest {
         game.rollDice(playerB.getId(), false);
 
         // then
-        int totalBakeryBonuses = handCard.getEstablishments(Bakery.class).size();
-        assertThat(playerB.getTotalCoins()).isEqualTo(2);
+        //TODO 命名為具有領域意義的名稱，會更好理解
+        int totalBakeryBonuses = playerB.getHandCard().getEstablishments().stream()
+                .mapToInt(e -> e instanceof Bakery ? 1 : 0)
+                .sum();
+        assertThat(playerB.getTotalCoins()).isEqualTo(totalBakeryBonuses);
         assertThat(game.getBank().getTotalCoin()).isEqualTo(originalBankCoins - totalBakeryBonuses);
     }
 
@@ -203,24 +217,18 @@ class GameTest {
         // given
         Dice dice = Mockito.mock(Dice.class);
 
-        HandCard handCardA = new HandCard();
-        handCardA.addHandCard(new Bakery());
-        handCardA.addHandCard(new Bakery());
-        Player playerA = Player.builder().id("A01").name("A").coins(0).handCard(handCardA).build();
-        HandCard handCardB = new HandCard();
-        handCardB.addHandCard(new Forest());
-        handCardB.addHandCard(new Forest());
-        Player playerB = Player.builder().id("B01").name("B").coins(0).handCard(handCardB).build();
-        HandCard handCardC = new HandCard();
-        handCardC.addHandCard(new Forest());
-        Player playerC = Player.builder().id("C01").name("C").coins(0).handCard(handCardC).build();
+        playerA.addCardToHandCard(new Bakery());
+        playerA.addCardToHandCard(new Bakery());
+        playerB.addCardToHandCard(new Forest());
+        playerB.addCardToHandCard(new Forest());
+        playerC.addCardToHandCard(new Forest());
 
         Game game = Game.builder()
                 .players(List.of(playerA, playerB, playerC))
                 .turnPlayer(playerA)
                 .currentDicePoint(5)
                 .dices(List.of(dice))
-                .bank(new Bank())
+                .bank(bank)
                 .build();
 
         var originalBankCoins = game.getBank().getTotalCoin();
@@ -238,32 +246,26 @@ class GameTest {
     @Test
     @DisplayName("""
             當玩家A有1張體育館，且輪到A擲骰子
-            當玩家B有2張森林
-            當玩家C有1張森林
+            當玩家B有10元
+            當玩家C有6元
             當A骰子擲出點數為6時,
             B跟C玩家各自要給A 2元
             """)
     void purpleStatdiumTest() {
         // given
         Dice dice = Mockito.mock(Dice.class);
+        Stadium stadium = new Stadium();
 
-        HandCard handCardA = new HandCard();
-        handCardA.addHandCard(new Stadium());
-        Player playerA = Player.builder().id("A01").name("A").coins(0).handCard(handCardA).build();
-        HandCard handCardB = new HandCard();
-        handCardB.addHandCard(new Forest());
-        handCardB.addHandCard(new Forest());
-        Player playerB = Player.builder().id("B01").name("B").coins(10).handCard(handCardB).build();
-        HandCard handCardC = new HandCard();
-        handCardC.addHandCard(new Forest());
-        Player playerC = Player.builder().id("C01").name("C").coins(6).handCard(handCardC).build();
+        playerA.addCardToHandCard(stadium);
+        playerB.gainCoin(10);
+        playerC.gainCoin(6);
 
         Game game = Game.builder()
                 .players(List.of(playerA, playerB, playerC))
                 .turnPlayer(playerA)
                 .currentDicePoint(6)
                 .dices(List.of(dice))
-                .bank(new Bank())
+                .bank(bank)
                 .build();
 
         var originalBankCoins = game.getBank().getTotalCoin();
@@ -271,9 +273,6 @@ class GameTest {
         // when
         Mockito.when(dice.throwDice()).thenReturn(6);
         game.rollDice(playerA.getId(), false);
-        playerC.payCoin(2);
-        playerB.payCoin(2);
-        playerA.gainCoin(4);
         // then
         assertThat(playerA.getTotalCoins()).isEqualTo(4);
         assertThat(playerB.getTotalCoins()).isEqualTo(8);
@@ -282,7 +281,7 @@ class GameTest {
 
     @Test
     @DisplayName("""
-            當玩家A有2張麵包店跟火車站，且輪到A擲骰子
+            當玩家A有2張麵包店、火車站跟10元，且輪到A擲骰子
             當玩家B有1張家庭餐廳
             當A骰子擲出點數為10時,
             A要給B 2塊
@@ -291,24 +290,21 @@ class GameTest {
         // given
         Dice dice1 = Mockito.mock(Dice.class);
         Dice dice2 = Mockito.mock(Dice.class);
-        Bank bank = new Bank();
-        HandCard handCardA = new HandCard();
-        handCardA.addHandCard(new Bakery());
-        handCardA.addHandCard(new Bakery());
+        playerA.addCardToHandCard(new Bakery());
+        playerA.addCardToHandCard(new Bakery());
 
-        Player playerA = Player.builder().id("A01").name("A").coins(10).handCard(handCardA).build();
         Landmark trainStation = playerA.getLandMark("火車站");
+        //避免玩家沒有足夠的錢建造購物中心建築物
+        playerA.gainCoin(10);
         playerA.flipLandMark(trainStation, bank);
-        HandCard handCardB = new HandCard();
-        handCardB.addHandCard(new FamilyRestaurant());
-        Player playerB = Player.builder().id("B01").name("B").coins(0).handCard(handCardB).build();
+        playerB.addCardToHandCard(new FamilyRestaurant());
 
         Game game = Game.builder()
                 .players(List.of(playerA, playerB))
                 .turnPlayer(playerA)
                 .currentDicePoint(10)
                 .dices(List.of(dice1, dice2))
-                .bank(bank)
+                .bank(bank)//這裡不是很確定
                 .build();
 
         // when
@@ -317,7 +313,7 @@ class GameTest {
         game.rollDice(playerA.getId(), true);
 
         //then
-        assertThat(playerA.getTotalCoins()).isEqualTo(4);
+        assertThat(playerA.getTotalCoins()).isEqualTo(4);//10-4-2
         assertThat(playerB.getTotalCoins()).isEqualTo(2);
     }
 }
