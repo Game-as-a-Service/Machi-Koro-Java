@@ -26,7 +26,9 @@ public class Game {
     @Builder.Default
     private List<Dice> dices = List.of(new Dice(), new Dice());
     private int currentDicePoint = 0;
+    private int targetEstablishmentIndex = 0;
     private Player turnPlayer;
+    private Player targetPlayer;
     private Marketplace marketplace;
 
     public Game(List<Player> players) {
@@ -120,6 +122,9 @@ public class Game {
 
         var turnPlayerGreenCards = turnPlayer.getEstablishments(currentDicePoint, IndustryColor.GREEN);
         turnPlayerGreenCards.forEach(greenEstablishment -> effectHandler.takeEffectGreen(turnPlayer, bank, greenEstablishment));
+        var purpleOwnCardPlayers = turnPlayer.getEstablishments(currentDicePoint, IndustryColor.PURPLE);
+        purpleOwnCardPlayers.forEach(purpleEstablishment ->
+                effectHandler.takeEffectPurple(turnPlayer, targetPlayer,targetEstablishmentIndex,targetEstablishmentIndex,purpleEstablishment,players));
     }
 
     public List<Player> getPlayersExcludeTurnPlayer() {
@@ -140,7 +145,7 @@ public class Game {
 
         if (isTwoDices) {
             currentDicePoint = dices.stream().mapToInt(Dice::throwDice).sum();
-        }else {
+        } else {
             currentDicePoint = dices.get(0).throwDice();
         }
 

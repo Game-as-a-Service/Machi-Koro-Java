@@ -54,6 +54,20 @@ public class EffectHandler {
         bank.payCoin(effectCoins);
     }
 
+    public void takeEffectPurple(Player turnPlayer, Player targetPlayer, int tradeEstablishmentIndex, int targetEstablishmentIndex, Establishment establishment, List<Player> players) {
+        if (establishment instanceof BusinessCenter) {
+            // 商業中心： 當你自己骰出這個數字時，你可以與其他玩家交換一間非[重要建築物 or 地標]的建築物。
+            takeEffectBusinessCenter(turnPlayer, targetPlayer, tradeEstablishmentIndex, targetEstablishmentIndex);
+           }
+        if (establishment instanceof TvStation) {
+            // 電視台： 當你自己骰出這個數字時，你可以指定任意一位玩家給你5元。
+            takeEffectTvStation(turnPlayer, targetPlayer);
+        }
+        if (establishment instanceof Stadium) {
+            // 體育館： 當你自己骰出這個數字時，每位玩家都必須給你2元。
+            takeEffectStadium(turnPlayer, players);
+        }
+    }
 
     public void takeEffectBusinessCenter(Player turnPlayer, Player targetPlayer, int tradeEstablishmentIndex, int targetEstablishmentIndex) {
         // 商業中心： 當你自己骰出這個數字時，你可以與其他玩家交換一間非[重要建築物 or 地標]的建築物。
